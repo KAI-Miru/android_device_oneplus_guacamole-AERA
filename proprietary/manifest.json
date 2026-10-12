@@ -25,6 +25,7 @@
     "libgralloctypes.so",
     "libhardware.so",
     "libhidlbase.so",
+    "libhidltransport.so",
     "libion.so",
     "liblog.so",
     "libm.so",
@@ -423,19 +424,6 @@
         "libz.so",
         "libsync.so",
         "libdmabufheap.so",
-        "libc++.so",
-        "libc.so",
-        "libm.so",
-        "libdl.so"
-      ]
-    },
-    "system/lib64/libhidltransport.so": {
-      "source": "vendor/lib64/libhidltransport.so",
-      "bytes": 10824,
-      "sha256": "ebbc2cdda107ccf14fa11b8bbb61b2287edecda4779c719a4651cef8b188989c",
-      "elf_class": 64,
-      "machine": "EM_AARCH64",
-      "needed": [
         "libc++.so",
         "libc.so",
         "libm.so",

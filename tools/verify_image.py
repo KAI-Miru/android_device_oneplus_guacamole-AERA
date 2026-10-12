@@ -28,6 +28,31 @@ def unpack_newc(data):
         offset = (end+3)//4*4
     return entries
 
+def verify_native_init(entries):
+    # Pinned AERA's init_recovery.rc module installs under system/etc/init/hw.
+    # Its Makefile removes root init.rc and creates this native init symlink.
+    script = 'system/etc/init/hw/init.rc'
+    for name in ('init', 'system/bin/init', script, 'init.recovery.service.rc'):
+        if name not in entries:
+            raise ValueError(f'Missing native AERA init file: {name}')
+    mode, target = entries['init']
+    if not stat.S_ISLNK(mode) or target != b'/system/bin/init':
+        raise ValueError('Root init must point to the native /system/bin/init')
+    mode, binary = entries['system/bin/init']
+    if not stat.S_ISREG(mode) or not mode & 0o111:
+        raise ValueError('Native init must be a regular executable')
+    elf = ELFFile(io.BytesIO(binary))
+    if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
+        raise ValueError('Native init must be an ARM64 ELF')
+    for name in (script, 'init.recovery.service.rc'):
+        if not stat.S_ISREG(entries[name][0]):
+            raise ValueError(f'Native init script must be a regular file: {name}')
+    if b'import /init.recovery.service.rc' not in entries[script][1]:
+        raise ValueError('Native AERA service init import is missing')
+    if b'service recovery /system/bin/recovery' not in entries['init.recovery.service.rc'][1]:
+        raise ValueError('Native AERA recovery service is missing')
+    return script
+
 def verify(image, report, kernel=None):
     root = Path(__file__).resolve().parents[1]
     expected = json.loads((root/'prebuilt/manifest.json').read_text())
@@ -51,7 +76,7 @@ def verify(image, report, kernel=None):
     compressed = pieces['ramdisk']
     data = gzip.decompress(compressed) if compressed[:2] == b'\x1f\x8b' else lzma.decompress(compressed)
     entries = unpack_newc(data)
-    required = ['init','init.rc','system/bin/recovery','system/etc/recovery.fstab',
+    required = ['system/bin/recovery','system/etc/recovery.fstab',
                 'init.recovery.qcom.rc','init.recovery.usb.rc','init.recovery.qcom_decrypt.rc',
                 'system/bin/qseecomd','system/bin/android.hardware.keymaster@4.0-service-qti',
                 'system/bin/android.hardware.gatekeeper@1.0-service-qti']
@@ -59,9 +84,7 @@ def verify(image, report, kernel=None):
     if missing: raise ValueError(f'Missing ramdisk files: {missing}')
     forbidden = ['system/bin/oplus_h40_credential_helper','system/bin/phoenix','ramdisk-stock.cpio.gz']
     if any(p in entries for p in forbidden): raise ValueError('Stock/custom recovery runtime was imported')
-    native_init = entries['init.rc'][1]
-    if b'import /init.recovery.service.rc' not in native_init:
-        raise ValueError('Native AERA service init is missing')
+    native_init = verify_native_init(entries)
     inputs = json.loads((root/'proprietary/manifest.json').read_text())
     for n, record in inputs['files'].items():
         if n not in entries or hashlib.sha256(entries[n][1]).hexdigest() != record['sha256']:
@@ -96,6 +119,7 @@ def verify(image, report, kernel=None):
         if absent: abi_errors.append(f'{n}: unresolved strong symbols {absent[:12]}')
     result = {'kernel_input':kernel_record,'image_bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
               'ramdisk_bytes':len(compressed),'ramdisk_entries':len(entries),
+              'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(json.dumps(result,indent=2)+'\n')

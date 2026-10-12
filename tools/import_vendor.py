@@ -13,7 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 PLATFORM_LIBRARIES = {
     'libc.so', 'libm.so', 'libdl.so', 'libc++.so', 'libc++demangle.so',
     'liblog.so', 'libbase.so', 'libcutils.so', 'libutils.so', 'libhardware.so',
-    'libhidlbase.so', 'libhwbinder.so', 'libbinder.so', 'libbinder_ndk.so',
+    # libhidltransport is an empty compatibility shim in both vendor R and
+    # pinned AERA; AERA stages its native build alongside libhidlbase.
+    'libhidlbase.so', 'libhidltransport.so', 'libhwbinder.so', 'libbinder.so', 'libbinder_ndk.so',
     'libcrypto.so', 'libz.so', 'libion.so', 'libsync.so', 'libnativewindow.so',
     'libui.so', 'libprocessgroup.so', 'libvndksupport.so', 'liblzma.so',
     'libunwindstack.so', 'libbacktrace.so', 'liblz4.so', 'libfmq.so',

@@ -21,7 +21,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libgralloccore.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgralloccore.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgrallocutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgrallocutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgsl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgsl.so \
-    $(LOCAL_PATH)/proprietary/system/lib64/libhidltransport.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libhidltransport.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libkeymasterdeviceutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libkeymasterdeviceutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libkeymasterutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libkeymasterutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libllvm-glnext.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libllvm-glnext.so \
@@ -64,7 +63,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/gralloc.msmnile.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/gralloc.msmnile.so
 
-TARGET_RECOVERY_DEVICE_MODULES += android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libion liblog libnativewindow libsync libutils libxml2 libz
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnativewindow libsync libutils libxml2 libz
 RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.gatekeeper@1.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@3.0.so \
@@ -86,6 +85,7 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libgralloctypes.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libhardware.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libhidlbase.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libhidltransport.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/liblog.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
