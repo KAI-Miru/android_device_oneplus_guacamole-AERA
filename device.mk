@@ -31,6 +31,7 @@ PRODUCT_PACKAGES += \
     libui
 
 TARGET_RECOVERY_DEVICE_MODULES += libion libnativewindow libui guacamole_recovery_graphics \
+    android.hardware.common-V2-ndk \
     android.hardware.graphics.common-V6-ndk \
     android.hardware.graphics.allocator-V2-ndk \
     android.hardware.graphics.allocator@2.0
@@ -40,6 +41,7 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libui.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.common-V2-ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.common-V6-ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator-V2-ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@2.0.so
