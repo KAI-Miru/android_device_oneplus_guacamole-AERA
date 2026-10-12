@@ -55,7 +55,7 @@ def extract(source, destination):
         'partition_bytes': 100663296, 'header': header, 'files': files,
         'source_ramdisk_imported': False,
     }
-    (out / 'manifest.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8')
+    (out / 'manifest.json').write_text(json.dumps(metadata, indent=2) + '\n', encoding='utf-8', newline='\n')
     return metadata
 
 if __name__ == '__main__':

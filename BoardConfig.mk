@@ -102,6 +102,9 @@ AERA_EXTRA_LANGUAGES := true
 TARGET_USES_LOGD := true
 
 # Recovery uses AERA's generated policy, not the stock compiled policy.
+# The reduced manifest omits unrelated ROM/test modules. Ninja still rejects
+# missing dependencies used by a requested target; the image audit checks ELFs.
+ALLOW_MISSING_DEPENDENCIES := true
 BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_PLUGIN_VALIDATION := soong-libaosprecovery_defaults soong-libguitwrp_defaults soong-libminuitwrp_defaults soong-vold_defaults
