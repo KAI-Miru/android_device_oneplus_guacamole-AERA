@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+"""Verify input identities, native ramdisk boundaries, and vendor dependencies."""
+from pathlib import Path
+import hashlib, json, re, sys, xml.etree.ElementTree as ET
+from import_vendor import elf_info
+
+ROOT = Path(__file__).resolve().parents[1]
+
+def verify():
+    prebuilt = json.loads((ROOT/'prebuilt/manifest.json').read_text())
+    assert prebuilt['source'] == 'PRO_CI59-BOOT.img'
+    assert prebuilt['source_sha256'] == '718d07ff88435d95df1c930c3ad5ff8e454b823394ffc9b05f9a4ff6ac249034'
+    assert prebuilt['source_ramdisk_imported'] is False
+    assert prebuilt['partition_bytes'] == 100663296
+    for base, manifest in [(ROOT/'prebuilt', prebuilt), (ROOT/'proprietary', json.loads((ROOT/'proprietary/manifest.json').read_text()))]:
+        for name, record in manifest['files'].items():
+            data = (base/name).read_bytes()
+            assert len(data) == record['bytes'], f'Size mismatch: {name}'
+            assert hashlib.sha256(data).hexdigest() == record['sha256'], f'Hash mismatch: {name}'
+        actual = {p.relative_to(base).as_posix() for p in base.rglob('*') if p.is_file()}
+        assert actual == set(manifest['files']) | {'manifest.json'}, f'Untracked binary inputs: {actual - set(manifest["files"])}'
+    assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
+    blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
+    provided = {Path(n).name for n in blobs['files']} | set(blobs['platform_libraries'])
+    for n, record in blobs['files'].items():
+        if 'needed' not in record: continue
+        info = elf_info(ROOT/'proprietary'/n)
+        assert info['needed'] == record['needed'], f'Changed ELF dependencies: {n}'
+        assert set(info['needed']) <= provided, f'Unresolved dependencies: {n}'
+    board = (ROOT/'BoardConfig.mk').read_text()
+    for pattern in [r'BOARD_USES_RECOVERY_AS_BOOT\s*:=\s*true', r'BOARD_BOOTIMAGE_PARTITION_SIZE\s*:=\s*100663296', r'BOARD_BOOT_HEADER_VERSION\s*:=\s*2', r'AERA_INCLUDE_CRYPTO\s*:=\s*true', r'AERA_USE_FSCRYPT_POLICY\s*:=\s*1']:
+        assert re.search(pattern, board), f'Wrong board setting: {pattern}'
+    assert 'OPLUS_H40' not in board and 'TARGET_RECOVERY_INITRC' not in board
+    fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
+    rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
+    data_rows = [r for r in rows if r[1] == '/data']
+    assert len(data_rows) == 1 and data_rows[0][2] == 'ext4'
+    assert 'fileencryption=ice' in data_rows[0][-1]
+    assert not any('logical' in r[-1] for r in rows)
+    for p in (ROOT/'recovery').rglob('*'):
+        if p.is_file():
+            assert p.name not in {'init.rc','sepolicy','ramdisk-stock.cpio.gz'}
+            assert b'\r' not in p.read_bytes(), f'CRLF in ramdisk configuration: {p}'
+    assert 'mount functionfs adb' not in (ROOT/'recovery/root/init.recovery.usb.rc').read_text()
+    ET.parse(ROOT/'manifest.xml')
+    lock = json.loads((ROOT/'sources.lock.json').read_text())
+    assert len({p['path'] for p in lock['projects']}) == len(lock['projects'])
+    assert all(re.fullmatch('[0-9a-f]{40}',p['commit']) for p in lock['projects'])
+    print(f'PASS: DTB/DTBO identities, {len(blobs["files"])} vendor files, native init boundaries, official crypto configuration, {len(lock["projects"])} pinned upstream projects.')
+
+if __name__ == '__main__': verify()

@@ -1,0 +1,11 @@
+# Inherited backend partition flags used by AERA, not a legacy UI configuration.
+# Keep userdata and system defined by the audited physical recovery.fstab.
+/boot emmc /dev/block/bootdevice/by-name/boot flags=slotselect;backup=1;display="Boot"
+/system_root ext4 /dev/block/bootdevice/by-name/system flags=slotselect;backup=0;display="System"
+/vendor ext4 /dev/block/bootdevice/by-name/vendor flags=slotselect;backup=0;display="Vendor"
+/metadata ext4 /dev/block/bootdevice/by-name/metadata flags=backup=0;display="Metadata"
+/cache ext4 /dev/block/bootdevice/by-name/op2 flags=backup=0;display="Cache"
+/data ext4 /dev/block/bootdevice/by-name/userdata flags=fileencryption=ice,keydirectory=/metadata/vold/metadata_encryption;display="Data"
+/firmware vfat /dev/block/bootdevice/by-name/modem flags=slotselect;mounttodecrypt;fsflags=ro;display="Firmware"
+/misc emmc /dev/block/bootdevice/by-name/misc
+/usbstorage vfat /dev/block/sdg1 /dev/block/sdg flags=fsflags=utf8;display="USB Storage";storage;removable

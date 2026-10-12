@@ -1,0 +1,6 @@
+persist.sys.binary_xml=false
+ro.recovery.usb.vid=2A70
+ro.recovery.usb.adb.pid=9012
+ro.recovery.usb.fastboot.pid=D00D
+ro.hardware.egl=adreno
+ro.hardware.gralloc=msmnile

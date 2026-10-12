@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: Apache-2.0
+import /init.recovery.qcom_decrypt.rc
+
+on init
+    setprop sys.usb.configfs 1
+    setprop sys.usb.controller ${ro.boot.usbcontroller}
+    setprop prepdecrypt.setpatch true
+    # AERA creates /cache as a data symlink; guacamole has a physical op2 cache.
+    rm /cache
+    mkdir /cache 0770 system cache
+    write /sys/class/backlight/panel0-backlight/brightness 200
+
+on fs
+    wait /dev/block/platform/soc/${ro.boot.bootdevice} 5
+    symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+    mkdir /firmware 0755 root root
+    mount vfat /dev/block/bootdevice/by-name/modem${ro.boot.slot_suffix} /firmware ro
+    symlink /firmware /vendor/firmware_mnt
+    mkdir /mnt/vendor/persist 0755 root root
+    mount ext4 /dev/block/bootdevice/by-name/persist /mnt/vendor/persist ro
+
+on boot
+    start boot-hal-1-0
+
+# Official qcom_decrypt owns QSEE, Keymaster and Gatekeeper service startup.
+# No stock service classes, stock init imports or mount_all commands are used.

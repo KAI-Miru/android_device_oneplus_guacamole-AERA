@@ -1,0 +1,26 @@
+{
+  "source": "PRO_CI59-BOOT.img",
+  "source_sha256": "718d07ff88435d95df1c930c3ad5ff8e454b823394ffc9b05f9a4ff6ac249034",
+  "partition_bytes": 100663296,
+  "header": {
+    "header_version": 2,
+    "page_size": 4096,
+    "kernel_address": 32768,
+    "ramdisk_address": 16777216,
+    "second_address": 0,
+    "tags_address": 256,
+    "dtb_address": 32505856,
+    "cmdline": "console=ttyMSM0,115200n8 earlycon=msm_geni_serial,0xa90000 androidboot.hardware=qcom androidboot.console=ttyMSM0 androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 swiotlb=2048 loop.max_part=7 androidboot.usbcontroller=a600000.dwc3 buildvariant=user"
+  },
+  "files": {
+    "dtb.img": {
+      "bytes": 12189033,
+      "sha256": "946a44a7a5ec5cd377ca5b7c0e2a5627affbbbe3d9f186664c6d378611c996a3"
+    },
+    "recovery-dtbo.img": {
+      "bytes": 5165936,
+      "sha256": "ddf316ecd06a35b554cf66d0f217063490eccb9e297c4c51302ae03cb6cdafef"
+    }
+  },
+  "source_ramdisk_imported": false
+}
