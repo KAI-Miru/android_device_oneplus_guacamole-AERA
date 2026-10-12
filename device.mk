@@ -30,7 +30,7 @@ PRODUCT_PACKAGES += \
     libnativewindow \
     libui
 
-TARGET_RECOVERY_DEVICE_MODULES += libion libnativewindow libui
+TARGET_RECOVERY_DEVICE_MODULES += libion libnativewindow libui guacamole_recovery_graphics
 RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
@@ -46,7 +46,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/ueventd.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/ueventd.qcom.rc \
     $(LOCAL_PATH)/recovery/root/system/etc/twrp.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags \
     $(LOCAL_PATH)/recovery/root/vendor/etc/init/aera-gralloc.rc:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/init/aera-gralloc.rc \
-    $(LOCAL_PATH)/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml \
-    $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/libnativewindow.so
+    $(LOCAL_PATH)/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
 
 include $(LOCAL_PATH)/proprietary-files.mk

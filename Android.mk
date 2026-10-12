@@ -2,4 +2,17 @@
 LOCAL_PATH := $(call my-dir)
 ifeq ($(TARGET_DEVICE),guacamole)
 include $(call all-makefiles-under,$(LOCAL_PATH))
+
+# Generated libraries must be staged after the platform output paths exist.
+# PRODUCT_COPY_FILES is evaluated earlier while the product is being parsed.
+include $(CLEAR_VARS)
+LOCAL_MODULE := guacamole_recovery_graphics
+LOCAL_MODULE_TAGS := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH := $(TARGET_RECOVERY_ROOT_OUT)
+LOCAL_REQUIRED_MODULES := libnativewindow
+LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so
+LOCAL_POST_INSTALL_CMD := mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64 && \
+    cp -f $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/libnativewindow.so
+include $(BUILD_PHONY_PACKAGE)
 endif
