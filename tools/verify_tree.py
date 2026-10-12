@@ -22,6 +22,10 @@ def verify():
     assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
     blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
     provided = {Path(n).name for n in blobs['files']} | set(blobs['platform_libraries'])
+    # QSEE hard-codes listener plugins outside its DT_NEEDED dependency table.
+    qsee = (ROOT/'proprietary/system/bin/qseecomd').read_bytes()
+    listeners = {n.decode() for n in re.findall(rb'lib[\w.+-]+\.so', qsee)}
+    assert listeners <= provided, f'Missing QSEE listener plugins: {listeners - provided}'
     for n, record in blobs['files'].items():
         if 'needed' not in record: continue
         info = elf_info(ROOT/'proprietary'/n)

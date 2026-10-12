@@ -3,6 +3,8 @@ vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti:system/bin/android.har
 vendor/bin/hw/android.hardware.keymaster@4.0-service-qti:system/bin/android.hardware.keymaster@4.0-service-qti|e50812dd4252b7907650e49b31699809c7194e7dd154342cf053c1a92d741b26
 vendor/bin/qseecomd:system/bin/qseecomd|15295176e7a05f0572fc47f2923f20baeaa67a39dca6f1fc4a6513fc2025b65c
 vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so|73dab5bff45b97cf3e8fe87583adb7135fde715de05d1ea5d8c97e89dbbef087
+vendor/lib64/libGPreqcancel.so:system/lib64/libGPreqcancel.so|9602fc69424bf0b77d20796278fdadfc33103ccf09ca48992d3d630f340be3fe
+vendor/lib64/libGPreqcancel_svc.so:system/lib64/libGPreqcancel_svc.so|cc677faa9d93cbff254efa9381325e9f539692ecdc142e4bcd77e75e2fcff4a5
 vendor/lib64/libQSEEComAPI.so:system/lib64/libQSEEComAPI.so|561ffea5839bd732eaa0729ec96232793f7a47f93d68a72a7dc2ac4a75ecf203
 vendor/lib64/libSecureUILib.so:system/lib64/libSecureUILib.so|f9c86bfbc392ee7378c4bc90c5acd640cc2704b3fd9c6c1885ec10ae6fb301e4
 vendor/lib64/libStDrvInt.so:system/lib64/libStDrvInt.so|e7aa592922fe4b518c913cbd6b92e6f84567e578e5b52ad9a626ed8b2f377b14
@@ -12,6 +14,7 @@ vendor/lib64/libdisplayconfig.qti.so:system/lib64/libdisplayconfig.qti.so|b3fb7a
 vendor/lib64/libdmabufheap.so:system/lib64/libdmabufheap.so|1c4233b6c11be1644e8a494b62a7bc324e8f287d738a5f57fe1a8d35518962bb
 vendor/lib64/libdrm.so:system/lib64/libdrm.so|e8c718c29327ec9b213295be1ee0d2c56688ac489b09a600571dd1144bd12481
 vendor/lib64/libdrmfs.so:system/lib64/libdrmfs.so|2dfb3c78a0730f219f6f2a29770ea605302868406f90fb98f882b8ff680583ca
+vendor/lib64/libdrmtime.so:system/lib64/libdrmtime.so|0d8f4ee9b5e80ade746a3e7203916170f8347e176019a34fe6188f9b2f817df4
 vendor/lib64/libgralloc.qti.so:system/lib64/libgralloc.qti.so|ef88c353dfc978ddd519db9cdb387922fa656f4785f10ab495c93ff4b3e90b5c
 vendor/lib64/libgralloccore.so:system/lib64/libgralloccore.so|8ad706c64d5c47abc2df4db458ef9c7efc8f6d47a2decc5112a7b6c96ff821cc
 vendor/lib64/libgrallocutils.so:system/lib64/libgrallocutils.so|41620f9fa8a5c47e86bb68c4b75eab9e173bcd6912c0af11350f664b5bec31d6
@@ -23,6 +26,7 @@ vendor/lib64/libllvm-glnext.so:system/lib64/libllvm-glnext.so|1559821cb6936223f4
 vendor/lib64/libops.so:system/lib64/libops.so|9f59345ecb4e8957b30dc6eaeb50e25e494fdfd8fc6e0c780651fda9f6588dc5
 vendor/lib64/libqcbor.so:system/lib64/libqcbor.so|a837390f4a9a1a8d02d16e304464905e6210d3e27f5359e2fc36ddbfebdb2513
 vendor/lib64/libqdMetaData.so:system/lib64/libqdMetaData.so|af9cea8a40c7a22bdbc30741d032c6d29866d7df99f96ba8094927a94f0970dd
+vendor/lib64/libqisl.so:system/lib64/libqisl.so|f25dd475c18d085a24f80a181823009e58d96079c95d8c05bc3642ae9cdd1e9b
 vendor/lib64/libqtikeymaster4.so:system/lib64/libqtikeymaster4.so|9675031207009be5f27861cda07bdea3b921d9a4fa81d957262d73f9f2745269
 vendor/lib64/librpmb.so:system/lib64/librpmb.so|a276d9fbfd2fd24b863ba2f39dbb2ff90468549f5bf84447fa516a7c4195cc1b
 vendor/lib64/libsecureui.so:system/lib64/libsecureui.so|252659d0ddb364fd5948d26003696d757391635d4388523e1e439d5233eecb68
@@ -30,6 +34,7 @@ vendor/lib64/libsecureui_svcsock.so:system/lib64/libsecureui_svcsock.so|761fe838
 vendor/lib64/libspcom.so:system/lib64/libspcom.so|a372601ab0ee3082f7a8553bb1108c15a6c8502fc588f1151d5b7864c0402215
 vendor/lib64/libspl.so:system/lib64/libspl.so|6be8b4a2944d427398f0cc5ca2f6e11a70327f32c0d78ac209720b074f297d89
 vendor/lib64/libssd.so:system/lib64/libssd.so|c48165e0607488b22a7d92152d7efc73f5383c15793fa4d065c2526fcc65f646
+vendor/lib64/libtime_genoff.so:system/lib64/libtime_genoff.so|75e7636036249f4013d647a97de6ecb4aadadf09f59bb20b9f510fbeab6d8be3
 vendor/lib64/vendor.display.config@1.0.so:system/lib64/vendor.display.config@1.0.so|ede17edb9a4f877ff7abcf323626647c4529066c18bff9d027292fc55640add5
 vendor/lib64/vendor.display.config@2.0.so:system/lib64/vendor.display.config@2.0.so|58783c6634ed08f87554227afb505b9a6d4ed1c70d839cd4f2ba0eb5c230462c
 vendor/lib64/vendor.qti.hardware.display.allocator@3.0.so:system/lib64/vendor.qti.hardware.display.allocator@3.0.so|b37169ee7ac51a87b2d3f834afff0d054abe64eed856969a8a699660a6ec1a2b

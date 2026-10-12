@@ -5,6 +5,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/bin/android.hardware.keymaster@4.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.keymaster@4.0-service-qti \
     $(LOCAL_PATH)/proprietary/system/bin/qseecomd:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/qseecomd \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel_svc.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel_svc.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libQSEEComAPI.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libQSEEComAPI.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libSecureUILib.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libSecureUILib.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libStDrvInt.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libStDrvInt.so \
@@ -14,6 +16,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libdmabufheap.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdmabufheap.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdrm.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdrm.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdrmfs.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdrmfs.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libdrmtime.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdrmtime.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgralloc.qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgralloc.qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgralloccore.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgralloccore.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgrallocutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgrallocutils.so \
@@ -25,6 +28,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libops.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libops.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqcbor.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqcbor.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqdMetaData.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqdMetaData.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqisl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqisl.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqtikeymaster4.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtikeymaster4.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librpmb.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librpmb.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui.so \
@@ -32,6 +36,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libspcom.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libspcom.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libspl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libspl.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libssd.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libssd.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libtime_genoff.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libtime_genoff.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.display.config@1.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.display.config@1.0.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.display.config@2.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.display.config@2.0.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.display.allocator@3.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.display.allocator@3.0.so \

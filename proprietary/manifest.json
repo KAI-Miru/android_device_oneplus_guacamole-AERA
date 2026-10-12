@@ -146,6 +146,41 @@
         "libdl.so"
       ]
     },
+    "system/lib64/libGPreqcancel.so": {
+      "source": "vendor/lib64/libGPreqcancel.so",
+      "bytes": 20024,
+      "sha256": "9602fc69424bf0b77d20796278fdadfc33103ccf09ca48992d3d630f340be3fe",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libutils.so",
+        "libcutils.so",
+        "libdiag.so",
+        "liblog.so",
+        "libQSEEComAPI.so",
+        "libGPreqcancel_svc.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libGPreqcancel_svc.so": {
+      "source": "vendor/lib64/libGPreqcancel_svc.so",
+      "bytes": 24136,
+      "sha256": "cc677faa9d93cbff254efa9381325e9f539692ecdc142e4bcd77e75e2fcff4a5",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libutils.so",
+        "libcutils.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/libQSEEComAPI.so": {
       "source": "vendor/lib64/libQSEEComAPI.so",
       "bytes": 40824,
@@ -282,6 +317,25 @@
         "liblog.so",
         "libQSEEComAPI.so",
         "libxml2.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libdrmtime.so": {
+      "source": "vendor/lib64/libdrmtime.so",
+      "bytes": 15416,
+      "sha256": "0d8f4ee9b5e80ade746a3e7203916170f8347e176019a34fe6188f9b2f817df4",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libutils.so",
+        "libcutils.so",
+        "libdiag.so",
+        "liblog.so",
+        "libQSEEComAPI.so",
+        "libtime_genoff.so",
         "libc++.so",
         "libc.so",
         "libm.so",
@@ -494,6 +548,22 @@
         "libdl.so"
       ]
     },
+    "system/lib64/libqisl.so": {
+      "source": "vendor/lib64/libqisl.so",
+      "bytes": 20112,
+      "sha256": "f25dd475c18d085a24f80a181823009e58d96079c95d8c05bc3642ae9cdd1e9b",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libQSEEComAPI.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/libqtikeymaster4.so": {
       "source": "vendor/lib64/libqtikeymaster4.so",
       "bytes": 151080,
@@ -623,6 +693,21 @@
         "libQSEEComAPI.so",
         "libc++.so",
         "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libtime_genoff.so": {
+      "source": "vendor/lib64/libtime_genoff.so",
+      "bytes": 15536,
+      "sha256": "75e7636036249f4013d647a97de6ecb4aadadf09f59bb20b9f510fbeab6d8be3",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libc.so",
+        "libcutils.so",
+        "liblog.so",
+        "libc++.so",
         "libm.so",
         "libdl.so"
       ]
