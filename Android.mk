@@ -3,6 +3,12 @@ LOCAL_PATH := $(call my-dir)
 ifeq ($(TARGET_DEVICE),guacamole)
 include $(call all-makefiles-under,$(LOCAL_PATH))
 
+# This standalone prebuilt-kernel tree has no kernel makefile to install DTB.
+# Preserve the complete extracted CI59 payload, including its original padding.
+$(PRODUCT_OUT)/dtb.img: $(TARGET_PREBUILT_DTB)
+	$(hide) mkdir -p $(dir $@)
+	$(hide) cp -f $< $@
+
 # Generated libraries must be staged after the platform output paths exist.
 # PRODUCT_COPY_FILES is evaluated earlier while the product is being parsed.
 include $(CLEAR_VARS)
