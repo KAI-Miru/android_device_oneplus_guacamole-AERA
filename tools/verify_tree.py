@@ -29,6 +29,7 @@ def verify():
     for n, record in blobs['files'].items():
         if 'needed' not in record: continue
         info = elf_info(ROOT/'proprietary'/n)
+        assert info['machine'] == 'EM_AARCH64', f'ARM64 recovery cannot load this vendor ELF: {n}'
         assert info['needed'] == record['needed'], f'Changed ELF dependencies: {n}'
         assert set(info['needed']) <= provided, f'Unresolved dependencies: {n}'
     board = (ROOT/'BoardConfig.mk').read_text()
