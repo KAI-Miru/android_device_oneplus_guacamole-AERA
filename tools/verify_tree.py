@@ -21,6 +21,14 @@ def verify():
         assert actual == set(manifest['files']) | {'manifest.json'}, f'Untracked binary inputs: {actual - set(manifest["files"])}'
     assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
     blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
+    crypto = json.loads((ROOT/'tools/official-crypto-source.json').read_text())
+    assert blobs['official_crypto_source'] == {k: crypto[k] for k in ('repository', 'commit')}
+    for dest in set(crypto['seeds'].values()) | {
+            'system/lib64/libQSEEComAPI.so', 'system/lib64/libqtikeymaster4.so',
+            'system/lib64/libkeymasterdeviceutils.so', 'system/lib64/libkeymasterutils.so'}:
+        record = blobs['files'][dest]
+        assert record['source_repository'] == crypto['repository'], f'Non-official crypto provider: {dest}'
+        assert record['source_commit'] == crypto['commit'], f'Changed official crypto revision: {dest}'
     provided = {Path(n).name for n in blobs['files']} | set(blobs['platform_libraries'])
     # QSEE hard-codes listener plugins outside its DT_NEEDED dependency table.
     qsee = (ROOT/'proprietary/system/bin/qseecomd').read_bytes()
@@ -53,6 +61,11 @@ def verify():
             assert p.name not in {'init.rc','sepolicy','ramdisk-stock.cpio.gz'}
             assert b'\r' not in p.read_bytes(), f'CRLF in ramdisk configuration: {p}'
     assert 'mount functionfs adb' not in (ROOT/'recovery/root/init.recovery.usb.rc').read_text()
+    from verify_image import verify_crypto_service_configuration
+    service_entries = {}
+    for name in ('init.recovery.qcom.rc', 'init.recovery.guacamole-crypto.rc'):
+        service_entries[name] = (0o100644, (ROOT/'recovery/root'/name).read_bytes())
+    verify_crypto_service_configuration(service_entries)
     ET.parse(ROOT/'manifest.xml')
     lock = json.loads((ROOT/'sources.lock.json').read_text())
     assert len({p['path'] for p in lock['projects']}) == len(lock['projects'])

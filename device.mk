@@ -57,6 +57,7 @@ PRODUCT_COPY_FILES += \
     system/hwservicemanager/hwservicemanager.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/hwservicemanager.xml \
     $(LOCAL_PATH)/recovery/root/system/etc/vintf/manifest/guacamole-boot.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/guacamole-boot.xml \
     $(LOCAL_PATH)/recovery/root/init.recovery.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.qcom.rc \
+    $(LOCAL_PATH)/recovery/root/init.recovery.guacamole-crypto.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.guacamole-crypto.rc \
     $(LOCAL_PATH)/recovery/root/init.recovery.usb.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.usb.rc \
     $(LOCAL_PATH)/recovery/root/ueventd.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/ueventd.qcom.rc \
     $(LOCAL_PATH)/recovery/root/system/etc/twrp.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags \

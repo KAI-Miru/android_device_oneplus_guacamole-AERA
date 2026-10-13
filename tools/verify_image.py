@@ -112,6 +112,41 @@ def verify_gpu_runtime(entries):
             raise ValueError(f'Missing native touch hook: {script}')
     return '/' + library
 
+
+def verify_crypto_service_configuration(entries):
+    name = 'init.recovery.guacamole-crypto.rc'
+    parent = 'init.recovery.qcom.rc'
+    for path in (name, parent):
+        if path not in entries or not stat.S_ISREG(entries[path][0]):
+            raise ValueError(f'Missing official crypto service configuration: {path}')
+    imports = entries[parent][1].decode().splitlines()
+    if ('import /init.recovery.qcom_decrypt.rc' not in imports or
+            'import /' + name not in imports or
+            imports.index('import /init.recovery.qcom_decrypt.rc') > imports.index('import /' + name)):
+        raise ValueError('Official Qualcomm services must be imported before the device loader overrides')
+    text = entries[name][1].decode()
+    services = {}
+    for block in ('\n' + text).split('\nservice ')[1:]:
+        lines = block.splitlines()
+        service_name, executable = lines[0].split()
+        if service_name in services:
+            raise ValueError('Duplicate official crypto service')
+        services[service_name] = (executable, {line.strip() for line in lines[1:] if line[:1].isspace()})
+    required = {
+        'qseecomd': '/system/bin/qseecomd',
+        'keymaster-4-0-qti': '/system/bin/android.hardware.keymaster@4.0-service-qti',
+        'gatekeeper-1-0-qti': '/system/bin/android.hardware.gatekeeper@1.0-service-qti',
+    }
+    if services.keys() != required.keys():
+        raise ValueError('Official Qualcomm crypto service set is incomplete')
+    loader = 'setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/system/lib:/vendor/lib:/sbin'
+    for service_name, executable in required.items():
+        actual, options = services[service_name]
+        if actual != executable or not {'override', 'disabled', 'user root', 'group root',
+                                       'seclabel u:r:recovery:s0', loader} <= options:
+            raise ValueError(f'Official crypto service has unsafe or shadowed providers: {service_name}')
+    return sorted(required)
+
 def verify(image, report, kernel=None):
     root = Path(__file__).resolve().parents[1]
     expected = json.loads((root/'prebuilt/manifest.json').read_text())
@@ -152,6 +187,7 @@ def verify(image, report, kernel=None):
     if any(p in entries for p in forbidden): raise ValueError('Stock/custom recovery runtime was imported')
     native_init = verify_native_init(entries)
     native_services = verify_native_service_configuration(entries)
+    crypto_services = verify_crypto_service_configuration(entries)
     gpu_runtime = verify_gpu_runtime(entries)
     inputs = json.loads((root/'proprietary/manifest.json').read_text())
     for n, record in inputs['files'].items():
@@ -190,6 +226,7 @@ def verify(image, report, kernel=None):
               'ramdisk_compression':compression,'bootloader_layout':loading,
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'native_service_configuration':native_services,
+              'official_crypto_services':crypto_services,
               'gpu_native_buffer_library':gpu_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)

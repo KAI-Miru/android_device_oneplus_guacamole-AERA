@@ -2,6 +2,10 @@
   "source_dump": "C15_PORT_GUAC_4G",
   "source_vendor_sdk": 30,
   "source_system_sdk": 35,
+  "official_crypto_source": {
+    "repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+    "commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+  },
   "platform_libraries": [
     "android.hardware.gatekeeper@1.0.so",
     "android.hardware.graphics.allocator@3.0.so",
@@ -70,7 +74,7 @@
       ]
     },
     "system/bin/android.hardware.gatekeeper@1.0-service-qti": {
-      "source": "vendor/bin/hw/android.hardware.gatekeeper@1.0-service-qti",
+      "source": "system/bin/android.hardware.gatekeeper@1.0-service-qti",
       "bytes": 11496,
       "sha256": "9d7d2274c8849c46259f1a82eeb644149690b0137b9a9a5f04d349a7e35d832a",
       "elf_class": 64,
@@ -85,10 +89,12 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/bin/android.hardware.keymaster@4.0-service-qti": {
-      "source": "vendor/bin/hw/android.hardware.keymaster@4.0-service-qti",
+      "source": "system/bin/android.hardware.keymaster@4.0-service-qti",
       "bytes": 11832,
       "sha256": "e50812dd4252b7907650e49b31699809c7194e7dd154342cf053c1a92d741b26",
       "elf_class": 64,
@@ -107,12 +113,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/bin/qseecomd": {
-      "source": "vendor/bin/qseecomd",
-      "bytes": 16504,
-      "sha256": "15295176e7a05f0572fc47f2923f20baeaa67a39dca6f1fc4a6513fc2025b65c",
+      "source": "system/bin/qseecomd",
+      "bytes": 20616,
+      "sha256": "5849792838759e17a70adecc352fd2639a18c9bd7b40650e4a6b215d7c63be8e",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -125,7 +133,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so",
@@ -145,7 +155,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libGPreqcancel.so": {
       "source": "vendor/lib64/libGPreqcancel.so",
@@ -164,7 +176,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libGPreqcancel_svc.so": {
       "source": "vendor/lib64/libGPreqcancel_svc.so",
@@ -180,12 +194,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libQSEEComAPI.so": {
       "source": "vendor/lib64/libQSEEComAPI.so",
-      "bytes": 40824,
-      "sha256": "561ffea5839bd732eaa0729ec96232793f7a47f93d68a72a7dc2ac4a75ecf203",
+      "bytes": 40816,
+      "sha256": "299eddd12acd41623706a613f2e440b20966121663a21ec17c5706c17a9cb4c0",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -197,7 +213,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libSecureUILib.so": {
       "source": "vendor/lib64/libSecureUILib.so",
@@ -216,7 +234,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libStDrvInt.so": {
       "source": "vendor/lib64/libStDrvInt.so",
@@ -230,7 +250,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libadreno_utils.so": {
       "source": "vendor/lib64/libadreno_utils.so",
@@ -248,8 +270,8 @@
     },
     "system/lib64/libdiag.so": {
       "source": "vendor/lib64/libdiag.so",
-      "bytes": 268560,
-      "sha256": "d8a41e85dc41106f1a0f15f9d8719bf659f7b2cddec168a259655da65e311c13",
+      "bytes": 251624,
+      "sha256": "2e114921f73ac94524539fa6b32f16c86d1de618138d743b8d47ee785e898c07",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -259,7 +281,9 @@
         "libc++.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libdisplayconfig.qti.so": {
       "source": "vendor/lib64/libdisplayconfig.qti.so",
@@ -303,7 +327,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libdrmfs.so": {
       "source": "vendor/lib64/libdrmfs.so",
@@ -322,7 +348,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libdrmtime.so": {
       "source": "vendor/lib64/libdrmtime.so",
@@ -341,7 +369,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libgralloc.qti.so": {
       "source": "vendor/lib64/libgralloc.qti.so",
@@ -432,8 +462,8 @@
     },
     "system/lib64/libkeymasterdeviceutils.so": {
       "source": "vendor/lib64/libkeymasterdeviceutils.so",
-      "bytes": 19840,
-      "sha256": "b4a8585f9cf832a8c3203b0c272f447ccee85fab947b82fd816219f7b87d641a",
+      "bytes": 19832,
+      "sha256": "a7c0ac2712fba9c963893e04b7b6fcd5adc1215fc103e0bb9d997a0dc9817439",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -447,12 +477,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libkeymasterutils.so": {
       "source": "vendor/lib64/libkeymasterutils.so",
       "bytes": 51848,
-      "sha256": "8d92872bfe7aead75eecece9206dae52ec2087d6e669ac7f7d2136831def78ba",
+      "sha256": "b3e21fa062b14502fe4694ab88046326db6debbbbaafe42a5f1096b0872df80c",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -464,7 +496,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libllvm-glnext.so": {
       "source": "vendor/lib64/libllvm-glnext.so",
@@ -499,23 +533,26 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libqcbor.so": {
       "source": "vendor/lib64/libqcbor.so",
-      "bytes": 19520,
-      "sha256": "a837390f4a9a1a8d02d16e304464905e6210d3e27f5359e2fc36ddbfebdb2513",
+      "bytes": 19504,
+      "sha256": "d41f6e3b8e367913e97b133c5231c5e40bbb1ec788a06195de2b0d876f1d1588",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
         "liblog.so",
         "libutils.so",
-        "libcutils.so",
         "libc++.so",
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libqdMetaData.so": {
       "source": "vendor/lib64/libqdMetaData.so",
@@ -550,12 +587,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libqtikeymaster4.so": {
       "source": "vendor/lib64/libqtikeymaster4.so",
       "bytes": 151080,
-      "sha256": "9675031207009be5f27861cda07bdea3b921d9a4fa81d957262d73f9f2745269",
+      "sha256": "9bf48a55e68bff2e937977a4e0cd1956bfaebacb6e48f6b90432afdc1a7152f9",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -574,7 +613,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/librpmb.so": {
       "source": "vendor/lib64/librpmb.so",
@@ -590,7 +631,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libsecureui.so": {
       "source": "vendor/lib64/libsecureui.so",
@@ -613,7 +656,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libsecureui_svcsock.so": {
       "source": "vendor/lib64/libsecureui_svcsock.so",
@@ -631,12 +676,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libspcom.so": {
       "source": "vendor/lib64/libspcom.so",
-      "bytes": 120144,
-      "sha256": "a372601ab0ee3082f7a8553bb1108c15a6c8502fc588f1151d5b7864c0402215",
+      "bytes": 53360,
+      "sha256": "a306b5c092847748f9095dc9323615a60668801eaa197d26392dd42a78296bd3",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -649,7 +696,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libspl.so": {
       "source": "vendor/lib64/libspl.so",
@@ -665,7 +714,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libssd.so": {
       "source": "vendor/lib64/libssd.so",
@@ -683,12 +734,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/libtime_genoff.so": {
       "source": "vendor/lib64/libtime_genoff.so",
-      "bytes": 15536,
-      "sha256": "75e7636036249f4013d647a97de6ecb4aadadf09f59bb20b9f510fbeab6d8be3",
+      "bytes": 15544,
+      "sha256": "e63b8d3b7107391ff62945a9c4e9df0deaaa546ae0dbdd6399319f0443bb278b",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -698,12 +751,14 @@
         "libc++.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/vendor.display.config@1.0.so": {
       "source": "vendor/lib64/vendor.display.config@1.0.so",
-      "bytes": 129944,
-      "sha256": "ede17edb9a4f877ff7abcf323626647c4529066c18bff9d027292fc55640add5",
+      "bytes": 173384,
+      "sha256": "49bc428bd1d4c3a520d2bc3f1faa62a36a11e9d08416569c0201c248259cc091",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -715,7 +770,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "system/lib64/vendor.display.config@2.0.so": {
       "source": "vendor/lib64/vendor.display.config@2.0.so",
@@ -881,8 +938,8 @@
     },
     "system/lib64/vendor.qti.hardware.tui_comm@1.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so",
-      "bytes": 141976,
-      "sha256": "2bc6284bc4821581effae0ded4f57faaaa8ba7c27fe700457d2d3c0dba31472c",
+      "bytes": 190832,
+      "sha256": "74e2247c31c0e7cb16de53641d621fe30a121478479394f7645e911ee5dbbf49",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -894,7 +951,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "vendor/firmware/a630_gmu.bin": {
       "source": "vendor/firmware/a630_gmu.bin",
@@ -1039,7 +1098,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
+      "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
     "vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so": {
       "source": "vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so",
