@@ -9,7 +9,7 @@ import subprocess
 HOST_TOOLS = {'prepare_manifest.py', 'prepare_checkout.py', 'prepare_build.py',
               'compact_checkout.py', 'complete_snapshot.py', 'environment_fingerprint.py',
               'prepared_snapshot.py', 'verify_prepared_environment.py'}
-HOST_TESTS = {'test_build_cache.py', 'test_capacity.py', 'test_checkout.py',
+HOST_TESTS = {'test_build_cache.py', 'test_build_kernel_preflight.py', 'test_capacity.py', 'test_checkout.py',
               'test_compact.py', 'test_environment.py', 'test_manifest.py',
               'test_prepared_snapshot.py', 'test_repair.py', 'test_restore.py', 'test_snapshot.py',
               'test_assembly.py'}
