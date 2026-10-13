@@ -57,14 +57,15 @@ def verify_native_service_configuration(entries):
     profiles = 'system/etc/task_profiles.json'
     framework = 'system/etc/vintf/manifest.xml'
     manager = 'system/etc/vintf/manifest/hwservicemanager.xml'
-    for name in (profiles, framework, manager):
+    boot = 'system/etc/vintf/manifest/guacamole-boot.xml'
+    for name in (profiles, framework, manager, boot):
         if name not in entries or not stat.S_ISREG(entries[name][0]):
             raise ValueError(f'Missing native service configuration: {name}')
     definitions = json.loads(entries[profiles][1])
     names = {p['Name'] for section in ('Profiles', 'AggregateProfiles') for p in definitions.get(section, [])}
     if not {'SCHED_SP_FOREGROUND', 'SCHED_SP_BACKGROUND'} <= names:
         raise ValueError('Native scheduling profiles are incomplete')
-    for name in (framework, manager):
+    for name in (framework, manager, boot):
         root = ET.fromstring(entries[name][1])
         if root.tag != 'manifest' or root.get('type') != 'framework':
             raise ValueError(f'Invalid native framework manifest: {name}')
@@ -75,7 +76,18 @@ def verify_native_service_configuration(entries):
                h.findtext('interface/name') == 'IServiceManager' and
                h.findtext('interface/instance') == 'default' for h in declarations.findall('hal')):
         raise ValueError('Native hardware service manager declaration is missing')
-    return [profiles, framework, manager]
+    declaration = ET.fromstring(entries[boot][1])
+    if not any(h.findtext('name') == 'android.hardware.boot' and
+               h.findtext('transport') == 'hwbinder' and
+               h.findtext('fqname') == '@1.1::IBootControl/default' for h in declaration.findall('hal')):
+        raise ValueError('SDK30 boot-control service declaration is missing')
+    service = 'system/bin/android.hardware.boot@1.1-service'
+    if service not in entries or not stat.S_ISREG(entries[service][0]) or not entries[service][0] & 0o111:
+        raise ValueError('Native boot-control 1.1 executable is missing')
+    elf = ELFFile(io.BytesIO(entries[service][1]))
+    if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
+        raise ValueError('Native boot-control service must be ARM64')
+    return [profiles, framework, manager, boot]
 
 
 def verify_gpu_runtime(entries):

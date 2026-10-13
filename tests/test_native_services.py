@@ -1,4 +1,5 @@
 import json
+import struct
 import sys
 import unittest
 from pathlib import Path
@@ -8,6 +9,9 @@ from verify_image import verify_native_service_configuration
 
 class NativeServiceTests(unittest.TestCase):
     def entries(self):
+        ident = b'\x7fELF\x02\x01\x01' + bytes(9)
+        binary = struct.pack('<16sHHIQQQIHHHHHH', ident, 2, 183, 1,
+                             0, 0, 0, 0, 64, 0, 0, 0, 0, 0)
         return {
             'system/etc/task_profiles.json': (0o100644, json.dumps({'Profiles': [],
                 'AggregateProfiles': [{'Name': 'SCHED_SP_FOREGROUND'},
@@ -18,10 +22,15 @@ class NativeServiceTests(unittest.TestCase):
                 b'<transport>hwbinder</transport><version>1.2</version><interface>'
                 b'<name>IServiceManager</name><instance>default</instance></interface>'
                 b'</hal></manifest>'),
+            'system/etc/vintf/manifest/guacamole-boot.xml': (0o100644,
+                b'<manifest type="framework"><hal><name>android.hardware.boot</name>'
+                b'<transport>hwbinder</transport><fqname>@1.1::IBootControl/default</fqname>'
+                b'</hal></manifest>'),
+            'system/bin/android.hardware.boot@1.1-service': (0o100755, binary),
         }
 
     def test_native_configuration_and_split_framework_fragment(self):
-        self.assertEqual(len(verify_native_service_configuration(self.entries())), 3)
+        self.assertEqual(len(verify_native_service_configuration(self.entries())), 4)
 
     def test_missing_file_or_symlink_is_rejected(self):
         for name in self.entries():
@@ -48,6 +57,18 @@ class NativeServiceTests(unittest.TestCase):
             entries[name] = (0o100644, entries[name][1].replace(old, new))
             with self.subTest(old=old), self.assertRaises(ValueError):
                 verify_native_service_configuration(entries)
+
+    def test_boot_provider_version_and_executable_are_required(self):
+        entries = self.entries()
+        path = 'system/etc/vintf/manifest/guacamole-boot.xml'
+        entries[path] = (0o100644, entries[path][1].replace(b'@1.1', b'@1.0'))
+        with self.assertRaisesRegex(ValueError, 'boot-control service declaration'):
+            verify_native_service_configuration(entries)
+        entries = self.entries()
+        path = 'system/bin/android.hardware.boot@1.1-service'
+        entries[path] = (0o100644, entries[path][1])
+        with self.assertRaisesRegex(ValueError, 'executable'):
+            verify_native_service_configuration(entries)
 
 
 if __name__ == '__main__':

@@ -17,6 +17,7 @@ PRODUCT_SOONG_NAMESPACES += $(LOCAL_PATH)
 PRODUCT_PACKAGES += \
     android.hardware.boot@1.0-impl:64 \
     android.hardware.boot@1.0-service \
+    android.hardware.boot@1.1-service \
     bootctrl.msmnile \
     bootctrl.msmnile.recovery \
     qcom_decrypt \
@@ -54,6 +55,7 @@ PRODUCT_COPY_FILES += \
     system/core/libprocessgroup/profiles/task_profiles.json:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/task_profiles.json \
     system/libhidl/vintfdata/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest.xml \
     system/hwservicemanager/hwservicemanager.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/hwservicemanager.xml \
+    $(LOCAL_PATH)/recovery/root/system/etc/vintf/manifest/guacamole-boot.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/guacamole-boot.xml \
     $(LOCAL_PATH)/recovery/root/init.recovery.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.qcom.rc \
     $(LOCAL_PATH)/recovery/root/init.recovery.usb.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.usb.rc \
     $(LOCAL_PATH)/recovery/root/ueventd.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/ueventd.qcom.rc \
