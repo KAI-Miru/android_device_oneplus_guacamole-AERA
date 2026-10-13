@@ -84,6 +84,7 @@ for java8_jar in rt jce; do
 done
 python3 "$device_repo/tools/prepare_build.py" "$build_root" "$artifact_root"
 python3 "$device_repo/tools/prepare_device_runtime.py" "$build_root" "$artifact_root"
+python3 "$device_repo/ci/prepare_recovery_staging.py" "$build_root" "$artifact_root"
 recovery_revision=$(python3 -c 'import json,sys; print(next(p["commit"] for p in json.load(open(sys.argv[1]))["projects"] if p["path"] == "bootable/recovery"))' "$device_repo/sources.lock.json")
 # Native version checks must be able to read original blobs without fetching
 # from inside the network-isolated Android build sandbox.

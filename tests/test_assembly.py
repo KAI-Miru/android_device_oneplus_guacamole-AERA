@@ -37,6 +37,8 @@ class AssemblyTests(unittest.TestCase):
         self.write(self.device, 'tools/verify_tree.py', 'device verifier')
         self.write(self.device, 'patches/device-nativewindow.patch', 'runtime repair')
         self.write(self.runner, 'ci/build.sh', 'trusted build script')
+        self.write(self.runner, 'ci/prepare_recovery_staging.py', 'staging repair')
+        self.write(self.runner, 'tests/fixtures/recovery-staging/prebuilt/Android.mk', 'install rule fixture')
         self.write(self.runner, 'tools/environment_fingerprint.py', 'host fingerprint')
         device_revision, runner_revision = self.commit(self.device), self.commit(self.runner)
         self.write(self.device, 'untracked-device.log', 'must stay outside build inputs')
@@ -46,6 +48,9 @@ class AssemblyTests(unittest.TestCase):
         self.assertEqual(report['runner_revision'], runner_revision)
         self.assertEqual((output / 'BoardConfig.mk').read_text(), 'ARM64 and secondary ARM')
         self.assertEqual((output / 'ci/build.sh').read_text(), 'trusted build script')
+        self.assertEqual((output / 'ci/prepare_recovery_staging.py').read_text(), 'staging repair')
+        self.assertEqual((output / 'tests/fixtures/recovery-staging/prebuilt/Android.mk').read_text(),
+                         'install rule fixture')
         self.assertTrue((output / 'patches/device-nativewindow.patch').is_file())
         self.assertFalse((output / '.git').exists())
         self.assertFalse((output / 'untracked-device.log').exists())
