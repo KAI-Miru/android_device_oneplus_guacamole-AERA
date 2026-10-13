@@ -3,6 +3,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/bin/aera-vendor-allocator:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/aera-vendor-allocator \
     $(LOCAL_PATH)/proprietary/system/bin/android.hardware.gatekeeper@1.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.gatekeeper@1.0-service-qti \
     $(LOCAL_PATH)/proprietary/system/bin/android.hardware.keymaster@4.0-service-qti:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/android.hardware.keymaster@4.0-service-qti \
+    $(LOCAL_PATH)/proprietary/system/bin/guacamole-cnss-daemon:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-cnss-daemon \
+    $(LOCAL_PATH)/proprietary/system/bin/guacamole-pd-mapper:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-pd-mapper \
+    $(LOCAL_PATH)/proprietary/system/bin/guacamole-qrtr-ns:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-qrtr-ns \
     $(LOCAL_PATH)/proprietary/system/bin/qseecomd:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/qseecomd \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel.so \
@@ -11,6 +14,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libSecureUILib.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libSecureUILib.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libStDrvInt.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libStDrvInt.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libadreno_utils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libadreno_utils.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libcld80211.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libcld80211.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdiag.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdiag.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdisplayconfig.qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdisplayconfig.qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdmabufheap.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdmabufheap.so \
@@ -21,13 +25,24 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libgralloccore.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgralloccore.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgrallocutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgrallocutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libgsl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libgsl.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libidl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libidl.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libjson.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libjson.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libkeymasterdeviceutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libkeymasterdeviceutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libkeymasterutils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libkeymasterutils.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libllvm-glnext.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libllvm-glnext.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libmdmdetect.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libmdmdetect.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/liboemnvbk_img_helper.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/liboemnvbk_img_helper.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libops.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libops.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libperipheral_client.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libperipheral_client.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqcbor.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqcbor.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqdMetaData.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqdMetaData.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqisl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqisl.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqmi_cci.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmi_cci.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqmi_common_so.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmi_common_so.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqmi_csi.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmi_csi.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqmi_encdec.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmi_encdec.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqmiservices.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmiservices.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqrtr.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqrtr.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqtikeymaster4.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtikeymaster4.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librpmb.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librpmb.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui.so \
@@ -63,7 +78,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/gralloc.msmnile.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/gralloc.msmnile.so
 
-TARGET_RECOVERY_DEVICE_MODULES += android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnativewindow libsync libutils libxml2 libz
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnativewindow libnl libssl libsync libutils libxml2 libz
 RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.gatekeeper@1.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@3.0.so \
@@ -89,6 +104,8 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/liblog.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libnl.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libssl.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libsync.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libutils.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libxml2.so \

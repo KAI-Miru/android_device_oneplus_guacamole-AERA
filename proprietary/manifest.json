@@ -34,6 +34,8 @@
     "liblog.so",
     "libm.so",
     "libnativewindow.so",
+    "libnl.so",
+    "libssl.so",
     "libsync.so",
     "libutils.so",
     "libxml2.so",
@@ -116,6 +118,63 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/bin/guacamole-cnss-daemon": {
+      "source": "vendor/bin/cnss-daemon",
+      "bytes": 94992,
+      "sha256": "e07fdc38860341e9c07796a4dfcf32c60e965697a82e2b8e765dd3861abbef40",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "liblog.so",
+        "libqmi_cci.so",
+        "libqmi_common_so.so",
+        "libnl.so",
+        "libcld80211.so",
+        "libperipheral_client.so",
+        "libmdmdetect.so",
+        "libqmiservices.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/bin/guacamole-pd-mapper": {
+      "source": "vendor/bin/pd-mapper",
+      "bytes": 33528,
+      "sha256": "07212216b955c60ae73bc1952d346e2a8ff49b8fe1f638f68babb39284017676",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libjson.so",
+        "libqmi_cci.so",
+        "libqmi_common_so.so",
+        "libqmi_encdec.so",
+        "libqmi_csi.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/bin/guacamole-qrtr-ns": {
+      "source": "vendor/bin/qrtr-ns",
+      "bytes": 25256,
+      "sha256": "1fe3498020693fa21449da99996d4335f179ea4265812395ff4f28805b4dd45a",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libqrtr.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
     },
     "system/bin/qseecomd": {
       "source": "system/bin/qseecomd",
@@ -262,6 +321,22 @@
       "machine": "EM_AARCH64",
       "needed": [
         "libgsl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libcld80211.so": {
+      "source": "vendor/lib64/libcld80211.so",
+      "bytes": 20184,
+      "sha256": "b48ec47beefc9a443eca8f73683ac5c42075799fea26e9df59ad41cee18101dc",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libnl.so",
+        "liblog.so",
         "libc++.so",
         "libc.so",
         "libm.so",
@@ -460,6 +535,34 @@
         "libdl.so"
       ]
     },
+    "system/lib64/libidl.so": {
+      "source": "vendor/lib64/libidl.so",
+      "bytes": 19688,
+      "sha256": "b524b1bf6a13bb3bb5815e33f26647853304f089bd261c01bd5432cabd285fad",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libjson.so": {
+      "source": "vendor/lib64/libjson.so",
+      "bytes": 45712,
+      "sha256": "fc0f581b4d811d67f42a8e27ace81e10550232f4c53066e6fac1556a3ff93a3a",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/libkeymasterdeviceutils.so": {
       "source": "vendor/lib64/libkeymasterdeviceutils.so",
       "bytes": 19832,
@@ -515,6 +618,43 @@
         "libdl.so"
       ]
     },
+    "system/lib64/libmdmdetect.so": {
+      "source": "vendor/lib64/libmdmdetect.so",
+      "bytes": 24296,
+      "sha256": "40a198aed44a4b09d24c526e735d3db24fbb1e0b1b566b58f5524924a3c68145",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "liboemnvbk_img_helper.so",
+        "libcrypto.so",
+        "libssl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/liboemnvbk_img_helper.so": {
+      "source": "vendor/lib64/liboemnvbk_img_helper.so",
+      "bytes": 94104,
+      "sha256": "27263162a8290e8bb0d7b4ee7e91eb47dd78d556a6f325bfc832e1ad0885e090",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libcrypto.so",
+        "libssl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/libops.so": {
       "source": "vendor/lib64/libops.so",
       "bytes": 24448,
@@ -536,6 +676,24 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/lib64/libperipheral_client.so": {
+      "source": "vendor/lib64/libperipheral_client.so",
+      "bytes": 81320,
+      "sha256": "8c48c81b0e05f2f7f7e3546dccb10e001e053a48679faaceeac79e8ceaf73487",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libbinder.so",
+        "libmdmdetect.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
     },
     "system/lib64/libqcbor.so": {
       "source": "vendor/lib64/libqcbor.so",
@@ -590,6 +748,97 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/lib64/libqmi_cci.so": {
+      "source": "vendor/lib64/libqmi_cci.so",
+      "bytes": 55104,
+      "sha256": "5afd1554764aee07d17319ad396e4201231112511486f613ab2c72e04ba17ede",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libqmi_encdec.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqmi_common_so.so": {
+      "source": "vendor/lib64/libqmi_common_so.so",
+      "bytes": 15448,
+      "sha256": "1f739462ff5e4f0b21a5ca9f3835c017dcc1a99bdfe9d8e14d5ce228dc996e6d",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqmi_csi.so": {
+      "source": "vendor/lib64/libqmi_csi.so",
+      "bytes": 42344,
+      "sha256": "24f888154b96bb0283edc494869c55be3fabf03c3e1be68078b0a7300f6970f4",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libqmi_encdec.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqmi_encdec.so": {
+      "source": "vendor/lib64/libqmi_encdec.so",
+      "bytes": 23880,
+      "sha256": "8d6edf8623bf75c3e111ccce4f96d0e4567275d258a893fcfa2ab2fb8754caf1",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqmiservices.so": {
+      "source": "vendor/lib64/libqmiservices.so",
+      "bytes": 158432,
+      "sha256": "dafefcff5aa3f3413cc68b18e5d221690f42fd1ce1730ba3982446f26ee56ef1",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libidl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqrtr.so": {
+      "source": "vendor/lib64/libqrtr.so",
+      "bytes": 15760,
+      "sha256": "982aae7f3a67b8beffb807920d2226a546b7153c3144ff5feefce022f2570456",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
     },
     "system/lib64/libqtikeymaster4.so": {
       "source": "vendor/lib64/libqtikeymaster4.so",

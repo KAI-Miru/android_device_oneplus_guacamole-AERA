@@ -21,4 +21,13 @@ LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.
 LOCAL_POST_INSTALL_CMD := mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64 && \
     cp -f $(TARGET_OUT_SHARED_LIBRARIES)/libnativewindow.so $(TARGET_RECOVERY_ROOT_OUT)/vendor/lib64/libnativewindow.so
 include $(BUILD_PHONY_PACKAGE)
+
+# Physical vendor remains mounted for graphics. Stage the native supplicant's
+# own generated declaration where recovery's service manager can see it,
+# retaining its exact interface/version instead of inventing a vendor ABI.
+guacamole_wifi_manifest := $(TARGET_RECOVERY_ROOT_OUT)/system/etc/vintf/manifest/guacamole-wifi.xml
+$(guacamole_wifi_manifest): $(TARGET_OUT_VENDOR_ETC)/vintf/manifest/android.hardware.wifi.supplicant.xml
+	$(hide) mkdir -p $(dir $@)
+	$(hide) sed 's/type="device"/type="framework"/' $< > $@
+ALL_DEFAULT_INSTALLED_MODULES += $(guacamole_wifi_manifest)
 endif

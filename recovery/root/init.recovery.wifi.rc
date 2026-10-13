@@ -1,0 +1,57 @@
+# Recovery extensions for the CI59 ICNSS/QMI WLAN stack. These services do
+# not import stock init classes or start the Android telephony framework.
+on property:sys.aera.wlan.up=1
+    mkdir /tmp/recovery 0755 root root
+    mkdir /tmp/recovery/sockets 0770 root wifi
+    start guacamole-qrtr-ns
+    start guacamole-wlan-firmware
+    start guacamole-pd-mapper
+    start guacamole-wlan-prepare
+    start wpa_supplicant
+    setprop sys.aera.wlan.up 0
+
+on property:init.svc.wpa_supplicant=stopped
+    stop guacamole-wlan-prepare
+    stop guacamole-cnss-daemon
+    stop guacamole-pd-mapper
+    stop guacamole-wlan-firmware
+    stop guacamole-qrtr-ns
+
+service guacamole-qrtr-ns /system/bin/guacamole-qrtr-ns -f
+    user root
+    group root
+    capabilities NET_BIND_SERVICE
+    disabled
+    seclabel u:r:recovery:s0
+
+service guacamole-pd-mapper /system/bin/guacamole-pd-mapper
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service guacamole-cnss-daemon /system/bin/guacamole-cnss-daemon -n -l
+    user root
+    group root inet net_admin wifi
+    capabilities NET_ADMIN
+    disabled
+    seclabel u:r:recovery:s0
+
+service guacamole-wlan-firmware /system/bin/sh /system/bin/guacamole-wlan-firmware.sh
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service guacamole-wlan-prepare /system/bin/sh /system/bin/guacamole-wlan-prepare.sh
+    user root
+    group root
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
+
+service wpa_supplicant /system/bin/sh /system/bin/guacamole-wpa-supplicant.sh
+    user root
+    group root inet net_admin wifi
+    disabled
+    seclabel u:r:recovery:s0

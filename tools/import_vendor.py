@@ -21,7 +21,7 @@ PLATFORM_LIBRARIES = {
     'libui.so', 'libprocessgroup.so', 'libvndksupport.so', 'liblzma.so',
     'libunwindstack.so', 'libbacktrace.so', 'liblz4.so', 'libfmq.so',
     'libdl_android.so', 'libziparchive.so', 'libpng.so', 'libgralloctypes.so',
-    'libexpat.so', 'libxml2.so', 'libhidlmemory.so',
+    'libexpat.so', 'libxml2.so', 'libhidlmemory.so', 'libnl.so', 'libssl.so',
 }
 
 def elf_info(path):

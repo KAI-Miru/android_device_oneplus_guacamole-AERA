@@ -1,6 +1,7 @@
 # SPDX-License-Identifier: Apache-2.0
 import /init.recovery.qcom_decrypt.rc
 import /init.recovery.guacamole-crypto.rc
+import /init.recovery.wifi.rc
 
 on init
     setprop sys.usb.configfs 1

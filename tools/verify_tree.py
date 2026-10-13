@@ -53,6 +53,10 @@ def verify():
             'keydirectory=/metadata/vold/metadata_encryption',
             'metadata_encryption=aes-256-xts'} <= data_flags
     assert re.search(r'AERA_SKIP_ADDITIONAL_FSTAB\s*:=\s*false', board)
+    assert re.search(r'AERA_ENABLE_WLAN\s*:=\s*1', board)
+    assert re.search(r'BOARD_WPA_SUPPLICANT_DRIVER\s*:=\s*NL80211', board)
+    from verify_wifi import verify_module_tree
+    verify_module_tree(ROOT)
     twrp_flags = (ROOT/'recovery/root/system/etc/twrp.flags').read_text()
     assert 'fileencryption=' not in twrp_flags, 'Display flags must not override ROM encryption settings'
     assert not any('logical' in r[-1] for r in rows)

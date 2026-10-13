@@ -4,6 +4,7 @@ import argparse, gzip, hashlib, io, json, lzma, stat, xml.etree.ElementTree as E
 from pathlib import Path, PurePosixPath
 from boot_v2 import parse_boot, bootloader_layout
 from elftools.elf.elffile import ELFFile
+from verify_wifi import WLAN_EXECUTABLES, verify_runtime as verify_wifi_runtime
 
 def unpack_newc(data):
     entries = {}; offset = 0
@@ -189,6 +190,7 @@ def verify(image, report, kernel=None):
     native_services = verify_native_service_configuration(entries)
     crypto_services = verify_crypto_service_configuration(entries)
     gpu_runtime = verify_gpu_runtime(entries)
+    wifi_runtime = verify_wifi_runtime(entries, json.loads((root/'modules/manifest.json').read_text()))
     inputs = json.loads((root/'proprietary/manifest.json').read_text())
     for n, record in inputs['files'].items():
         if n not in entries or hashlib.sha256(entries[n][1]).hexdigest() != record['sha256']:
@@ -209,8 +211,8 @@ def verify(image, report, kernel=None):
                 if s.entry.st_shndx != 'SHN_UNDEF': defined.add(s.name)
                 elif s.entry.st_info.bind == 'STB_GLOBAL': undefined.add(s.name)
         return deps, defined, undefined
-    for n, record in inputs['files'].items():
-        if 'needed' not in record: continue
+    audited = {n for n, record in inputs['files'].items() if 'needed' in record} | set(WLAN_EXECUTABLES)
+    for n in sorted(audited):
         deps, defined, undefined = dynamic(entries[n][1]); seen = set(); todo = list(deps)
         while todo:
             name = todo.pop()
@@ -228,6 +230,7 @@ def verify(image, report, kernel=None):
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
               'gpu_native_buffer_library':gpu_runtime,
+              'wifi_runtime':wifi_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(json.dumps(result,indent=2)+'\n')

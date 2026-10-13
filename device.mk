@@ -58,11 +58,17 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/system/etc/vintf/manifest/guacamole-boot.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/guacamole-boot.xml \
     $(LOCAL_PATH)/recovery/root/init.recovery.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.qcom.rc \
     $(LOCAL_PATH)/recovery/root/init.recovery.guacamole-crypto.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.guacamole-crypto.rc \
+    $(LOCAL_PATH)/recovery/root/init.recovery.wifi.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.wifi.rc \
     $(LOCAL_PATH)/recovery/root/init.recovery.usb.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.usb.rc \
     $(LOCAL_PATH)/recovery/root/ueventd.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/ueventd.qcom.rc \
     $(LOCAL_PATH)/recovery/root/system/etc/twrp.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags \
     $(LOCAL_PATH)/recovery/root/system/bin/runatboot.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/runatboot.sh \
     $(LOCAL_PATH)/recovery/root/system/bin/postscreenunblank.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/postscreenunblank.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-firmware.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-firmware.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-prepare.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-prepare.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wpa-supplicant.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wpa-supplicant.sh \
+    $(LOCAL_PATH)/recovery/root/system/etc/guacamole-wpa_supplicant.conf:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/guacamole-wpa_supplicant.conf \
+    $(LOCAL_PATH)/modules/qca_cld3_wlan.ko:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib/modules/msmnile/qca_cld3_wlan.ko \
     $(LOCAL_PATH)/recovery/root/vendor/etc/init/aera-gralloc.rc:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/init/aera-gralloc.rc \
     $(LOCAL_PATH)/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
 
