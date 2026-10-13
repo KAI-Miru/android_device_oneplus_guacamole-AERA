@@ -51,10 +51,15 @@ DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 
 # All copied init files are device-specific extensions to AERA's native init.
 PRODUCT_COPY_FILES += \
+    system/core/libprocessgroup/profiles/task_profiles.json:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/task_profiles.json \
+    system/libhidl/vintfdata/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest.xml \
+    system/hwservicemanager/hwservicemanager.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/hwservicemanager.xml \
     $(LOCAL_PATH)/recovery/root/init.recovery.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.qcom.rc \
     $(LOCAL_PATH)/recovery/root/init.recovery.usb.rc:$(TARGET_COPY_OUT_RECOVERY)/root/init.recovery.usb.rc \
     $(LOCAL_PATH)/recovery/root/ueventd.qcom.rc:$(TARGET_COPY_OUT_RECOVERY)/root/ueventd.qcom.rc \
     $(LOCAL_PATH)/recovery/root/system/etc/twrp.flags:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/twrp.flags \
+    $(LOCAL_PATH)/recovery/root/system/bin/runatboot.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/runatboot.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/postscreenunblank.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/postscreenunblank.sh \
     $(LOCAL_PATH)/recovery/root/vendor/etc/init/aera-gralloc.rc:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/init/aera-gralloc.rc \
     $(LOCAL_PATH)/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/vintf/manifest.xml
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Verify the actual boot image and its native AERA ramdisk before upload."""
-import argparse, gzip, hashlib, io, json, lzma, stat
+import argparse, gzip, hashlib, io, json, lzma, stat, xml.etree.ElementTree as ET
 from pathlib import Path, PurePosixPath
 from boot_v2 import parse_boot, bootloader_layout
 from elftools.elf.elffile import ELFFile
@@ -53,6 +53,53 @@ def verify_native_init(entries):
         raise ValueError('Native AERA recovery service is missing')
     return script
 
+def verify_native_service_configuration(entries):
+    profiles = 'system/etc/task_profiles.json'
+    framework = 'system/etc/vintf/manifest.xml'
+    manager = 'system/etc/vintf/manifest/hwservicemanager.xml'
+    for name in (profiles, framework, manager):
+        if name not in entries or not stat.S_ISREG(entries[name][0]):
+            raise ValueError(f'Missing native service configuration: {name}')
+    definitions = json.loads(entries[profiles][1])
+    names = {p['Name'] for section in ('Profiles', 'AggregateProfiles') for p in definitions.get(section, [])}
+    if not {'SCHED_SP_FOREGROUND', 'SCHED_SP_BACKGROUND'} <= names:
+        raise ValueError('Native scheduling profiles are incomplete')
+    for name in (framework, manager):
+        root = ET.fromstring(entries[name][1])
+        if root.tag != 'manifest' or root.get('type') != 'framework':
+            raise ValueError(f'Invalid native framework manifest: {name}')
+    declarations = ET.fromstring(entries[manager][1])
+    if not any(h.findtext('name') == 'android.hidl.manager' and
+               h.findtext('transport') == 'hwbinder' and
+               h.findtext('version') == '1.2' and
+               h.findtext('interface/name') == 'IServiceManager' and
+               h.findtext('interface/instance') == 'default' for h in declarations.findall('hal')):
+        raise ValueError('Native hardware service manager declaration is missing')
+    return [profiles, framework, manager]
+
+
+def verify_gpu_runtime(entries):
+    library = 'system/lib64/libnativewindow.so'
+    recovery = entries['system/bin/recovery'][1]
+    if ('/' + library).encode() + b'\0' not in recovery:
+        raise ValueError('GPU renderer does not load the native AERA buffer runtime')
+    if library not in entries or not stat.S_ISREG(entries[library][0]):
+        raise ValueError('Missing native GPU buffer runtime')
+    elf = ELFFile(io.BytesIO(entries[library][1]))
+    if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
+        raise ValueError('GPU buffer runtime must be ARM64')
+    symbols = elf.get_section_by_name('.dynsym')
+    exports = {s.name for s in symbols.iter_symbols() if s.entry.st_shndx != 'SHN_UNDEF'} if symbols else set()
+    required = {'AHardwareBuffer_allocate', 'AHardwareBuffer_release',
+                'AHardwareBuffer_describe', 'AHardwareBuffer_getNativeHandle',
+                '_ZN7android38AHardwareBuffer_to_ANativeWindowBufferEPK15AHardwareBuffer'}
+    if not required <= exports:
+        raise ValueError(f'Incomplete GPU buffer API: {sorted(required - exports)}')
+    for script in ('system/bin/runatboot.sh', 'system/bin/postscreenunblank.sh'):
+        if script not in entries or not stat.S_ISREG(entries[script][0]):
+            raise ValueError(f'Missing native touch hook: {script}')
+    return '/' + library
+
 def verify(image, report, kernel=None):
     root = Path(__file__).resolve().parents[1]
     expected = json.loads((root/'prebuilt/manifest.json').read_text())
@@ -92,6 +139,8 @@ def verify(image, report, kernel=None):
     forbidden = ['system/bin/oplus_h40_credential_helper','system/bin/phoenix','ramdisk-stock.cpio.gz']
     if any(p in entries for p in forbidden): raise ValueError('Stock/custom recovery runtime was imported')
     native_init = verify_native_init(entries)
+    native_services = verify_native_service_configuration(entries)
+    gpu_runtime = verify_gpu_runtime(entries)
     inputs = json.loads((root/'proprietary/manifest.json').read_text())
     for n, record in inputs['files'].items():
         if n not in entries or hashlib.sha256(entries[n][1]).hexdigest() != record['sha256']:
@@ -128,6 +177,8 @@ def verify(image, report, kernel=None):
               'ramdisk_bytes':len(compressed),'ramdisk_entries':len(entries),
               'ramdisk_compression':compression,'bootloader_layout':loading,
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
+              'native_service_configuration':native_services,
+              'gpu_native_buffer_library':gpu_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)
     target.write_text(json.dumps(result,indent=2)+'\n')
