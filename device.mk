@@ -22,7 +22,6 @@ PRODUCT_PACKAGES += \
     bootctrl.msmnile.recovery \
     qcom_decrypt \
     qcom_decrypt_fbe \
-    fastbootd \
     update_engine \
     update_engine_sideload \
     update_verifier \

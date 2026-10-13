@@ -9,6 +9,7 @@ load window from the supplied Image header, the DTB reservation and guard pages.
 The firmware layout is in `config/bootloader-layout.json`. The supplied Image
 must support legacy LZMA ramdisks and match the device's DTB, firmware and WLAN
 module. The tested firmware did not complete `fastboot boot`.
+Fastbootd is disabled for this physical partition layout.
 
 ## Graphics and input
 

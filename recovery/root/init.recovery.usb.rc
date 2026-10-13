@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-# AERA's base init owns configfs, ADB/sideload/fastboot functions and their mounts.
+# AERA's base init owns configfs, ADB/sideload functions and their mounts.
 # This extension adds only MTP and cleanup of its second function link.
 on fs && property:sys.usb.configfs=1
     mkdir /config/usb_gadget/g1/functions/ffs.mtp
