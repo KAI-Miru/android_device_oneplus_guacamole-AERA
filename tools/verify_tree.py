@@ -46,6 +46,8 @@ def verify():
     assert 'OPLUS_H40' not in board and 'TARGET_RECOVERY_INITRC' not in board
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
     rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
+    vendor_rows = [r for r in rows if r[1] == '/vendor']
+    assert vendor_rows and all('ro' in r[3].split(',') for r in vendor_rows), 'GPU startup must mount vendor read-only'
     data_rows = [r for r in rows if r[1] == '/data']
     assert len(data_rows) == 1 and data_rows[0][2] == 'f2fs'
     data_flags = set(data_rows[0][-1].split(','))

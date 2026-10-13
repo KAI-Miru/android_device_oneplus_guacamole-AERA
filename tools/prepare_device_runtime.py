@@ -16,19 +16,29 @@ def prepare(source_root, artifact_root, device_root=None):
     actual = subprocess.check_output(git + ['rev-parse', 'HEAD'], text=True).strip()
     if actual != expected:
         raise ValueError(f'Device runtime patch requires pinned recovery {expected}, found {actual}')
-    patch = device / 'patches/device-nativewindow.patch'
-    already = subprocess.run(git + ['apply', '--reverse', '--check', str(patch)],
-                             capture_output=True).returncode == 0
-    if not already:
-        subprocess.run(git + ['apply', '--check', str(patch)], check=True)
+    descriptions = {
+        'device-nativewindow.patch': 'Use native AERA libnativewindow with its native libui for GPU buffer allocation',
+        'device-vendor-gpu-startup.patch': 'Mount read-only paired vendor shader compilers before native UI and check their availability',
+    }
+    # Preflight the entire set before editing: a drifted second patch must not
+    # leave a partial runtime repair behind.
+    pending, records = [], []
+    for name, purpose in descriptions.items():
+        patch = device / 'patches' / name
+        already = subprocess.run(git + ['apply', '--reverse', '--check', str(patch)],
+                                 capture_output=True).returncode == 0
+        if not already:
+            subprocess.run(git + ['apply', '--check', str(patch)], check=True)
+            pending.append(patch)
+        records.append({'patch': name, 'patch_sha256': hashlib.sha256(patch.read_bytes()).hexdigest(),
+                        'purpose': purpose})
+    for patch in pending:
         subprocess.run(git + ['apply', str(patch)], check=True)
     artifacts = Path(artifact_root)
     artifacts.mkdir(parents=True, exist_ok=True)
-    record = {'project': project, 'commit': actual, 'patch': patch.name,
-              'patch_sha256': hashlib.sha256(patch.read_bytes()).hexdigest(),
-              'purpose': 'Use native AERA libnativewindow with its native libui for GPU buffer allocation'}
+    record = {'project': project, 'commit': actual, 'patches': records}
     (artifacts / 'device-runtime-patches.json').write_text(json.dumps(record, indent=2) + '\n')
-    print('Pinned native GPU runtime path repaired and recorded')
+    print('Pinned native GPU buffer and vendor startup repairs applied and recorded')
 
 
 if __name__ == '__main__':

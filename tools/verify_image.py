@@ -91,11 +91,23 @@ def verify_native_service_configuration(entries):
     return [profiles, framework, manager, boot]
 
 
+def verify_gpu_startup_configuration(recovery):
+    for compiler in ('/vendor/lib64/libllvm-qgl.so', '/vendor/lib64/libllvm-qcom.so'):
+        if compiler.encode() + b'\0' not in recovery:
+            raise ValueError('GPU renderer lacks the paired vendor compiler preflight')
+    if b'Guacamole GPU runtime: mounted read-only vendor before UI' not in recovery:
+        raise ValueError('GPU startup lacks the vendor mount before native UI initialization')
+    return {'installed_vendor_compilers': ['/vendor/lib64/libllvm-qgl.so',
+                                           '/vendor/lib64/libllvm-qcom.so'],
+            'vendor_mount_before_ui': True, 'cold_boot_tested': False}
+
+
 def verify_gpu_runtime(entries):
     library = 'system/lib64/libnativewindow.so'
     recovery = entries['system/bin/recovery'][1]
     if ('/' + library).encode() + b'\0' not in recovery:
         raise ValueError('GPU renderer does not load the native AERA buffer runtime')
+    verify_gpu_startup_configuration(recovery)
     if library not in entries or not stat.S_ISREG(entries[library][0]):
         raise ValueError('Missing native GPU buffer runtime')
     elf = ELFFile(io.BytesIO(entries[library][1]))
@@ -230,6 +242,7 @@ def verify(image, report, kernel=None):
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
               'gpu_native_buffer_library':gpu_runtime,
+              'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1]),
               'wifi_runtime':wifi_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)
