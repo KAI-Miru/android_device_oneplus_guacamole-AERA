@@ -23,6 +23,12 @@ and mount vendor before UI initialization. The installed vendor supplies the
 paired Adreno shader compilers. The local preflight checks those files before
 entering the driver; its absence check retains AERA's software renderer.
 
+Reboot and power-off actions hand their result to the recovery backend while
+the early graphics thread stays alive. Waiting for that thread to exit first
+can block inside vendor EGL thread-local cleanup before init receives the
+power request. A native regression test covers this handoff with stalled
+graphics cleanup; device confirmation is still needed.
+
 ## Decryption
 
 QSEE, Keymaster and Gatekeeper use the official TeamWin guacamole crypto set at

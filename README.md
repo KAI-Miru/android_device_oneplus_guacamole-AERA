@@ -25,10 +25,13 @@ firmware services and vendor libraries are in this tree. See
 [device notes](docs/device-notes.md) for the remaining integration details and
 [NOTICES.md](NOTICES.md) for sources and licensing.
 
-Two temporary graphics patches remain in [patches/](patches/). Their shared
+Three temporary native patches remain in [patches/](patches/). The graphics
 fixes are under review in AERA [PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17)
 and [PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
-The local compiler preflight is specific to this vendor. UI layout changes
+The [power handoff repair](https://github.com/KAI-Miru/android_bootable_recovery/commit/0e2535f56fdb75a8be273182d9e254c1d4f33b6c)
+keeps vendor graphics cleanup out of the reboot path. Native regression tests
+pass; reboot and shutdown still need device confirmation.
+The compiler preflight is specific to this vendor. UI layout changes
 belong in AERA, rather than this device tree.
 
 ## Building

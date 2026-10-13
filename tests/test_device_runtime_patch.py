@@ -19,7 +19,8 @@ class DeviceRuntimePatchTests(unittest.TestCase):
         self.checkout.mkdir(parents=True)
         self.device = self.root / 'device'
         (self.device / 'patches').mkdir(parents=True)
-        for name in ('device-nativewindow.patch', 'device-vendor-gpu-startup.patch'):
+        for name in ('device-nativewindow.patch', 'device-vendor-gpu-startup.patch',
+                     'native-ui-power-handoff.patch'):
             shutil.copyfile(ROOT / 'patches' / name, self.device / 'patches' / name)
         self.file = self.checkout / 'aeraui/core/gpu_renderer.cpp'
         self.file.parent.mkdir(parents=True)
@@ -44,6 +45,10 @@ class DeviceRuntimePatchTests(unittest.TestCase):
             '\t// Set the props for OrangeFox dynamic partitions\n'
             '\t//PartitionManager.Fox_Set_Dynamic_Partition_Props();\n\n'
             '\t// start the UI\n\tprintf("Starting the UI...\\n");\n\tgui_init();\n}\n')
+        for name in ('aeraui/core/runner.cpp', 'aeraui/include/aeraui/runner.hpp'):
+            destination = self.checkout / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / 'tests/fixtures/early-ui' / name, destination)
         self.git('init', '-q')
         self.git('config', 'user.name', 'Test')
         self.git('config', 'user.email', 'test@example.invalid')
@@ -77,7 +82,8 @@ class DeviceRuntimePatchTests(unittest.TestCase):
         record = json.loads((self.root / 'reports/device-runtime-patches.json').read_text())
         self.assertEqual(record['commit'], self.revision)
         self.assertEqual({p['patch'] for p in record['patches']},
-                         {'device-nativewindow.patch', 'device-vendor-gpu-startup.patch'})
+                         {'device-nativewindow.patch', 'device-vendor-gpu-startup.patch',
+                          'native-ui-power-handoff.patch'})
         self.assertTrue(all(len(p['patch_sha256']) == 64 for p in record['patches']))
 
     def test_changed_startup_context_does_not_apply_partial_gpu_patch(self):
@@ -88,6 +94,16 @@ class DeviceRuntimePatchTests(unittest.TestCase):
             prepare(self.source, self.root / 'reports', self.device)
         self.assertEqual(self.file.read_text(), before)
         self.assertEqual(self.startup.read_text(), altered)
+
+    def test_changed_power_handoff_does_not_apply_partial_runtime_repairs(self):
+        before = self.file.read_text()
+        runner = self.checkout / 'aeraui/core/runner.cpp'
+        altered = runner.read_text().replace('early_thread.join();', 'other_join();')
+        runner.write_text(altered)
+        with self.assertRaises(subprocess.CalledProcessError):
+            prepare(self.source, self.root / 'reports', self.device)
+        self.assertEqual(self.file.read_text(), before)
+        self.assertEqual(runner.read_text(), altered)
 
     def test_unpinned_revision_and_changed_context_fail_without_editing(self):
         before = self.file.read_text()

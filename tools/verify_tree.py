@@ -44,6 +44,9 @@ def verify():
     for pattern in [r'BOARD_USES_RECOVERY_AS_BOOT\s*:=\s*true', r'BOARD_BOOTIMAGE_PARTITION_SIZE\s*:=\s*100663296', r'BOARD_BOOT_HEADER_VERSION\s*:=\s*2', r'BOARD_RAMDISK_USE_LZMA\s*:=\s*true', r'AERA_INCLUDE_CRYPTO\s*:=\s*true', r'AERA_USE_FSCRYPT_POLICY\s*:=\s*1']:
         assert re.search(pattern, board), f'Wrong board setting: {pattern}'
     assert 'OPLUS_H40' not in board and 'TARGET_RECOVERY_INITRC' not in board
+    assert re.search(r'AERA_INCLUDE_FASTBOOTD\s*:=\s*false', board)
+    assert not re.search(r'^\s*fastbootd(?:\s|$)', (ROOT/'device.mk').read_text(), re.M)
+    assert 'ro.recovery.usb.fastboot.pid' not in (ROOT/'system.prop').read_text()
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
     rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
     vendor_rows = [r for r in rows if r[1] == '/vendor']

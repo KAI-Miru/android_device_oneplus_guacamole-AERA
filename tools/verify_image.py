@@ -211,6 +211,10 @@ def verify(image, report, kernel=None):
     else:
         compression = 'lzma'; data = lzma.decompress(compressed, format=lzma.FORMAT_ALONE)
     entries = unpack_newc(data)
+    if any(name in entries for name in ('system/bin/fastbootd', 'sbin/fastbootd')):
+        raise ValueError('Guacamole recovery must not package fastbootd')
+    if b'terminal action handed off with graphics thread alive' not in entries.get('system/bin/recovery', (0, b''))[1]:
+        raise ValueError('Native UI power handoff repair is missing from recovery')
     required = ['system/bin/recovery','system/etc/recovery.fstab',
                 'init.recovery.qcom.rc','init.recovery.usb.rc','init.recovery.qcom_decrypt.rc',
                 'system/bin/qseecomd','system/bin/android.hardware.keymaster@4.0-service-qti',
@@ -263,6 +267,8 @@ def verify(image, report, kernel=None):
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
               'gatekeeper_startup':verify_gatekeeper_spu_configuration(entries),
+              'ui_power_handoff':{'graphics_thread_kept_alive':True,'device_reboot_tested':False},
+              'fastbootd_enabled':False,
               'gpu_native_buffer_library':gpu_runtime,
               'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1]),
               'wifi_runtime':wifi_runtime,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Apply and record the guacamole runtime fix against the pinned native source."""
+"""Apply and record native runtime repairs against the pinned AERA source."""
 import argparse
 import hashlib
 import json
@@ -19,6 +19,7 @@ def prepare(source_root, artifact_root, device_root=None):
     descriptions = {
         'device-nativewindow.patch': 'Use native AERA libnativewindow with its native libui for GPU buffer allocation',
         'device-vendor-gpu-startup.patch': 'Mount read-only paired vendor shader compilers before native UI and check their availability',
+        'native-ui-power-handoff.patch': 'Hand terminal actions to recovery without exiting the graphics thread',
     }
     # Preflight the entire set before editing: a drifted second patch must not
     # leave a partial runtime repair behind.
@@ -38,7 +39,7 @@ def prepare(source_root, artifact_root, device_root=None):
     artifacts.mkdir(parents=True, exist_ok=True)
     record = {'project': project, 'commit': actual, 'patches': records}
     (artifacts / 'device-runtime-patches.json').write_text(json.dumps(record, indent=2) + '\n')
-    print('Pinned native GPU startup patches applied and recorded')
+    print('Pinned native runtime patches applied and recorded')
 
 
 if __name__ == '__main__':
