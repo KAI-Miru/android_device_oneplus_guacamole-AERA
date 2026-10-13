@@ -94,7 +94,9 @@ AERA_DEFAULT_BRIGHTNESS := 200
 AERA_INPUT_BLACKLIST := "hbtp_vm"
 AERA_NO_SCREEN_BLANK := true
 AERA_EXCLUDE_DEFAULT_USB_INIT := true
-AERA_SKIP_ADDITIONAL_FSTAB := true
+# Native AERA imports only /data and /metadata from the installed vendor fstab,
+# as the working CI59 recovery does. Encryption options belong to that ROM.
+AERA_SKIP_ADDITIONAL_FSTAB := false
 AERA_INCLUDE_REPACKTOOLS := true
 AERA_INCLUDE_FASTBOOTD := true
 AERA_INCLUDE_LOGCAT := true

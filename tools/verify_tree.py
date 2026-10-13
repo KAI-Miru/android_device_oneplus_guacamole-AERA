@@ -39,8 +39,14 @@ def verify():
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
     rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
     data_rows = [r for r in rows if r[1] == '/data']
-    assert len(data_rows) == 1 and data_rows[0][2] == 'ext4'
-    assert 'fileencryption=ice' in data_rows[0][-1]
+    assert len(data_rows) == 1 and data_rows[0][2] == 'f2fs'
+    data_flags = set(data_rows[0][-1].split(','))
+    assert {'fileencryption=aes-256-xts:aes-256-cts:v2+inlinecrypt_optimized',
+            'keydirectory=/metadata/vold/metadata_encryption',
+            'metadata_encryption=aes-256-xts'} <= data_flags
+    assert re.search(r'AERA_SKIP_ADDITIONAL_FSTAB\s*:=\s*false', board)
+    twrp_flags = (ROOT/'recovery/root/system/etc/twrp.flags').read_text()
+    assert 'fileencryption=' not in twrp_flags, 'Display flags must not override ROM encryption settings'
     assert not any('logical' in r[-1] for r in rows)
     for p in (ROOT/'recovery').rglob('*'):
         if p.is_file():
