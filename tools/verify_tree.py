@@ -33,7 +33,7 @@ def verify():
         assert info['needed'] == record['needed'], f'Changed ELF dependencies: {n}'
         assert set(info['needed']) <= provided, f'Unresolved dependencies: {n}'
     board = (ROOT/'BoardConfig.mk').read_text()
-    for pattern in [r'BOARD_USES_RECOVERY_AS_BOOT\s*:=\s*true', r'BOARD_BOOTIMAGE_PARTITION_SIZE\s*:=\s*100663296', r'BOARD_BOOT_HEADER_VERSION\s*:=\s*2', r'AERA_INCLUDE_CRYPTO\s*:=\s*true', r'AERA_USE_FSCRYPT_POLICY\s*:=\s*1']:
+    for pattern in [r'BOARD_USES_RECOVERY_AS_BOOT\s*:=\s*true', r'BOARD_BOOTIMAGE_PARTITION_SIZE\s*:=\s*100663296', r'BOARD_BOOT_HEADER_VERSION\s*:=\s*2', r'BOARD_RAMDISK_USE_LZMA\s*:=\s*true', r'AERA_INCLUDE_CRYPTO\s*:=\s*true', r'AERA_USE_FSCRYPT_POLICY\s*:=\s*1']:
         assert re.search(pattern, board), f'Wrong board setting: {pattern}'
     assert 'OPLUS_H40' not in board and 'TARGET_RECOVERY_INITRC' not in board
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()

@@ -2,7 +2,7 @@
 """Verify the actual boot image and its native AERA ramdisk before upload."""
 import argparse, gzip, hashlib, io, json, lzma, stat
 from pathlib import Path, PurePosixPath
-from boot_v2 import parse_boot
+from boot_v2 import parse_boot, bootloader_layout
 from elftools.elf.elffile import ELFFile
 
 def unpack_newc(data):
@@ -74,7 +74,14 @@ def verify(image, report, kernel=None):
         if hashlib.sha256(pieces[n]).hexdigest() != record['sha256']:
             raise ValueError(f'Changed device boot component: {n}')
     compressed = pieces['ramdisk']
-    data = gzip.decompress(compressed) if compressed[:2] == b'\x1f\x8b' else lzma.decompress(compressed)
+    layout = json.loads((root/'config/bootloader-layout.json').read_text())
+    loading = bootloader_layout(pieces['kernel'], len(compressed), header['page_size'], layout)
+    if compressed[:2] == b'\x1f\x8b':
+        compression = 'gzip'; data = gzip.decompress(compressed)
+    elif compressed[:6] == b'\xfd7zXZ\x00':
+        raise ValueError('This device configuration requires legacy LZMA ramdisks')
+    else:
+        compression = 'lzma'; data = lzma.decompress(compressed, format=lzma.FORMAT_ALONE)
     entries = unpack_newc(data)
     required = ['system/bin/recovery','system/etc/recovery.fstab',
                 'init.recovery.qcom.rc','init.recovery.usb.rc','init.recovery.qcom_decrypt.rc',
@@ -119,6 +126,7 @@ def verify(image, report, kernel=None):
         if absent: abi_errors.append(f'{n}: unresolved strong symbols {absent[:12]}')
     result = {'kernel_input':kernel_record,'image_bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
               'ramdisk_bytes':len(compressed),'ramdisk_entries':len(entries),
+              'ramdisk_compression':compression,'bootloader_layout':loading,
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)

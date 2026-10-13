@@ -39,6 +39,40 @@ def parse_boot(data):
         'dtb_address': u64(1652), 'cmdline': cmdline.decode('ascii'),
     }, pieces
 
+def bootloader_layout(kernel, ramdisk_bytes, page, layout):
+    """Check Qualcomm's runtime kernel/DTB/ramdisk window, including BSS."""
+    if len(kernel) < 64 or kernel[56:60] != b'ARMd':
+        raise ValueError('Expected the CI59 ARM64 Image header')
+    runtime_bytes = struct.unpack_from('<Q', kernel, 16)[0]
+    if runtime_bytes < len(kernel):
+        raise ValueError('Invalid ARM64 runtime image size')
+    kernel_end = layout['kernel_load_address'] + runtime_bytes
+    ramdisk_start = layout['load_window_end'] - ((ramdisk_bytes + page - 1) // page * page + page)
+    dtb_start = ramdisk_start - layout['device_tree_reserve_bytes'] - page
+    result = {'kernel_runtime_bytes': runtime_bytes,
+              'kernel_runtime_end': kernel_end, 'ramdisk_load_address': ramdisk_start,
+              'device_tree_load_address': dtb_start, 'clearance_bytes': dtb_start - kernel_end}
+    if result['clearance_bytes'] < 0:
+        raise ValueError(f"Bootloader kernel/DTB overlap: {-result['clearance_bytes']} bytes; compress the ramdisk")
+    return result
+
+def replace_ramdisk(data, ramdisk):
+    """Reframe boot-v2 using identical kernel, DTBO, DTB and header metadata."""
+    header, parts = parse_boot(data)
+    page = header['page_size']; align = lambda n: (n+page-1)//page*page
+    page_header = bytearray(data[:page])
+    struct.pack_into('<I', page_header, 16, len(ramdisk))
+    struct.pack_into('<Q', page_header, 1636, page+align(len(parts['kernel']))+align(len(ramdisk)))
+    parts['ramdisk'] = ramdisk
+    sha1 = hashlib.sha1()
+    for blob in (parts['kernel'], ramdisk, b'', parts['recovery-dtbo.img'], parts['dtb.img']):
+        sha1.update(blob); sha1.update(struct.pack('<I', len(blob)))
+    page_header[576:608] = sha1.digest() + bytes(12)
+    payload = bytes(page_header)
+    for name in ('kernel', 'ramdisk', 'recovery-dtbo.img', 'dtb.img'):
+        blob = parts[name]; payload += blob + bytes(align(len(blob))-len(blob))
+    return payload
+
 def extract(source, destination):
     import json
     image = Path(source).read_bytes()

@@ -1,0 +1,11 @@
+{
+  "kernel_load_address": 2148007936,
+  "load_window_end": 2238709760,
+  "device_tree_reserve_bytes": 2097152,
+  "guard_pages": 2,
+  "evidence": {
+    "firmware": "5.0.230313.BOOT.XF.3.0-00543-SM8150LZB-1",
+    "page_bytes": 4096,
+    "loader_source": "https://github.com/SHIFTPHONES/android_bootable_bootloader_edk2/blob/sos-3.x/QcomModulePkg/Library/BootLib/BootLinux.c"
+  }
+}

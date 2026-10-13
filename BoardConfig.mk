@@ -36,6 +36,10 @@ BOARD_PREBUILT_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/recovery-dtbo.img
 BOARD_PREBUILT_RECOVERY_DTBOIMAGE := $(DEVICE_PATH)/prebuilt/recovery-dtbo.img
 BOARD_BOOT_HEADER_VERSION := 2
 BOARD_KERNEL_PAGESIZE := 4096
+# The bootloader's kernel/DTB/ramdisk load window is smaller than boot's
+# physical partition. The supplied Image must support legacy LZMA ramdisks.
+# Compress the full native ramdisk without dropping any runtime components.
+BOARD_RAMDISK_USE_LZMA := true
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_OFFSET := 0x00008000
 BOARD_RAMDISK_OFFSET := 0x01000000
