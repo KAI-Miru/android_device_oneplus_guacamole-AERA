@@ -38,7 +38,7 @@ def prepare(source_root, artifact_root, device_root=None):
     artifacts.mkdir(parents=True, exist_ok=True)
     record = {'project': project, 'commit': actual, 'patches': records}
     (artifacts / 'device-runtime-patches.json').write_text(json.dumps(record, indent=2) + '\n')
-    print('Pinned native GPU buffer and vendor startup repairs applied and recorded')
+    print('Pinned native GPU startup patches applied and recorded')
 
 
 if __name__ == '__main__':

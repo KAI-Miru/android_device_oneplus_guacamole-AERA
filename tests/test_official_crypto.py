@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
 from import_vendor import official_crypto_root, select_library
-from verify_image import verify_crypto_service_configuration
+from verify_image import verify_crypto_service_configuration, verify_gatekeeper_spu_configuration
 
 
 class OfficialCryptoTests(unittest.TestCase):
@@ -22,11 +22,31 @@ class OfficialCryptoTests(unittest.TestCase):
         return {
             'init.recovery.guacamole-crypto.rc': (0o100644, text.encode()),
             'init.recovery.qcom.rc': (0o100644,
-                b'import /init.recovery.qcom_decrypt.rc\nimport /init.recovery.guacamole-crypto.rc\n'),
+                b'import /init.recovery.qcom_decrypt.rc\nimport /init.recovery.guacamole-crypto.rc\n'
+                b'on init\n    setprop vendor.gatekeeper.disable_spu true\n'),
         }
 
     def test_standard_services_keep_official_providers_when_vendor_is_mounted(self):
         self.assertEqual(len(verify_crypto_service_configuration(self.services())), 3)
+
+    def test_gatekeeper_rejects_missing_or_enabled_spu_configuration(self):
+        for value in (b'', b'    setprop vendor.gatekeeper.disable_spu false\n'):
+            entries = self.services()
+            name = 'init.recovery.qcom.rc'
+            entries[name] = (0o100644, entries[name][1].replace(
+                b'    setprop vendor.gatekeeper.disable_spu true\n', value))
+            with self.assertRaisesRegex(ValueError, 'SPU on init'):
+                verify_crypto_service_configuration(entries)
+
+    def test_gatekeeper_setting_must_precede_crypto_startup(self):
+        entries = self.services()
+        name = 'init.recovery.qcom.rc'
+        entries[name] = (0o100644, entries[name][1].replace(b'on init\n', b'on boot\n'))
+        with self.assertRaisesRegex(ValueError, 'SPU on init'):
+            verify_gatekeeper_spu_configuration(entries)
+        report = verify_gatekeeper_spu_configuration(self.services())
+        self.assertTrue(report['disable_spu'])
+        self.assertFalse(report['credential_unlock_tested'])
 
     def test_vendor_shadowing_and_wrong_import_order_are_rejected(self):
         entries = self.services()

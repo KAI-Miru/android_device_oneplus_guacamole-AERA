@@ -126,6 +126,26 @@ def verify_gpu_runtime(entries):
     return '/' + library
 
 
+def verify_gatekeeper_spu_configuration(entries):
+    """Require the working guacamole Gatekeeper choice before crypto startup."""
+    parent = 'init.recovery.qcom.rc'
+    if parent not in entries or not stat.S_ISREG(entries[parent][0]):
+        raise ValueError('Missing guacamole Gatekeeper startup configuration')
+    trigger = None
+    assignments = []
+    for raw in entries[parent][1].decode().splitlines():
+        line = raw.split('#', 1)[0].strip()
+        if not line:
+            continue
+        if not raw[:1].isspace():
+            trigger = line
+        elif line.startswith('setprop vendor.gatekeeper.disable_spu '):
+            assignments.append((trigger, line.split()))
+    if assignments != [('on init', ['setprop', 'vendor.gatekeeper.disable_spu', 'true'])]:
+        raise ValueError('Official guacamole Gatekeeper must disable SPU on init before crypto startup')
+    return {'disable_spu': True, 'trigger': 'on init', 'credential_unlock_tested': False}
+
+
 def verify_crypto_service_configuration(entries):
     name = 'init.recovery.guacamole-crypto.rc'
     parent = 'init.recovery.qcom.rc'
@@ -158,6 +178,7 @@ def verify_crypto_service_configuration(entries):
         if actual != executable or not {'override', 'disabled', 'user root', 'group root',
                                        'seclabel u:r:recovery:s0', loader} <= options:
             raise ValueError(f'Official crypto service has unsafe or shadowed providers: {service_name}')
+    verify_gatekeeper_spu_configuration(entries)
     return sorted(required)
 
 def verify(image, report, kernel=None):
@@ -241,6 +262,7 @@ def verify(image, report, kernel=None):
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
+              'gatekeeper_startup':verify_gatekeeper_spu_configuration(entries),
               'gpu_native_buffer_library':gpu_runtime,
               'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1]),
               'wifi_runtime':wifi_runtime,
