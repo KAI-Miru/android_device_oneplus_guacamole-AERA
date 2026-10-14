@@ -93,12 +93,16 @@ def verify_native_service_configuration(entries):
 
 
 def verify_screen_lock_configuration(recovery):
-    required = (b'display suspended after inactivity',
-                b'/data/system/aera/screen-lock.conf', b'AERA-SCREEN-LOCK-1')
-    if any(value not in recovery for value in required):
-        raise ValueError('Native screen timeout or separate password lock is missing')
-    return {'inactivity_loop_present': True, 'separate_password_verifier_present': True,
-            'device_blank_wake_and_password_tested': False}
+    markers = (b'display suspended after inactivity', b'Use Android screen lock',
+               b'/system/locksettings.db', b'user-gk-authentication', b'weaver-key',
+               b'Checking Android credential...', b'twrp.user.0.decrypt')
+    for marker in markers:
+        if marker not in recovery:
+            raise ValueError(f'Missing Android screen-lock/timeout marker: {marker!r}')
+    if b'AERA-SCREEN-LOCK-1' in recovery:
+        raise ValueError('Obsolete separate AERA password verifier')
+    return {'native_timeout_and_android_bouncer_present': True,
+            'device_blank_wake_and_credential_tested': False}
 
 
 def verify_filesystem_format_configuration(recovery):
