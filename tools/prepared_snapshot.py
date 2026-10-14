@@ -50,7 +50,7 @@ class ChunkWriter:
             self.file.flush()
 
 
-def pack(source, directory, part_bytes=PART_BYTES):
+def pack(source, directory, part_bytes=PART_BYTES, remove_source=False):
     source, directory = Path(source), Path(directory)
     if not source.is_dir() or not 0 < part_bytes <= PART_BYTES:
         raise ValueError('Invalid snapshot source or layer size')
@@ -59,7 +59,28 @@ def pack(source, directory, part_bytes=PART_BYTES):
     directory.mkdir(parents=True, exist_ok=True)
     if any(directory.iterdir()):
         raise ValueError('Snapshot output must be empty')
+    if remove_source and source.is_symlink():
+        raise ValueError('Cannot release a symlinked source root')
     writer = ChunkWriter(directory, part_bytes)
+
+    class ReleasingTar(tarfile.TarFile):
+        def addfile(self, member, fileobj=None):
+            super().addfile(member, fileobj)
+            if member.isfile() or member.issym() or member.islnk():
+                original = source.joinpath(*PurePosixPath(member.name).parts[1:])
+                if not original.parent.resolve().is_relative_to(source.resolve()):
+                    raise ValueError('Cannot release a path outside the source root')
+                original.unlink()
+
+        def add(self, name, arcname=None, recursive=True, *, filter=None):
+            super().add(name, arcname, recursive, filter=filter)
+            original = Path(name)
+            if original.is_dir() and not original.is_symlink():
+                # The known skipped Ninja FIFO can keep a directory nonempty.
+                try:
+                    original.rmdir()
+                except OSError:
+                    pass
 
     def metadata(member):
         # Ninja recreates this IPC endpoint. It contains no sources or cache.
@@ -75,7 +96,8 @@ def pack(source, directory, part_bytes=PART_BYTES):
 
     with gzip.GzipFile(filename='', fileobj=writer, mode='wb',
                        compresslevel=1, mtime=0) as compressed:
-        with tarfile.open(fileobj=compressed, mode='w|', format=tarfile.PAX_FORMAT) as archive:
+        archive_type = ReleasingTar if remove_source else tarfile.TarFile
+        with archive_type.open(fileobj=compressed, mode='w|', format=tarfile.PAX_FORMAT) as archive:
             archive.add(source, arcname='aera', filter=metadata)
     writer.finish_chunk()
     result = {'schema': 1, 'root': 'aera', 'format': 'tar+gzip',
@@ -216,8 +238,12 @@ if __name__ == '__main__':
     parser.add_argument('mode', choices=('pack', 'restore'))
     parser.add_argument('first', type=Path)
     parser.add_argument('second', type=Path)
+    parser.add_argument('--remove-source', action='store_true',
+                        help='Release the disposable /aera checkout while packing')
     args = parser.parse_args()
+    if args.remove_source and (args.mode != 'pack' or args.first.resolve() != Path('/aera')):
+        parser.error('--remove-source is restricted to packing the disposable /aera checkout')
     if args.mode == 'pack':
-        pack(args.first, args.second)
+        pack(args.first, args.second, remove_source=args.remove_source)
     else:
         restore(args.first, args.second)

@@ -21,15 +21,23 @@ keeps the existing build-script paths and prepared-environment fingerprint
 contract, without putting runner files back into the device branch.
 
 Prepared builds use the private immutable digest in `AERA_PREPARED_BUILDER`.
-Source, toolchain and host-build inputs must match the recorded snapshot.
-Changing those inputs requires **Prepare private AERA builder**; changing
-device configuration usually does not. Registry credentials remain on the
-disposable runner and are not copied into snapshots or artifacts.
+The other source projects, toolchains and host-build inputs must match the
+recorded snapshot. Recovery can advance to another pinned commit on our AERA
+fork¡¯s `miru` branch. Builds check out that commit directly and require clean
+tracked sources; they do not apply patches to recovery.
 
-After checking the prepared baseline, each build applies the revision-checked
-recovery staging repair. It removes duplicate Nano/Bash copies of terminfo;
-the common installer still copies the full database. Its patch and resulting
-source hashes are saved in `recovery-staging-patch.json`.
+Successful prepared builds retain the complete compiled `out/` tree, Ninja¡¯s
+dependency state, source files and nanosecond timestamps in a new private
+checkpoint. The diagnostics record its immutable digest in
+`compiled-checkpoint-published.json`. Select that digest with
+`AERA_PREPARED_BUILDER` for the next build. Ninja rebuilds changed inputs and
+their dependent outputs, then the image passes the full audit again.
+
+The first checkpoint needs one device build because the original prepared
+environment retained only host outputs. Checkpoints use the existing private
+package; the workflow verifies its visibility before publishing. Registry
+credentials stay on the runner. The flattened runtime excludes build inputs
+and rejects credential files before packaging.
 
 Cold builds install Android's Linux prerequisites, check out pinned sources,
 apply the recorded host patches and build `bootimage`. Disk and memory guards

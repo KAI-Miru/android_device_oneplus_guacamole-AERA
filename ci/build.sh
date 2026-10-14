@@ -33,7 +33,13 @@ cd "$build_root"
 du -h --max-depth=1 "$build_root" | sort -h | tee "$artifact_root/source-footprint.txt"
 python3 "$device_repo/tools/compact_checkout.py" "$build_root"
 source_lock=$(sha256sum "$device_repo/sources.lock.json" "$device_repo/tools/prepare_manifest.py" "$device_repo/tools/prepare_checkout.py" "$device_repo/tools/complete_snapshot.py" | sha256sum | cut -d' ' -f1)
-if [[ ! -f .aera-source-lock ]] || [[ $(cat .aera-source-lock) != "$source_lock" ]]; then
+if [[ ${AERA_PREPARED_SOURCE:-0} == 1 ]]; then
+    # The prepared verifier already checked every other source/tool input.
+    # Update only the committed recovery fork and the local manifest overrides.
+    python3 "$device_repo/tools/select_recovery_source.py" "$device_repo" "$build_root"
+    python3 "$device_repo/tools/prepare_manifest.py" .repo/local_manifests/guacamole-pins.xml
+    printf '%s\n' "$source_lock" > .aera-source-lock
+elif [[ ! -f .aera-source-lock ]] || [[ $(cat .aera-source-lock) != "$source_lock" ]]; then
     repo init -u https://github.com/AERA-Recovery/android_manifest.git -b "$manifest_revision" --depth=1 --no-clone-bundle --no-use-superproject
     python3 "$device_repo/tools/prepare_manifest.py" .repo/local_manifests/guacamole-pins.xml
     repo manifest -o "$artifact_root/source-plan.xml"
@@ -83,8 +89,7 @@ for java8_jar in rt jce; do
     }
 done
 python3 "$device_repo/tools/prepare_build.py" "$build_root" "$artifact_root"
-python3 "$device_repo/tools/prepare_device_runtime.py" "$build_root" "$artifact_root"
-python3 "$device_repo/ci/prepare_recovery_staging.py" "$build_root" "$artifact_root"
+python3 "$device_repo/tools/verify_recovery_source.py" "$build_root" "$artifact_root"
 recovery_revision=$(python3 -c 'import json,sys; print(next(p["commit"] for p in json.load(open(sys.argv[1]))["projects"] if p["path"] == "bootable/recovery"))' "$device_repo/sources.lock.json")
 # Native version checks must be able to read original blobs without fetching
 # from inside the network-isolated Android build sandbox.

@@ -8,12 +8,12 @@ import subprocess
 
 HOST_TOOLS = {'prepare_manifest.py', 'prepare_checkout.py', 'prepare_build.py',
               'compact_checkout.py', 'complete_snapshot.py', 'environment_fingerprint.py',
-              'prepared_snapshot.py', 'verify_prepared_environment.py'}
-HOST_TESTS = {'test_build_cache.py', 'test_build_kernel_preflight.py', 'test_recovery_staging.py', 'test_capacity.py', 'test_checkout.py',
+              'prepared_snapshot.py', 'verify_prepared_environment.py', 'select_recovery_source.py',
+              'retained_image.py'}
+HOST_TESTS = {'test_build_cache.py', 'test_build_kernel_preflight.py', 'test_capacity.py', 'test_checkout.py',
               'test_compact.py', 'test_environment.py', 'test_manifest.py',
               'test_prepared_snapshot.py', 'test_repair.py', 'test_restore.py', 'test_snapshot.py',
-              'test_assembly.py'}
-DEVICE_PATCHES = {'device-nativewindow.patch', 'device-vendor-gpu-startup.patch'}
+              'test_assembly.py', 'test_compiled_checkpoint.py'}
 
 def git(root, *args):
     return subprocess.check_output(['git', '-C', str(root), *args])
@@ -22,10 +22,8 @@ def tracked(root):
     return [name.decode() for name in git(root, 'ls-files', '-z').split(b'\0') if name]
 
 def is_runner_file(name):
-    if name.startswith('ci/patches/') and Path(name).name in DEVICE_PATCHES: return False
     if name == 'ci/bootloader-layout.json': return False
     return (name.startswith('ci/') or name == '.dockerignore' or
-            name.startswith('tests/fixtures/recovery-staging/') or
             (name.startswith('tools/') and Path(name).name in HOST_TOOLS) or
             (name.startswith('tests/') and Path(name).name in HOST_TESTS))
 

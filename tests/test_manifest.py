@@ -26,6 +26,8 @@ class ManifestTests(unittest.TestCase):
             self.assertEqual(override['name'], project['name'])
             if project['remote'] == 'AERA':
                 self.assertEqual(remotes[override['remote']], 'https://github.com/AERA-Recovery')
+            elif project['remote'] == 'Miru':
+                self.assertEqual(remotes[override['remote']], 'https://github.com/KAI-Miru')
             else:
                 self.assertNotIn('remote', override)
 

@@ -46,6 +46,21 @@ jobs:
           for script in ci/*.sh recovery/root/system/bin/*.sh vendorsetup.sh; do bash -n "$script"; done
           git -C "$GITHUB_WORKSPACE/device" diff --check
           git -C "$GITHUB_WORKSPACE/runner" diff --check
+      - name: Check the pinned recovery fork regressions
+        working-directory: ${{ steps.inputs.outputs.path }}
+        run: |
+          source="$RUNNER_TEMP/recovery-source"
+          url=$(python3 -c 'import json; print(next(p["url"] for p in json.load(open("sources.lock.json"))["projects"] if p["path"] == "bootable/recovery"))')
+          revision=$(python3 -c 'import json; print(next(p["commit"] for p in json.load(open("sources.lock.json"))["projects"] if p["path"] == "bootable/recovery"))')
+          git init "$source"
+          git -C "$source" remote add origin "$url"
+          git -C "$source" fetch --depth=1 origin "$revision"
+          git -C "$source" checkout --detach FETCH_HEAD
+          for test in reboot_handoff fastbootd_capability recovery_staging; do
+            PYTHONDONTWRITEBYTECODE=1 python3 "$source/aeraui/tests/${test}_test.py"
+          done
+          g++ -std=c++17 -Wall -Wextra -Werror "$source/aeraui/tests/required_gpu_libraries_test.cpp" -o "$RUNNER_TEMP/gpu-runtime-test"
+          "$RUNNER_TEMP/gpu-runtime-test"
       - name: Check workflow syntax
         env:
           ACTIONLINT_VERSION: 1.7.12

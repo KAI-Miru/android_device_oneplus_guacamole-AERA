@@ -23,10 +23,14 @@ def write_manifest(destination):
     # is not consistently used during its preliminary revision probes.
     ET.SubElement(manifest, 'remote', name='guacamole-aera-https',
                   fetch='https://github.com/AERA-Recovery')
+    ET.SubElement(manifest, 'remote', name='miru-https',
+                  fetch='https://github.com/KAI-Miru')
     for p in lock['projects']:
         attributes = dict(name=p['name'], path=p['path'], revision=p['commit'])
         if p['remote'] == 'AERA':
             attributes['remote'] = 'guacamole-aera-https'
+        elif p['remote'] == 'Miru':
+            attributes['remote'] = 'miru-https'
         ET.SubElement(manifest, 'extend-project', **attributes)
     ET.indent(manifest)
     target = Path(destination); target.parent.mkdir(parents=True, exist_ok=True)
