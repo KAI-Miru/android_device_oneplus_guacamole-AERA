@@ -164,6 +164,8 @@ def verify_gatekeeper_spu_configuration(entries):
         raise ValueError('Missing guacamole Gatekeeper startup configuration')
     trigger = None
     assignments = []
+    verifier_actions = []
+    verifier_trigger = 'on property:crypto.ready=0 && property:twrp.user.0.decrypt=1'
     for raw in entries[parent][1].decode().splitlines():
         line = raw.split('#', 1)[0].strip()
         if not line:
@@ -172,9 +174,14 @@ def verify_gatekeeper_spu_configuration(entries):
             trigger = line
         elif line.startswith('setprop vendor.gatekeeper.disable_spu '):
             assignments.append((trigger, line.split()))
+        elif trigger == verifier_trigger:
+            verifier_actions.append(line)
     if assignments != [('on init', ['setprop', 'vendor.gatekeeper.disable_spu', 'true'])]:
         raise ValueError('Official guacamole Gatekeeper must disable SPU on init before crypto startup')
-    return {'disable_spu': True, 'trigger': 'on init', 'credential_unlock_tested': False}
+    if verifier_actions != ['start qseecomd', 'start gatekeeper-1-0-qti']:
+        raise ValueError('Screen verifier must restart after crypto cleanup only for a decrypted owner')
+    return {'disable_spu': True, 'trigger': 'on init', 'post_decrypt_verifier': True,
+            'credential_unlock_tested': False}
 
 
 def verify_crypto_service_configuration(entries):

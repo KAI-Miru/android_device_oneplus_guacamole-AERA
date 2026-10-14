@@ -23,7 +23,9 @@ class OfficialCryptoTests(unittest.TestCase):
             'init.recovery.guacamole-crypto.rc': (0o100644, text.encode()),
             'init.recovery.qcom.rc': (0o100644,
                 b'import /init.recovery.qcom_decrypt.rc\nimport /init.recovery.guacamole-crypto.rc\n'
-                b'on init\n    setprop vendor.gatekeeper.disable_spu true\n'),
+                b'on init\n    setprop vendor.gatekeeper.disable_spu true\n'
+                b'on property:crypto.ready=0 && property:twrp.user.0.decrypt=1\n'
+                b'    start qseecomd\n    start gatekeeper-1-0-qti\n'),
         }
 
     def test_standard_services_keep_official_providers_when_vendor_is_mounted(self):
@@ -47,6 +49,22 @@ class OfficialCryptoTests(unittest.TestCase):
         report = verify_gatekeeper_spu_configuration(self.services())
         self.assertTrue(report['disable_spu'])
         self.assertFalse(report['credential_unlock_tested'])
+
+    def test_screen_verifier_requires_owner_unlock_and_completed_crypto_cleanup(self):
+        name = 'init.recovery.qcom.rc'
+        for old, new in (
+            (b' && property:twrp.user.0.decrypt=1', b''),
+            (b'property:crypto.ready=0', b'property:crypto.ready=1'),
+            (b'    start gatekeeper-1-0-qti\n', b''),
+            (b'    start qseecomd\n', b''),
+            (b'    start gatekeeper-1-0-qti\n', b'    start gatekeeper-1-0-qti\n    start keymaster-4-0-qti\n'),
+        ):
+            entries = self.services()
+            entries[name] = (0o100644, entries[name][1].replace(old, new))
+            with self.subTest(change=old), self.assertRaisesRegex(ValueError, 'Screen verifier'):
+                verify_gatekeeper_spu_configuration(entries)
+        report = verify_gatekeeper_spu_configuration(self.services())
+        self.assertTrue(report['post_decrypt_verifier'])
 
     def test_vendor_shadowing_and_wrong_import_order_are_rejected(self):
         entries = self.services()

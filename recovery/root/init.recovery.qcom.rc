@@ -29,5 +29,13 @@ on boot
     # passthrough services reject it, leaving metadata checkpoint waits stuck.
     start boot-hal-1-1
 
-# Official qcom_decrypt owns QSEE, Keymaster and Gatekeeper service startup.
+# Official qcom_decrypt handles initial QSEE, Keymaster and Gatekeeper startup.
 # No stock service classes, stock init imports or mount_all commands are used.
+
+# FBE cleanup sets crypto.ready=0 and stops Gatekeeper once all users unlock.
+# This queued property action runs after that cleanup. Keep only QSEE and the
+# credential verifier available for AERA's verification-only screen lock.
+# The owner property prevents starting it for metadata-only or failed unlocks.
+on property:crypto.ready=0 && property:twrp.user.0.decrypt=1
+    start qseecomd
+    start gatekeeper-1-0-qti
