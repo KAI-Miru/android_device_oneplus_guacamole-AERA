@@ -70,6 +70,8 @@ def verify():
             assert p.name not in {'init.rc','sepolicy','ramdisk-stock.cpio.gz'}
             assert b'\r' not in p.read_bytes(), f'CRLF in ramdisk configuration: {p}'
     assert 'mount functionfs adb' not in (ROOT/'recovery/root/init.recovery.usb.rc').read_text()
+    from verify_usb import verify_usb_configuration
+    verify_usb_configuration((ROOT/'recovery/root/init.recovery.usb.rc').read_bytes())
     from verify_image import verify_crypto_service_configuration
     service_entries = {}
     for name in ('init.recovery.qcom.rc', 'init.recovery.guacamole-crypto.rc'):
