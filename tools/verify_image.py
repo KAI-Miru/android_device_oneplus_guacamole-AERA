@@ -5,6 +5,7 @@ from pathlib import Path, PurePosixPath
 from boot_v2 import parse_boot, bootloader_layout
 from elftools.elf.elffile import ELFFile
 from verify_wifi import WLAN_EXECUTABLES, verify_runtime as verify_wifi_runtime
+from verify_usb import verify_usb_configuration
 
 def unpack_newc(data):
     entries = {}; offset = 0
@@ -91,15 +92,23 @@ def verify_native_service_configuration(entries):
     return [profiles, framework, manager, boot]
 
 
-def verify_gpu_startup_configuration(recovery):
-    for compiler in ('/vendor/lib64/libllvm-qgl.so', '/vendor/lib64/libllvm-qcom.so'):
-        if compiler.encode() + b'\0' not in recovery:
-            raise ValueError('GPU renderer lacks the paired vendor compiler preflight')
-    if b'Guacamole GPU runtime: mounted read-only vendor before UI' not in recovery:
+def verify_gpu_startup_configuration(recovery, properties):
+    required = b'ro.aera.gpu.required_libraries=/vendor/lib64/libllvm-qgl.so:/vendor/lib64/libllvm-qcom.so'
+    if required not in properties.splitlines():
+        raise ValueError('GPU renderer lacks the paired vendor compiler configuration')
+    if (b'ro.aera.gpu.required_libraries\0' not in recovery or
+            b'GPU runtime: required library unavailable' not in recovery):
+        raise ValueError('GPU renderer lacks the device-declared compiler preflight')
+    if b'Native UI: vendor runtime mount unavailable' not in recovery:
         raise ValueError('GPU startup lacks the vendor mount before native UI initialization')
     return {'installed_vendor_compilers': ['/vendor/lib64/libllvm-qgl.so',
                                            '/vendor/lib64/libllvm-qcom.so'],
             'vendor_mount_before_ui': True, 'cold_boot_tested': False}
+
+
+def image_properties(entries):
+    return b'\n'.join(data for name, (_, data) in entries.items()
+                      if name.endswith(('.prop', 'prop.default')))
 
 
 def verify_gpu_runtime(entries):
@@ -107,7 +116,7 @@ def verify_gpu_runtime(entries):
     recovery = entries['system/bin/recovery'][1]
     if ('/' + library).encode() + b'\0' not in recovery:
         raise ValueError('GPU renderer does not load the native AERA buffer runtime')
-    verify_gpu_startup_configuration(recovery)
+    verify_gpu_startup_configuration(recovery, image_properties(entries))
     if library not in entries or not stat.S_ISREG(entries[library][0]):
         raise ValueError('Missing native GPU buffer runtime')
     elf = ELFFile(io.BytesIO(entries[library][1]))
@@ -215,12 +224,17 @@ def verify(image, report, kernel=None):
         raise ValueError('Guacamole recovery must not package fastbootd')
     if b'terminal action handed off with graphics thread alive' not in entries.get('system/bin/recovery', (0, b''))[1]:
         raise ValueError('Native UI power handoff repair is missing from recovery')
+    if b'terminal action retained across startup page' not in entries.get('system/bin/recovery', (0, b''))[1]:
+        raise ValueError('Native UI must preserve terminal actions across startup pages')
+    if b'AERA: ignoring unsupported --fastboot request.' not in entries.get('system/bin/recovery', (0, b''))[1]:
+        raise ValueError('Native Fastbootd capability guard is missing from recovery')
     required = ['system/bin/recovery','system/etc/recovery.fstab',
                 'init.recovery.qcom.rc','init.recovery.usb.rc','init.recovery.qcom_decrypt.rc',
                 'system/bin/qseecomd','system/bin/android.hardware.keymaster@4.0-service-qti',
                 'system/bin/android.hardware.gatekeeper@1.0-service-qti']
     missing = [p for p in required if p not in entries]
     if missing: raise ValueError(f'Missing ramdisk files: {missing}')
+    usb_configuration = verify_usb_configuration(entries['init.recovery.usb.rc'][1])
     forbidden = ['system/bin/oplus_h40_credential_helper','system/bin/phoenix','ramdisk-stock.cpio.gz']
     if any(p in entries for p in forbidden): raise ValueError('Stock/custom recovery runtime was imported')
     native_init = verify_native_init(entries)
@@ -267,10 +281,12 @@ def verify(image, report, kernel=None):
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
               'gatekeeper_startup':verify_gatekeeper_spu_configuration(entries),
-              'ui_power_handoff':{'graphics_thread_kept_alive':True,'device_reboot_tested':False},
+              'ui_power_handoff':{'graphics_thread_kept_alive':True,'terminal_action_retained':True,'device_reboot_tested':False},
               'fastbootd_enabled':False,
+              'fastbootd_capability_guard':True,
+              'usb_configuration':usb_configuration,
               'gpu_native_buffer_library':gpu_runtime,
-              'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1]),
+              'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1], image_properties(entries)),
               'wifi_runtime':wifi_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)

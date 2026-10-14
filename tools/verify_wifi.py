@@ -9,6 +9,64 @@ from elftools.elf.elffile import ELFFile
 
 WLAN_EXECUTABLES = ('system/bin/wpa_supplicant', 'system/bin/wpa_cli',
                     'system/bin/dhcptool', 'system/bin/rclone', 'system/bin/fusermount3')
+WLAN_VENDOR_EXECUTABLES = ('system/bin/rmt_storage', 'system/bin/tftp_server')
+
+
+def verify_startup_configuration(entries):
+    init = entries['init.recovery.wifi.rc'][1].decode()
+    trigger = init.split('on property:sys.aera.wlan.up=1', 1)[1].split('\non ', 1)[0]
+    if any('start ' + name in trigger for name in
+           ('guacamole-qrtr-ns', 'guacamole-pd-mapper', 'guacamole-wlan-firmware')):
+        raise ValueError('WLAN dependencies must start after the firmware bind')
+    supplicant = init.split('service wpa_supplicant ', 1)[1].split('\nservice ', 1)[0]
+    if '\n    oneshot\n' not in supplicant:
+        raise ValueError('Failed WLAN startup must stop instead of automatically restarting')
+    prepare = entries['system/bin/guacamole-wlan-prepare.sh'][1].decode()
+    domains = entries['system/bin/guacamole-wlan-domains.sh'][1].decode()
+    if domains.index('mount -o bind /firmware /vendor/firmware_mnt') > domains.index('start_service guacamole-pd-mapper'):
+        raise ValueError('PD mapper must see the installed firmware domain descriptors')
+    if '/vendor/firmware_mnt/image/modemuw.jsn' not in domains:
+        raise ValueError('WLAN firmware-domain readiness check is missing')
+    if domains.index("grep -q ' /vendor ' /proc/mounts") > domains.index('mount -o bind /firmware /vendor/firmware_mnt'):
+        raise ValueError('Firmware bind must wait for the installed vendor mount')
+    if '/vendor/firmware_mnt/image/modemuw.jsn' not in prepare:
+        raise ValueError('WLAN preparation must recheck the firmware bind after startup')
+    boot = init.split('on boot', 1)[1].split('\non ', 1)[0]
+    if 'start guacamole-wlan-domains' not in boot:
+        raise ValueError('WLAN domains must register before the kernel startup timeout')
+    if 'insmod ' in domains or 'guacamole-wlan-firmware' in domains:
+        raise ValueError('Early domain registration must not power up the WLAN firmware')
+    if prepare.index('sys.guacamole.wlan.domains)" = ready') > prepare.index('start_service guacamole-wlan-firmware'):
+        raise ValueError('Radio startup must wait for populated firmware domains')
+    stop = init.split('on property:init.svc.wpa_supplicant=stopped', 1)[1].split('\non ', 1)[0].split('\nservice ', 1)[0]
+    if any('stop ' + name not in stop for name in ('guacamole-wlan-prepare', 'guacamole-cnss-daemon', 'guacamole-wlan-firmware')):
+        raise ValueError('Failed supplicant startup must release its radio helpers')
+    dependencies = ('guacamole-qrtr-ns', 'guacamole-pd-mapper', 'guacamole-rmt-storage', 'guacamole-tftp-server')
+    if any('stop ' + name in stop for name in dependencies):
+        raise ValueError('Wi-Fi toggles must retain the registered modem backends')
+    for service, executable in (('guacamole-rmt-storage', 'rmt_storage'), ('guacamole-tftp-server', 'tftp_server')):
+        declaration = init.split('service ' + service + ' ', 1)[1].split('\nservice ', 1)[0]
+        if not declaration.startswith('/system/bin/' + executable + '\n') or any(line not in declaration for line in
+                ('\n    shutdown critical\n', '\n    oneshot\n', '\n    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64\n')):
+            raise ValueError('Stock WLAN backend lifetime/provider configuration is missing')
+        if prepare.index('start_service ' + service) > prepare.index('start_service guacamole-wlan-firmware'):
+            raise ValueError('Modem storage and TFTP must start before firmware power')
+    storage = entries['system/bin/guacamole-wlan-storage.sh'][1].decode()
+    if 'base=/tmp/guacamole-wlan-rfs' not in storage or "grep -q ' ro,'" not in storage or 'current_root' not in storage:
+        raise ValueError('Stock TFTP writes require guarded RAM mirrors and read-only persist')
+    if prepare.index('/system/bin/sh /system/bin/guacamole-wlan-storage.sh') > prepare.index('start_service guacamole-tftp-server'):
+        raise ValueError('TFTP RAM storage must be prepared before its service starts')
+    config = entries['system/etc/guacamole-wpa_supplicant.conf'][1].decode()
+    if 'pmf=1\n' not in config or 'sae_pwe=2\n' not in config:
+        raise ValueError('Native WLAN configuration must enable PMF negotiation and SAE H2E')
+    wrapper = entries['system/bin/guacamole-wpa-supplicant.sh'][1].decode()
+    if 'getprop sys.guacamole.wlan.prepare' not in wrapper or '!= failed' not in wrapper:
+        raise ValueError('Supplicant must observe device preparation failure')
+    for permission in ('chown wifi:wifi "$config" || exit 1', 'chmod 0600 "$config" || exit 1'):
+        if permission not in wrapper or wrapper.index(permission) > wrapper.index('exec /system/bin/wpa_supplicant'):
+            raise ValueError('Native supplicant must own its private RAM configuration')
+    return {'firmware_before_mapper': True, 'early_domains_without_radio_power': True, 'failed_startup_retries': False,
+            'supplicant_private_config_owner': 'wifi'}
 
 
 def verify_module(data, record):
@@ -41,13 +99,15 @@ def verify_runtime(entries, module_metadata):
     if module not in entries or not stat.S_ISREG(entries[module][0]):
         raise ValueError('Matched WLAN module is absent')
     verify_module(entries[module][1], module_metadata['files']['qca_cld3_wlan.ko'])
-    for name in WLAN_EXECUTABLES:
+    for name in WLAN_EXECUTABLES + WLAN_VENDOR_EXECUTABLES:
         if name not in entries or not stat.S_ISREG(entries[name][0]) or not entries[name][0] & 0o111:
             raise ValueError(f'Native WLAN executable missing: {name}')
         elf = ELFFile(io.BytesIO(entries[name][1]))
         if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
             raise ValueError(f'Native WLAN executable must be ARM64: {name}')
     configs = ('init.recovery.wifi.rc', 'system/bin/guacamole-wlan-firmware.sh',
+               'system/bin/guacamole-wlan-domains.sh',
+               'system/bin/guacamole-wlan-storage.sh',
                'system/bin/guacamole-wlan-prepare.sh', 'system/bin/guacamole-wpa-supplicant.sh',
                'system/etc/guacamole-wpa_supplicant.conf',
                'system/etc/vintf/manifest/guacamole-wifi.xml')
@@ -62,6 +122,7 @@ def verify_runtime(entries, module_metadata):
                  hal.findtext('interface/instance') == 'default'))
             for hal in manifest.findall('hal')):
         raise ValueError('Native supplicant declaration is not visible to recovery')
+    startup = verify_startup_configuration(entries)
     return {'module_sha256': module_metadata['files']['qca_cld3_wlan.ko']['sha256'],
             'kernel_release': module_metadata['kernel_release'], 'userspace': list(WLAN_EXECUTABLES),
-            'device_wifi_tested': False}
+            'startup': startup, 'device_wifi_tested': False}

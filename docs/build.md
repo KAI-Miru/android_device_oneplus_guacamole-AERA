@@ -18,6 +18,8 @@ checks the loader window, native runtime dependencies and AVB structure.
 
 Use **Guacamole native AERA recovery** in GitHub Actions and select the device
 ref to build. Supply an HTTPS URL and SHA256 for your compatible ARM64 Image.
+With a private checkpoint, the URL can be blank to reuse a retained Image with
+the exact supplied SHA256.
 The launcher on `main` calls the runner workflow on `ci-runner`.
 Every build records the resolved device and runner commits separately.
 
@@ -38,7 +40,9 @@ bash /tmp/guacamole-build-inputs/ci/build.sh
 
 Install the Android Linux build prerequisites and Google's `repo` tool first.
 The runner branch documents the prepared environment and runner maintenance.
-`sources.lock.json` keeps the build tied to the reviewed source revisions.
+`sources.lock.json` pins recovery to our AERA fork¡¯s `miru` commit and keeps
+the other source revisions fixed. Recovery source is checked for a clean Git
+state; no Python tool rewrites it during the build.
 The Image must support legacy LZMA ramdisks and match the bundled DTB/DTBO and
 WLAN module. Its hash is recorded for each build and checked against the final
 boot image. It is not added to this repository.

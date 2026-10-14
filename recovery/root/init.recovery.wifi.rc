@@ -1,11 +1,13 @@
 # Recovery extensions for the CI59 ICNSS/QMI WLAN stack. These services do
 # not import stock init classes or start the Android telephony framework.
+on boot
+    setprop sys.guacamole.wlan.domains preparing
+    start guacamole-wlan-domains
+
 on property:sys.aera.wlan.up=1
     mkdir /tmp/recovery 0755 root root
     mkdir /tmp/recovery/sockets 0770 root wifi
-    start guacamole-qrtr-ns
-    start guacamole-wlan-firmware
-    start guacamole-pd-mapper
+    setprop sys.guacamole.wlan.prepare preparing
     start guacamole-wlan-prepare
     start wpa_supplicant
     setprop sys.aera.wlan.up 0
@@ -13,9 +15,24 @@ on property:sys.aera.wlan.up=1
 on property:init.svc.wpa_supplicant=stopped
     stop guacamole-wlan-prepare
     stop guacamole-cnss-daemon
-    stop guacamole-pd-mapper
     stop guacamole-wlan-firmware
-    stop guacamole-qrtr-ns
+
+on property:init.svc.guacamole-rmt-storage=stopped && property:sys.guacamole.wlan.prepare=ready
+    setprop sys.guacamole.wlan.prepare failed
+    stop wpa_supplicant
+
+on property:init.svc.guacamole-tftp-server=stopped && property:sys.guacamole.wlan.prepare=ready
+    setprop sys.guacamole.wlan.prepare failed
+    stop wpa_supplicant
+
+# Keep the locator available for ICNSS's one-time kernel registration.
+# This preparation does not load WLAN or open modem/ADSP power references.
+service guacamole-wlan-domains /system/bin/sh /system/bin/guacamole-wlan-domains.sh
+    user root
+    group root
+    disabled
+    oneshot
+    seclabel u:r:recovery:s0
 
 service guacamole-qrtr-ns /system/bin/guacamole-qrtr-ns -f
     user root
@@ -43,6 +60,26 @@ service guacamole-wlan-firmware /system/bin/sh /system/bin/guacamole-wlan-firmwa
     disabled
     seclabel u:r:recovery:s0
 
+# Standard modem backends outlive radio shutdown and keep their registrations
+# across Off/On. Init retains them until the final shutdown stage.
+service guacamole-rmt-storage /system/bin/rmt_storage
+    user root
+    group root system
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64
+    disabled
+    oneshot
+    shutdown critical
+    seclabel u:r:recovery:s0
+
+service guacamole-tftp-server /system/bin/tftp_server
+    user root
+    group root system
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64
+    disabled
+    oneshot
+    shutdown critical
+    seclabel u:r:recovery:s0
+
 service guacamole-wlan-prepare /system/bin/sh /system/bin/guacamole-wlan-prepare.sh
     user root
     group root
@@ -54,4 +91,5 @@ service wpa_supplicant /system/bin/sh /system/bin/guacamole-wpa-supplicant.sh
     user root
     group root inet net_admin wifi
     disabled
+    oneshot
     seclabel u:r:recovery:s0

@@ -8,9 +8,9 @@ on:
         type: string
         default: main
       kernel_url:
-        description: HTTPS URL of your compatible ARM64 Image
+        description: Image HTTPS URL, or blank to reuse the approved private input
         type: string
-        required: true
+        default: ''
       kernel_sha256:
         description: SHA256 of the supplied Image
         type: string
@@ -27,7 +27,7 @@ on:
 
 permissions:
   contents: read
-  packages: read
+  packages: write
 
 jobs:
   build:

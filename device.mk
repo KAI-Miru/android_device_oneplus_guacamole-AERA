@@ -64,7 +64,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/system/bin/runatboot.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/runatboot.sh \
     $(LOCAL_PATH)/recovery/root/system/bin/postscreenunblank.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/postscreenunblank.sh \
     $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-firmware.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-firmware.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-domains.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-domains.sh \
     $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-prepare.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-prepare.sh \
+    $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wlan-storage.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wlan-storage.sh \
     $(LOCAL_PATH)/recovery/root/system/bin/guacamole-wpa-supplicant.sh:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-wpa-supplicant.sh \
     $(LOCAL_PATH)/recovery/root/system/etc/guacamole-wpa_supplicant.conf:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/guacamole-wpa_supplicant.conf \
     $(LOCAL_PATH)/modules/qca_cld3_wlan.ko:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib/modules/msmnile/qca_cld3_wlan.ko \

@@ -24,5 +24,7 @@
   "vendor/lib64/egl/eglSubDriverAndroid.so": "vendor/lib64/egl/eglSubDriverAndroid.so",
   "vendor/bin/qrtr-ns": "system/bin/guacamole-qrtr-ns",
   "vendor/bin/pd-mapper": "system/bin/guacamole-pd-mapper",
-  "vendor/bin/cnss-daemon": "system/bin/guacamole-cnss-daemon"
+  "vendor/bin/cnss-daemon": "system/bin/guacamole-cnss-daemon",
+  "vendor/bin/rmt_storage": "system/bin/rmt_storage",
+  "vendor/bin/tftp_server": "system/bin/tftp_server"
 }

@@ -15,10 +15,10 @@
     {
       "path": "bootable/recovery",
       "name": "android_bootable_recovery",
-      "remote": "AERA",
-      "url": "https://github.com/AERA-Recovery/android_bootable_recovery.git",
-      "branch": "aera-16.0",
-      "commit": "e04e0f5d6d83b0125fd48688141d02d73af09f56"
+      "remote": "Miru",
+      "url": "https://github.com/KAI-Miru/android_bootable_recovery.git",
+      "branch": "miru",
+      "commit": "0b3ce0725441d37b918622f2a3729eb487fcf5b5"
     },
     {
       "path": "build/make",

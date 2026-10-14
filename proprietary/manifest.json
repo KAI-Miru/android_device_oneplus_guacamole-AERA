@@ -196,6 +196,42 @@
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
+    "system/bin/rmt_storage": {
+      "source": "vendor/bin/rmt_storage",
+      "bytes": 1952296,
+      "sha256": "ec79898d700d8657727cfa3b928930edd88b0810e597535f886af2dbb7173574",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libqmi_csi.so",
+        "libqmi_common_so.so",
+        "libcutils.so",
+        "liblog.so",
+        "libmdmdetect.so",
+        "libcrypto.so",
+        "libssl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/bin/tftp_server": {
+      "source": "vendor/bin/tftp_server",
+      "bytes": 110376,
+      "sha256": "6ee43ee36de75ffd55f4d3af0a5c82bcca055b5169f038ea93d89b32d0983292",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libqsocket.so",
+        "libqrtr.so",
+        "liblog.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so",
       "bytes": 37864,
@@ -831,6 +867,19 @@
       "source": "vendor/lib64/libqrtr.so",
       "bytes": 15760,
       "sha256": "982aae7f3a67b8beffb807920d2226a546b7153c3144ff5feefce022f2570456",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
+    "system/lib64/libqsocket.so": {
+      "source": "vendor/lib64/libqsocket.so",
+      "bytes": 15032,
+      "sha256": "a2f24829896c0505bfd1faa50268e9e6c529e0d0ce6cc323c57a1e27777b5604",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [

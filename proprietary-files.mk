@@ -7,6 +7,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/bin/guacamole-pd-mapper:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-pd-mapper \
     $(LOCAL_PATH)/proprietary/system/bin/guacamole-qrtr-ns:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/guacamole-qrtr-ns \
     $(LOCAL_PATH)/proprietary/system/bin/qseecomd:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/qseecomd \
+    $(LOCAL_PATH)/proprietary/system/bin/rmt_storage:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/rmt_storage \
+    $(LOCAL_PATH)/proprietary/system/bin/tftp_server:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/tftp_server \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel_svc.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel_svc.so \
@@ -43,6 +45,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libqmi_encdec.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmi_encdec.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqmiservices.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqmiservices.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqrtr.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqrtr.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqsocket.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqsocket.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqtikeymaster4.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtikeymaster4.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librpmb.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librpmb.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui.so \

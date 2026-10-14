@@ -8,8 +8,9 @@ the Android 15 ColorOS port. This is an experimental build.
 | Feature | Device testing |
 | --- | --- |
 | Display, touch and Adreno acceleration | Working |
-| Storage decryption | Unlock confirmed with the Gatekeeper TEE option applied in RAM; fresh boot with the persisted option still needs testing |
-| Wi-Fi | Module and firmware startup tested; scanning and connection unverified |
+| Storage decryption | Unlock confirmed with the persisted Gatekeeper TEE option |
+| Wi-Fi | Scanning and WPA2 on 2.4 GHz confirmed with temporary services; WPA3 unresolved |
+| Reboot and USB after unlock | Startup handoff and USB identity fixes need device confirmation |
 
 ## Device configuration
 
@@ -25,14 +26,17 @@ firmware services and vendor libraries are in this tree. See
 [device notes](docs/device-notes.md) for the remaining integration details and
 [NOTICES.md](NOTICES.md) for sources and licensing.
 
-Three temporary native patches remain in [patches/](patches/). The graphics
-fixes are under review in AERA [PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17)
-and [PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
-The [power handoff repair](https://github.com/KAI-Miru/android_bootable_recovery/commit/0e2535f56fdb75a8be273182d9e254c1d4f33b6c)
-keeps vendor graphics cleanup out of the reboot path. Native regression tests
-pass; reboot and shutdown still need device confirmation.
-The compiler preflight is specific to this vendor. UI layout changes
-belong in AERA, rather than this device tree.
+Recovery sources come directly from the pinned
+[`miru` branch](https://github.com/KAI-Miru/android_bootable_recovery/tree/miru)
+of our AERA fork. Builds do not apply source patches to recovery. Generic
+graphics, power handoff, Fastbootd capability and terminal staging fixes live
+there with their source tests. The device overlay declares the paired shader
+compiler inputs in `system.prop`; the renderer checks them before loading EGL.
+
+The graphics fixes are under review in AERA
+[PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17) and
+[PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
+The remaining source changes will be reviewed separately for upstream.
 
 ## Building
 

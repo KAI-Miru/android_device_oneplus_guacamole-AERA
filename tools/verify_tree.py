@@ -62,6 +62,11 @@ def verify():
     assert re.search(r'BOARD_WPA_SUPPLICANT_DRIVER\s*:=\s*NL80211', board)
     from verify_wifi import verify_module_tree
     verify_module_tree(ROOT)
+    from verify_wifi import verify_startup_configuration
+    wifi_names = ('init.recovery.wifi.rc', 'system/bin/guacamole-wlan-domains.sh',
+                  'system/bin/guacamole-wlan-prepare.sh', 'system/bin/guacamole-wpa-supplicant.sh',
+                  'system/bin/guacamole-wlan-storage.sh', 'system/etc/guacamole-wpa_supplicant.conf')
+    verify_startup_configuration({name: (0o100644, (ROOT/'recovery/root'/name).read_bytes()) for name in wifi_names})
     twrp_flags = (ROOT/'recovery/root/system/etc/twrp.flags').read_text()
     assert 'fileencryption=' not in twrp_flags, 'Display flags must not override ROM encryption settings'
     assert not any('logical' in r[-1] for r in rows)
@@ -81,6 +86,9 @@ def verify():
     lock = json.loads((ROOT/'sources.lock.json').read_text())
     assert len({p['path'] for p in lock['projects']}) == len(lock['projects'])
     assert all(re.fullmatch('[0-9a-f]{40}',p['commit']) for p in lock['projects'])
+    recovery = next(p for p in lock['projects'] if p['path'] == 'bootable/recovery')
+    assert recovery['url'] == 'https://github.com/KAI-Miru/android_bootable_recovery.git'
+    assert recovery['branch'] == 'miru' and recovery['remote'] == 'Miru'
     print(f'PASS: DTB/DTBO identities, {len(blobs["files"])} vendor files, native init boundaries, official crypto configuration, {len(lock["projects"])} pinned upstream projects.')
 
 if __name__ == '__main__': verify()
