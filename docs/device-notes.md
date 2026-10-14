@@ -40,6 +40,11 @@ The configfs MTP+ADB profile uses Google's `18d1:4ee2` identity, matching the
 native recovery default. The former `18d1:9012` pair enumerated after unlock
 without an ADB interface registration on the test host. The device extension
 keeps both MTP and ADB FunctionFS interfaces; native init owns the ADB mount.
+The MTP profiles wait for MTP descriptors, and the combined profile also waits
+for ADB descriptors, before binding the controller. Waiting only for ADB can
+leave USB detached when MTP starts later after storage unlock.
+Native `none` cleanup owns the disconnect; the ready handler links the
+functions and binds without detaching them again.
 
 ## Decryption
 
