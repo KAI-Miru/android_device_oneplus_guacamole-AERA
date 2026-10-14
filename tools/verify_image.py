@@ -92,6 +92,15 @@ def verify_native_service_configuration(entries):
     return [profiles, framework, manager, boot]
 
 
+def verify_screen_lock_configuration(recovery):
+    required = (b'display suspended after inactivity',
+                b'/data/system/aera/screen-lock.conf', b'AERA-SCREEN-LOCK-1')
+    if any(value not in recovery for value in required):
+        raise ValueError('Native screen timeout or separate password lock is missing')
+    return {'inactivity_loop_present': True, 'separate_password_verifier_present': True,
+            'device_blank_wake_and_password_tested': False}
+
+
 def verify_gpu_startup_configuration(recovery, properties):
     required = b'ro.aera.gpu.required_libraries=/vendor/lib64/libllvm-qgl.so:/vendor/lib64/libllvm-qcom.so'
     if required not in properties.splitlines():
@@ -284,6 +293,7 @@ def verify(image, report, kernel=None):
               'ui_power_handoff':{'graphics_thread_kept_alive':True,'terminal_action_retained':True,'device_reboot_tested':False},
               'fastbootd_enabled':False,
               'fastbootd_capability_guard':True,
+              'screen_lock':verify_screen_lock_configuration(entries['system/bin/recovery'][1]),
               'usb_configuration':usb_configuration,
               'gpu_native_buffer_library':gpu_runtime,
               'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1], image_properties(entries)),

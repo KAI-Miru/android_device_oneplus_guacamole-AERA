@@ -33,6 +33,11 @@ graphics, power handoff, Fastbootd capability and terminal staging fixes live
 there with their source tests. The device overlay declares the paired shader
 compiler inputs in `system.prop`; the renderer checks them before loading EGL.
 
+The fork also adds screen timeout beside Brightness and an optional separate
+AERA password for the lock screen. These controls have host tests; device
+behavior is not yet confirmed. The password does not change Android encryption
+or restrict ADB. New labels are available in English and both Chinese languages.
+
 The graphics fixes are under review in AERA
 [PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17) and
 [PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
