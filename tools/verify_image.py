@@ -101,6 +101,15 @@ def verify_screen_lock_configuration(recovery):
             'device_blank_wake_and_password_tested': False}
 
 
+def verify_filesystem_format_configuration(recovery):
+    required = (b'Change filesystem', b'Format partition now',
+                b'Type yes to enable formatting', b'/proc/filesystems')
+    if any(value not in recovery for value in required):
+        raise ValueError('Native filesystem selection or typed format confirmation is missing')
+    return {'native_filesystem_selection_present': True,
+            'device_format_tested': False}
+
+
 def verify_gpu_startup_configuration(recovery, properties):
     required = b'ro.aera.gpu.required_libraries=/vendor/lib64/libllvm-qgl.so:/vendor/lib64/libllvm-qcom.so'
     if required not in properties.splitlines():
@@ -294,6 +303,7 @@ def verify(image, report, kernel=None):
               'fastbootd_enabled':False,
               'fastbootd_capability_guard':True,
               'screen_lock':verify_screen_lock_configuration(entries['system/bin/recovery'][1]),
+              'filesystem_format':verify_filesystem_format_configuration(entries['system/bin/recovery'][1]),
               'usb_configuration':usb_configuration,
               'gpu_native_buffer_library':gpu_runtime,
               'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1], image_properties(entries)),

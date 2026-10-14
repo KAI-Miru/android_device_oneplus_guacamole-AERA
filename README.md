@@ -38,6 +38,12 @@ AERA password for the lock screen. These controls have host tests; device
 behavior is not yet confirmed. The password does not change Android encryption
 or restrict ADB. New labels are available in English and both Chinese languages.
 
+Wipe also includes filesystem selection for eligible writable partitions.
+Available choices depend on the running kernel and packaged formatters.
+Changing `/data` erases internal storage and resets encryption. The chooser
+requires typing `yes` and pressing the format button; host checks passed, but
+physical formatting has not been tested.
+
 The graphics fixes are under review in AERA
 [PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17) and
 [PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
