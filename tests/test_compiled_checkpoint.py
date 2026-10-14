@@ -16,6 +16,7 @@ from environment_fingerprint import INPUTS, fingerprint
 from verify_prepared_environment import verify
 from retained_image import select
 from prepared_snapshot import pack, restore
+from select_recovery_source import select as select_source
 
 
 class CompiledCheckpointTests(unittest.TestCase):
@@ -74,6 +75,25 @@ class CompiledCheckpointTests(unittest.TestCase):
         self.write_plan()
         with self.assertRaisesRegex(ValueError, 'reviewed miru fork'):
             self.check()
+
+    def test_source_cache_uses_the_fork_remote_for_later_object_fetches(self):
+        checkout = self.source / 'bootable/recovery'
+        checkout.mkdir(parents=True)
+        code = checkout / 'recovery.cpp'
+        code.write_text('committed source\n')
+        git = ['git', '-C', str(checkout)]
+        for args in (['init', '-q'], ['config', 'user.name', 'Test'],
+                     ['config', 'user.email', 'test@example.invalid'],
+                     ['add', '.'], ['commit', '-qm', 'Source fixture'],
+                     ['remote', 'add', 'AERA', 'https://github.com/AERA-Recovery/android_bootable_recovery.git']):
+            subprocess.run(git + args, check=True, capture_output=True)
+        self.plan['projects'][0]['commit'] = subprocess.check_output(git + ['rev-parse', 'HEAD'], text=True).strip()
+        self.write_plan()
+        select_source(self.current, self.source)
+        url = subprocess.check_output(git + ['remote', 'get-url', 'AERA'], text=True).strip()
+        self.assertEqual(url, self.plan['projects'][0]['url'])
+        self.assertEqual(code.read_text(), 'committed source\n')
+        self.assertFalse(subprocess.check_output(git + ['status', '--porcelain']))
 
     def test_compiled_cache_requires_its_image_and_ninja_state(self):
         with self.assertRaisesRegex(ValueError, 'Unknown'):

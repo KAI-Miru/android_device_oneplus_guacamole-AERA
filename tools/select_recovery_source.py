@@ -18,10 +18,17 @@ def select(inputs, source):
     checkout = Path(source).resolve() / 'bootable/recovery'
     git = ['git', '-C', str(checkout)]
     actual = subprocess.check_output(git + ['rev-parse', 'HEAD'], text=True).strip()
+    remotes = subprocess.check_output(git + ['remote'], text=True).splitlines()
+    if remotes:
+        remote = remotes[0]
+        subprocess.run(git + ['remote', 'set-url', remote, project['url']], check=True)
+    else:
+        remote = 'origin'
+        subprocess.run(git + ['remote', 'add', remote, project['url']], check=True)
     if actual != project['commit']:
         # This is the dedicated CI source cache. Replace its former patched
         # recovery checkout with the committed fork; other projects stay intact.
-        subprocess.run(git + ['fetch', '--no-tags', '--depth=1', project['url'],
+        subprocess.run(git + ['fetch', '--no-tags', '--depth=1', remote,
                               project['commit']], check=True)
         subprocess.run(git + ['reset', '--hard', project['commit']], check=True)
     elif subprocess.check_output(git + ['status', '--porcelain', '--untracked-files=no']):
