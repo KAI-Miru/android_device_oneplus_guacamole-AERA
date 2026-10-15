@@ -14,8 +14,9 @@
   `bootctrl/include` with their original notices.
 - DTB and recovery DTBO: user-supplied boot image. Sources and identities are
   recorded in `prebuilt/manifest.json`.
-- Proprietary inputs: user-supplied `C15_PORT_GUAC_4G` and the official TeamWin
-  guacamole tree. Per-file origins and hashes are in `proprietary/manifest.json`.
+- Proprietary inputs: user-supplied `C15_PORT_GUAC_4G`, the matching graphics
+  runtime from `7Pro_H40`, and the official TeamWin guacamole tree.
+  Per-file origins and hashes are in `proprietary/manifest.json`.
 - AERA sources: revisions in `sources.lock.json`, retaining their AOSP,
   TeamWin, OrangeFox, LineageOS and LVGL ancestry.
 

@@ -9,22 +9,21 @@ trap 'status=$?; if [ "$status" -ne 0 ]; then setprop sys.guacamole.wlan.domains
 # before that request times out, independently of the Wi-Fi UI or CE unlock.
 attempt=0
 while [ "$attempt" -lt 45 ]; do
-    if grep -q ' /vendor ' /proc/mounts && [ -d /vendor/firmware_mnt ] &&
-            [ -d /firmware/image ]; then
+    if ! grep -q ' /vendor ' /proc/mounts &&
+            [ -r /vendor/firmware_mnt/image/modemuw.jsn ]; then
         break
     fi
     sleep 1
     attempt=$((attempt + 1))
 done
-# Binding below the ramdisk's vendor directory would be hidden when native
-# partition startup mounts the installed vendor. Wait for that parent first.
-grep -q ' /vendor ' /proc/mounts || exit 1
-[ -d /vendor/firmware_mnt ] && [ -d /firmware/image ] || exit 1
-if [ ! -d /vendor/firmware_mnt/image ]; then
-    mount -o bind /firmware /vendor/firmware_mnt
-fi
+# Native partition discovery may temporarily mount vendor. Wait for its normal
+# cleanup, then use init's ramdisk symlink to the read-only firmware partition.
+# A child bind under installed vendor would keep that partition busy.
+! grep -q ' /vendor ' /proc/mounts || exit 1
+[ -L /vendor/firmware_mnt ] || exit 1
+[ "$(readlink /vendor/firmware_mnt)" = /firmware ] || exit 1
 [ -r /vendor/firmware_mnt/image/modemuw.jsn ] || {
-    echo 'Guacamole WLAN: missing the installed WLAN firmware-domain descriptor' >&2
+    echo 'Guacamole WLAN: missing the WLAN firmware-domain descriptor' >&2
     exit 1
 }
 

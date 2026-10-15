@@ -23,12 +23,15 @@ def verify_startup_configuration(entries):
         raise ValueError('Failed WLAN startup must stop instead of automatically restarting')
     prepare = entries['system/bin/guacamole-wlan-prepare.sh'][1].decode()
     domains = entries['system/bin/guacamole-wlan-domains.sh'][1].decode()
-    if domains.index('mount -o bind /firmware /vendor/firmware_mnt') > domains.index('start_service guacamole-pd-mapper'):
-        raise ValueError('PD mapper must see the installed firmware domain descriptors')
     if '/vendor/firmware_mnt/image/modemuw.jsn' not in domains:
         raise ValueError('WLAN firmware-domain readiness check is missing')
-    if domains.index("grep -q ' /vendor ' /proc/mounts") > domains.index('mount -o bind /firmware /vendor/firmware_mnt'):
-        raise ValueError('Firmware bind must wait for the installed vendor mount')
+    for guard in ("! grep -q ' /vendor ' /proc/mounts || exit 1",
+                  '[ -L /vendor/firmware_mnt ] || exit 1',
+                  '[ "$(readlink /vendor/firmware_mnt)" = /firmware ] || exit 1'):
+        if guard not in domains or domains.index(guard) > domains.index('start_service guacamole-pd-mapper'):
+            raise ValueError('PD mapper must use the ramdisk firmware symlink after vendor cleanup')
+    if '\nmount ' in domains or 'mount -o bind /firmware /vendor' in domains:
+        raise ValueError('WLAN domains must not pin installed vendor with a firmware bind')
     if '/vendor/firmware_mnt/image/modemuw.jsn' not in prepare:
         raise ValueError('WLAN preparation must recheck the firmware bind after startup')
     boot = init.split('on boot', 1)[1].split('\non ', 1)[0]

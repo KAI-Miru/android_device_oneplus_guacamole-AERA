@@ -7,18 +7,20 @@ the Android 15 ColorOS port. This is an experimental build.
 
 | Feature | Device testing |
 | --- | --- |
-| Display, touch and Adreno acceleration | Working |
+| Display, touch and Adreno acceleration | Previous runtime confirmed; bundled H.40 replacement needs testing |
 | Storage decryption | Unlock confirmed with the persisted Gatekeeper TEE option |
 | Wi-Fi | Scanning and WPA2 on 2.4 GHz confirmed with temporary services; WPA3 unresolved |
 | Reboot and USB after unlock | Startup handoff and USB identity fixes need device confirmation |
+| Screen timeout, Android screen lock and rotation | Confirmed on the previous alpha |
 
 ## Device configuration
 
-- ARM64 with secondary ARM support; Snapdragon 855 / Adreno 640.
+- ARM64-only recovery; Snapdragon 855 / Adreno 640.
 - Recovery-as-boot, physical A/B slots, boot header v2 and a 96 MiB boot partition.
 - DTB and recovery DTBO in `prebuilt/`; hashes are recorded alongside them.
 - A compatible ARM64 Image must be supplied by the builder; no kernel binary is included.
-- Legacy LZMA ramdisk compression to fit the bootloader's load window.
+- Legacy LZMA ramdisk with a 32 MiB dictionary to fit the bootloader's load window.
+- Complete H.40 Adreno EGL/GLES runtime in the ramdisk, including its shader compiler.
 - Qualcomm crypto providers from the official TeamWin guacamole tree.
 
 The recovery ramdisk and policy are built by AERA. Device-specific init, fstab,
@@ -30,13 +32,16 @@ Recovery sources come directly from the pinned
 [`miru` branch](https://github.com/KAI-Miru/android_bootable_recovery/tree/miru)
 of our AERA fork. Builds do not apply source patches to recovery. Generic
 graphics, power handoff, Fastbootd capability and terminal staging fixes live
-there with their source tests. The device overlay declares the paired shader
-compiler inputs in `system.prop`; the renderer checks them before loading EGL.
+there with their source tests. The device overlay declares the bundled shader
+compiler in `system.prop`; the renderer checks it before loading EGL.
+Graphics startup does not require mounting the installed vendor partition.
 
-The fork also adds screen timeout beside Brightness and an optional separate
-AERA password for the lock screen. These controls have host tests; device
-behavior is not yet confirmed. The password does not change Android encryption
-or restrict ADB. New labels are available in English and both Chinese languages.
+The fork adds screen timeout beside Brightness and an optional Android owner
+credential screen lock after successful storage unlock. It uses a native
+verification-only path and opens the PIN, pattern or password screen directly.
+The lock, swipe-unlock rotation and landscape backgrounds passed device testing
+on the previous alpha. The screen lock does not restrict ADB.
+New labels are available in English and both Chinese languages.
 
 Wipe also includes filesystem selection for eligible writable partitions.
 Available choices depend on the running kernel and packaged formatters.
@@ -44,10 +49,9 @@ Changing `/data` erases internal storage and resets encryption. The chooser
 requires typing `yes` and pressing the format button; host checks passed, but
 physical formatting has not been tested.
 
-The graphics fixes are under review in AERA
-[PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17) and
-[PR #18](https://github.com/AERA-Recovery/android_bootable_recovery/pull/18).
-The remaining source changes will be reviewed separately for upstream.
+The native-buffer loader change is under review in AERA
+[PR #17](https://github.com/AERA-Recovery/android_bootable_recovery/pull/17).
+The vendor-mount proposal was closed in favor of a self-contained graphics runtime.
 
 ## Building
 

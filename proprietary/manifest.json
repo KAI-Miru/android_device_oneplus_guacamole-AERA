@@ -6,6 +6,23 @@
     "repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
     "commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
   },
+  "graphics_source": {
+    "source_dump": "7Pro_H40",
+    "description": "Matching OnePlus 7 Pro OxygenOS H.40 Adreno 640 EGL/GLES and gralloc runtime",
+    "seeds": {
+      "vendor/bin/hw/vendor.qti.hardware.display.allocator-service": "system/bin/aera-vendor-allocator",
+      "vendor/lib64/hw/gralloc.msmnile.so": "vendor/lib64/hw/gralloc.msmnile.so",
+      "vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so": "vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so",
+      "vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so": "vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so",
+      "vendor/lib64/egl/libEGL_adreno.so": "vendor/lib64/egl/libEGL_adreno.so",
+      "vendor/lib64/egl/libGLESv1_CM_adreno.so": "vendor/lib64/egl/libGLESv1_CM_adreno.so",
+      "vendor/lib64/egl/libGLESv2_adreno.so": "vendor/lib64/egl/libGLESv2_adreno.so",
+      "vendor/lib64/egl/eglSubDriverAndroid.so": "vendor/lib64/egl/eglSubDriverAndroid.so"
+    },
+    "required_libraries": [
+      "system/lib64/libllvm-glnext.so"
+    ]
+  },
   "platform_libraries": [
     "android.hardware.gatekeeper@1.0.so",
     "android.hardware.graphics.allocator@3.0.so",
@@ -33,7 +50,6 @@
     "libion.so",
     "liblog.so",
     "libm.so",
-    "libnativewindow.so",
     "libnl.so",
     "libssl.so",
     "libsync.so",
@@ -73,7 +89,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/bin/android.hardware.gatekeeper@1.0-service-qti": {
       "source": "system/bin/android.hardware.gatekeeper@1.0-service-qti",
@@ -139,7 +157,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/bin/guacamole-pd-mapper": {
       "source": "vendor/bin/pd-mapper",
@@ -160,7 +179,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/bin/guacamole-qrtr-ns": {
       "source": "vendor/bin/qrtr-ns",
@@ -174,7 +194,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/bin/qseecomd": {
       "source": "system/bin/qseecomd",
@@ -214,7 +235,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/bin/tftp_server": {
       "source": "vendor/bin/tftp_server",
@@ -230,7 +252,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so",
@@ -351,8 +374,8 @@
     },
     "system/lib64/libadreno_utils.so": {
       "source": "vendor/lib64/libadreno_utils.so",
-      "bytes": 89544,
-      "sha256": "73b7c435575d8aa88ccb9395133692bc62998c9582cc394d5867ff58c4437efb",
+      "bytes": 81376,
+      "sha256": "ef677d142efb114bc049d4058d40d17a0d155f62afebde3bcc661d210f4e5513",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -361,7 +384,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libcld80211.so": {
       "source": "vendor/lib64/libcld80211.so",
@@ -377,7 +402,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libdiag.so": {
       "source": "vendor/lib64/libdiag.so",
@@ -411,21 +437,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
-    },
-    "system/lib64/libdmabufheap.so": {
-      "source": "vendor/lib64/libdmabufheap.so",
-      "bytes": 87224,
-      "sha256": "1c4233b6c11be1644e8a494b62a7bc324e8f287d738a5f57fe1a8d35518962bb",
-      "elf_class": 64,
-      "machine": "EM_AARCH64",
-      "needed": [
-        "liblog.so",
-        "libc++.so",
-        "libc.so",
-        "libm.so",
-        "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libdrm.so": {
       "source": "vendor/lib64/libdrm.so",
@@ -486,8 +499,8 @@
     },
     "system/lib64/libgralloc.qti.so": {
       "source": "vendor/lib64/libgralloc.qti.so",
-      "bytes": 33816,
-      "sha256": "ef88c353dfc978ddd519db9cdb387922fa656f4785f10ab495c93ff4b3e90b5c",
+      "bytes": 28760,
+      "sha256": "bebe1bd5dbf889c6eb81e1c48fd0968b4987429657e1eaba4736ac23b395500d",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -502,7 +515,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libgralloccore.so": {
       "source": "vendor/lib64/libgralloccore.so",
@@ -528,7 +543,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libgrallocutils.so": {
       "source": "vendor/lib64/libgrallocutils.so",
@@ -551,12 +568,14 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libgsl.so": {
       "source": "vendor/lib64/libgsl.so",
-      "bytes": 2268120,
-      "sha256": "04f5ea923ee9b8c163913171c94285b18250a25853ec122fc705bf337915a811",
+      "bytes": 2129952,
+      "sha256": "24acda32d84debd36b6164f3d2e70188a1d7ef5927054b5d6a6beb0057188919",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -564,12 +583,14 @@
         "liblog.so",
         "libz.so",
         "libsync.so",
-        "libdmabufheap.so",
+        "libion.so",
         "libc++.so",
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libidl.so": {
       "source": "vendor/lib64/libidl.so",
@@ -582,7 +603,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libjson.so": {
       "source": "vendor/lib64/libjson.so",
@@ -597,7 +619,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libkeymasterdeviceutils.so": {
       "source": "vendor/lib64/libkeymasterdeviceutils.so",
@@ -641,8 +664,8 @@
     },
     "system/lib64/libllvm-glnext.so": {
       "source": "vendor/lib64/libllvm-glnext.so",
-      "bytes": 1891352,
-      "sha256": "1559821cb6936223f40a1bfabbd20af176a5a25020a359f1977e3ef88527b1f5",
+      "bytes": 13889168,
+      "sha256": "03f59deb54329b69df085d94cdf35247f71b6e38cac3cf57898ea496f82d564f",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -652,7 +675,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libmdmdetect.so": {
       "source": "vendor/lib64/libmdmdetect.so",
@@ -671,7 +696,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/liboemnvbk_img_helper.so": {
       "source": "vendor/lib64/liboemnvbk_img_helper.so",
@@ -689,7 +715,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libops.so": {
       "source": "vendor/lib64/libops.so",
@@ -729,7 +756,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqcbor.so": {
       "source": "vendor/lib64/libqcbor.so",
@@ -750,8 +778,8 @@
     },
     "system/lib64/libqdMetaData.so": {
       "source": "vendor/lib64/libqdMetaData.so",
-      "bytes": 28960,
-      "sha256": "af9cea8a40c7a22bdbc30741d032c6d29866d7df99f96ba8094927a94f0970dd",
+      "bytes": 24224,
+      "sha256": "89c7dcd4a140bc0d3f49c9318b8a96bd023d0833d73cffe130cc3d7ee10cbc96",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -765,7 +793,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/libqisl.so": {
       "source": "vendor/lib64/libqisl.so",
@@ -800,7 +830,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqmi_common_so.so": {
       "source": "vendor/lib64/libqmi_common_so.so",
@@ -815,7 +846,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqmi_csi.so": {
       "source": "vendor/lib64/libqmi_csi.so",
@@ -832,7 +864,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqmi_encdec.so": {
       "source": "vendor/lib64/libqmi_encdec.so",
@@ -847,7 +880,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqmiservices.so": {
       "source": "vendor/lib64/libqmiservices.so",
@@ -861,7 +895,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqrtr.so": {
       "source": "vendor/lib64/libqrtr.so",
@@ -874,7 +909,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqsocket.so": {
       "source": "vendor/lib64/libqsocket.so",
@@ -887,7 +923,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/libqtikeymaster4.so": {
       "source": "vendor/lib64/libqtikeymaster4.so",
@@ -1087,7 +1124,8 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "C15_PORT_GUAC_4G"
     },
     "system/lib64/vendor.qti.hardware.display.allocator@3.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.allocator@3.0.so",
@@ -1109,7 +1147,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.allocator@4.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.allocator@4.0.so",
@@ -1131,7 +1171,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.mapper@2.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.mapper@2.0.so",
@@ -1153,7 +1195,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.mapper@3.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.mapper@3.0.so",
@@ -1175,7 +1219,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.mapper@4.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.mapper@4.0.so",
@@ -1197,7 +1243,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so",
@@ -1214,7 +1262,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so": {
       "source": "vendor/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so",
@@ -1232,7 +1282,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "system/lib64/vendor.qti.hardware.tui_comm@1.0.so": {
       "source": "vendor/lib64/vendor.qti.hardware.tui_comm@1.0.so",
@@ -1295,8 +1347,8 @@
     },
     "vendor/lib64/egl/eglSubDriverAndroid.so": {
       "source": "vendor/lib64/egl/eglSubDriverAndroid.so",
-      "bytes": 100936,
-      "sha256": "b49f3ae98d37162f15945fe361403a9e11e4bfbcee6b1d421718aebea1feadfe",
+      "bytes": 71744,
+      "sha256": "c712e186c8eeb99ce889386fe6e6654f34b5e45817a4604040d63ff22118c119",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -1304,16 +1356,13 @@
         "libcutils.so",
         "libhardware.so",
         "libgsl.so",
-        "libnativewindow.so",
         "vendor.qti.hardware.display.mapper@2.0.so",
         "vendor.qti.hardware.display.mapper@3.0.so",
         "android.hardware.graphics.mapper@3.0.so",
-        "android.hardware.graphics.mapper@2.0.so",
+        "vendor.qti.hardware.display.mapperextensions@1.1.so",
         "vendor.qti.hardware.display.mapper@4.0.so",
         "android.hardware.graphics.mapper@4.0.so",
-        "libgralloc.qti.so",
-        "libgralloctypes.so",
-        "vendor.qti.hardware.display.mapperextensions@1.1.so",
+        "android.hardware.graphics.mapper@2.0.so",
         "libhidlbase.so",
         "libutils.so",
         "libdl.so",
@@ -1322,12 +1371,14 @@
         "libc++.so",
         "libc.so",
         "libm.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/egl/libEGL_adreno.so": {
       "source": "vendor/lib64/egl/libEGL_adreno.so",
-      "bytes": 48008,
-      "sha256": "2ef1a360c9ab2b55d4a77dd9a6efcc0c402b9b72ce892fe2e4dafde37c8223db",
+      "bytes": 39864,
+      "sha256": "4526aca478194f770c4a85e769127d7c5b8be71a96acd77fed954dd6f90c46e1",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -1340,12 +1391,14 @@
         "libc++.so",
         "libc.so",
         "libm.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/egl/libGLESv1_CM_adreno.so": {
       "source": "vendor/lib64/egl/libGLESv1_CM_adreno.so",
-      "bytes": 258232,
-      "sha256": "05132d3facdc7222c1faede9e5589bee221de7cee6fb8f32a65af7ffa0eff7f0",
+      "bytes": 233824,
+      "sha256": "cdb6b819455201a2dbc9f13b28d1d2665417447cdd0268cfd31230629203d6ff",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -1357,12 +1410,14 @@
         "libc++.so",
         "libc.so",
         "libm.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/egl/libGLESv2_adreno.so": {
       "source": "vendor/lib64/egl/libGLESv2_adreno.so",
-      "bytes": 4586400,
-      "sha256": "cc136470436658166fce57f59efa526e176f82008c4f4adc609080b904602dd3",
+      "bytes": 4128544,
+      "sha256": "5d0a617c14680ea996214a03ff4e8eb576aed2d9d4151ebdda9df6228c0de69e",
       "elf_class": 64,
       "machine": "EM_AARCH64",
       "needed": [
@@ -1376,7 +1431,9 @@
         "libc++.so",
         "libc.so",
         "libm.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so",
@@ -1426,7 +1483,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so": {
       "source": "vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so",
@@ -1457,7 +1516,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     },
     "vendor/lib64/hw/gralloc.msmnile.so": {
       "source": "vendor/lib64/hw/gralloc.msmnile.so",
@@ -1482,7 +1543,9 @@
         "libc.so",
         "libm.so",
         "libdl.so"
-      ]
+      ],
+      "source_dump": "7Pro_H40",
+      "runtime": "graphics"
     }
   }
 }

@@ -19,11 +19,20 @@ by logd, hwservicemanager and the graphics allocator. `runatboot.sh` and
 `postscreenunblank.sh` send the OEM display notification after the renderer is
 ready, which also restores touch.
 
-The pinned recovery fork loads AERA's matching native-buffer runtime from system
-and mount vendor before UI initialization. The installed vendor supplies the
-paired Adreno shader compilers. The device declares those files in `ro.aera.gpu.required_libraries`.
-The native preflight checks them before
-entering the driver; its absence check retains AERA's software renderer.
+The ramdisk includes a matching H.40 Adreno 640 EGL/GLES, gralloc and shader
+compiler dependency set. Per-file sources and hashes are recorded in the
+proprietary manifest. The H.40 shader compiler is self-contained; it does not
+load the separate `libllvm-qgl.so` or OpenCL compiler used by newer stacks.
+AERA supplies the native `libui` and `libnativewindow` providers. Kernel-facing
+GPU firmware remains the set supplied with the tested firmware environment.
+The renderer checks the bundled compiler declared in
+`ro.aera.gpu.required_libraries` before entering EGL. Missing inputs retain the
+software-renderer fallback. No UI startup hook pins installed vendor.
+
+The build uses ARM64 only. It compresses the complete ramdisk with legacy LZMA
+and a 32 MiB dictionary. The image audit checks the dictionary, actual loader
+clearance and every GPU provider against the manifest; a size estimate alone
+does not make an image suitable for flashing.
 
 Reboot and power-off actions hand their result to the recovery backend while
 the early graphics thread stays alive. Waiting for that thread to exit first
@@ -71,9 +80,10 @@ compatibility; runtime testing is required.
 
 QRTR, PD mapper and CNSS services prepare the ICNSS firmware path asynchronously.
 Firmware is mounted read-only; CNSS and supplicant runtime files use tmpfs.
-PD mapper waits for the installed vendor mount and firmware bind during early
-recovery startup, so its
-initial domain list is populated before ICNSS's five-minute registration timeout.
+PD mapper waits for native partition discovery to release installed vendor,
+then uses the ramdisk's `/vendor/firmware_mnt` symlink to read-only `/firmware`.
+It creates no child bind that would keep installed vendor busy. Its initial
+domain list must be populated before ICNSS's five-minute registration timeout.
 This stage leaves the modem/ADSP power references and WLAN module to the Wi-Fi
 enable path.
 Stock `rmt_storage` and `tftp_server` start before the radio. The modem needs

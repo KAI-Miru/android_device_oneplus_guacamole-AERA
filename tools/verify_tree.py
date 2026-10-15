@@ -21,6 +21,15 @@ def verify():
         assert actual == set(manifest['files']) | {'manifest.json'}, f'Untracked binary inputs: {actual - set(manifest["files"])}'
     assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
     blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
+    graphics = json.loads((ROOT/'tools/gpu-source.json').read_text())
+    assert blobs['graphics_source'] == graphics
+    for dest in set(graphics['seeds'].values()) | set(graphics['required_libraries']):
+        record = blobs['files'][dest]
+        assert record['source_dump'] == graphics['source_dump'], f'Mixed graphics sources: {dest}'
+        assert record['runtime'] == 'graphics', f'Unrecorded graphics provider: {dest}'
+    for dest, record in blobs['files'].items():
+        if record.get('runtime') == 'graphics':
+            assert record['source_dump'] == graphics['source_dump'], f'Mixed graphics dependency: {dest}'
     crypto = json.loads((ROOT/'tools/official-crypto-source.json').read_text())
     assert blobs['official_crypto_source'] == {k: crypto[k] for k in ('repository', 'commit')}
     for dest in set(crypto['seeds'].values()) | {
@@ -41,6 +50,9 @@ def verify():
         assert info['needed'] == record['needed'], f'Changed ELF dependencies: {n}'
         assert set(info['needed']) <= provided, f'Unresolved dependencies: {n}'
     board = (ROOT/'BoardConfig.mk').read_text()
+    assert re.search(r'^TARGET_ARCH\s*:=\s*arm64\s*$', board, re.M)
+    assert not re.search(r'^TARGET_2ND_\w+[ \t]*:=[ \t]*\S', board, re.M)
+    assert re.search(r'^TARGET_SUPPORTS_32_BIT_APPS\s*:=\s*false\s*$', board, re.M)
     for pattern in [r'BOARD_USES_RECOVERY_AS_BOOT\s*:=\s*true', r'BOARD_BOOTIMAGE_PARTITION_SIZE\s*:=\s*100663296', r'BOARD_BOOT_HEADER_VERSION\s*:=\s*2', r'BOARD_RAMDISK_USE_LZMA\s*:=\s*true', r'AERA_INCLUDE_CRYPTO\s*:=\s*true', r'AERA_USE_FSCRYPT_POLICY\s*:=\s*1']:
         assert re.search(pattern, board), f'Wrong board setting: {pattern}'
     assert 'OPLUS_H40' not in board and 'TARGET_RECOVERY_INITRC' not in board
@@ -50,7 +62,7 @@ def verify():
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
     rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
     vendor_rows = [r for r in rows if r[1] == '/vendor']
-    assert vendor_rows and all('ro' in r[3].split(',') for r in vendor_rows), 'GPU startup must mount vendor read-only'
+    assert vendor_rows and all('ro' in r[3].split(',') for r in vendor_rows), 'Installed vendor access must remain read-only'
     data_rows = [r for r in rows if r[1] == '/data']
     assert len(data_rows) == 1 and data_rows[0][2] == 'f2fs'
     data_flags = set(data_rows[0][-1].split(','))

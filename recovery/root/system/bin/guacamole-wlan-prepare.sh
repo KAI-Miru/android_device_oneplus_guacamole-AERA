@@ -11,7 +11,7 @@ module=/system/lib/modules/msmnile/qca_cld3_wlan.ko
 }
 [ -r "$module" ] || exit 1
 
-# Native crypto mounts vendor and initializes DE storage. Wait outside init's
+# Native crypto initializes DE storage. Wait outside init's
 # main thread; credential-encrypted user storage is not needed for WLAN.
 attempt=0
 while [ "$attempt" -lt 45 ]; do
@@ -25,7 +25,7 @@ done
 [ -d /data/vendor/wifi ] && [ -d /vendor/firmware_mnt ] && [ -d /firmware/image ] || exit 1
 
 # Init starts the domain mapper early, before ICNSS's one-time lookup expires.
-# Also allow a retry if its read-only mount was unavailable during startup.
+# Also allow a retry if its read-only firmware was unavailable during startup.
 if [ "$(getprop sys.guacamole.wlan.domains)" != ready ] ||
         [ ! -r /vendor/firmware_mnt/image/modemuw.jsn ]; then
     /system/bin/sh /system/bin/guacamole-wlan-domains.sh

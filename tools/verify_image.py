@@ -114,18 +114,30 @@ def verify_filesystem_format_configuration(recovery):
             'device_format_tested': False}
 
 
-def verify_gpu_startup_configuration(recovery, properties):
-    required = b'ro.aera.gpu.required_libraries=/vendor/lib64/libllvm-qgl.so:/vendor/lib64/libllvm-qcom.so'
+def verify_gpu_startup_configuration(recovery, properties, entries):
+    compiler = 'system/lib64/libllvm-glnext.so'
+    required = ('ro.aera.gpu.required_libraries=/' + compiler).encode()
     if required not in properties.splitlines():
-        raise ValueError('GPU renderer lacks the paired vendor compiler configuration')
+        raise ValueError('GPU renderer lacks the ramdisk compiler configuration')
     if (b'ro.aera.gpu.required_libraries\0' not in recovery or
             b'GPU runtime: required library unavailable' not in recovery):
         raise ValueError('GPU renderer lacks the device-declared compiler preflight')
-    if b'Native UI: vendor runtime mount unavailable' not in recovery:
-        raise ValueError('GPU startup lacks the vendor mount before native UI initialization')
-    return {'installed_vendor_compilers': ['/vendor/lib64/libllvm-qgl.so',
-                                           '/vendor/lib64/libllvm-qcom.so'],
-            'vendor_mount_before_ui': True, 'cold_boot_tested': False}
+    if b'Native UI: vendor runtime mount unavailable' in recovery:
+        raise ValueError('GPU startup still pins the installed vendor partition')
+    profile = json.loads((Path(__file__).parent / 'gpu-source.json').read_text())
+    runtime = sorted(set(profile['seeds'].values()) | set(profile['required_libraries']))
+    for name in runtime:
+        if name not in entries or not stat.S_ISREG(entries[name][0]):
+            raise ValueError(f'Missing ramdisk GPU runtime: {name}')
+    if any(name in entries[compiler][1] for name in (b'libllvm-qgl.so', b'libllvm-qcom.so')):
+        raise ValueError('Ramdisk shader compiler still requires external compiler providers')
+    declaration = entries.get('vendor/etc/init/aera-gralloc.rc', (0, b''))[1]
+    if (b'service aera-gralloc /system/bin/aera-vendor-allocator\n' not in declaration or
+            b'    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/egl\n' not in declaration):
+        raise ValueError('Graphics allocator must prefer the bundled platform and GPU providers')
+    return {'ramdisk_compiler': '/' + compiler, 'runtime_files': runtime,
+            'installed_vendor_required': False,
+            'vendor_mount_before_ui': False, 'cold_boot_tested': False}
 
 
 def image_properties(entries):
@@ -133,12 +145,26 @@ def image_properties(entries):
                       if name.endswith(('.prop', 'prop.default')))
 
 
+def verify_arm64_runtime(entries):
+    count = 0
+    for name, (mode, data) in entries.items():
+        # GPU firmware containers may themselves be ELF32; they are loaded by
+        # the kernel and are not Android processes or shared libraries.
+        if name.startswith('vendor/firmware/') or not stat.S_ISREG(mode) or data[:4] != b'\x7fELF':
+            continue
+        elf = ELFFile(io.BytesIO(data))
+        if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
+            raise ValueError(f'Non-ARM64 executable or library in recovery: {name}')
+        count += 1
+    return {'primary': 'arm64', 'secondary': None, 'elf_count': count}
+
+
 def verify_gpu_runtime(entries):
     library = 'system/lib64/libnativewindow.so'
     recovery = entries['system/bin/recovery'][1]
     if ('/' + library).encode() + b'\0' not in recovery:
         raise ValueError('GPU renderer does not load the native AERA buffer runtime')
-    verify_gpu_startup_configuration(recovery, image_properties(entries))
+    verify_gpu_startup_configuration(recovery, image_properties(entries), entries)
     if library not in entries or not stat.S_ISREG(entries[library][0]):
         raise ValueError('Missing native GPU buffer runtime')
     elf = ELFFile(io.BytesIO(entries[library][1]))
@@ -248,6 +274,9 @@ def verify(image, report, kernel=None):
         raise ValueError('This device configuration requires legacy LZMA ramdisks')
     else:
         compression = 'lzma'; data = lzma.decompress(compressed, format=lzma.FORMAT_ALONE)
+        from lzma_ramdisk import DICTIONARY_BYTES
+        if int.from_bytes(compressed[1:5], 'little') != DICTIONARY_BYTES:
+            raise ValueError('Ramdisk LZMA dictionary differs from the device compressor')
     entries = unpack_newc(data)
     if any(name in entries for name in ('system/bin/fastbootd', 'sbin/fastbootd')):
         raise ValueError('Guacamole recovery must not package fastbootd')
@@ -305,7 +334,9 @@ def verify(image, report, kernel=None):
         if absent: abi_errors.append(f'{n}: unresolved strong symbols {absent[:12]}')
     result = {'kernel_input':kernel_record,'image_bytes':len(raw),'sha256':hashlib.sha256(raw).hexdigest(),
               'ramdisk_bytes':len(compressed),'ramdisk_entries':len(entries),
-              'ramdisk_compression':compression,'bootloader_layout':loading,
+              'ramdisk_compression':compression,
+              'lzma_dictionary_bytes':int.from_bytes(compressed[1:5], 'little') if compression == 'lzma' else None,
+              'architecture':verify_arm64_runtime(entries),'bootloader_layout':loading,
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'native_service_configuration':native_services,
               'official_crypto_services':crypto_services,
@@ -317,7 +348,7 @@ def verify(image, report, kernel=None):
               'filesystem_format':verify_filesystem_format_configuration(entries['system/bin/recovery'][1]),
               'usb_configuration':usb_configuration,
               'gpu_native_buffer_library':gpu_runtime,
-              'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1], image_properties(entries)),
+              'gpu_startup':verify_gpu_startup_configuration(entries['system/bin/recovery'][1], image_properties(entries), entries),
               'wifi_runtime':wifi_runtime,
               'vendor_inputs':len(inputs['files']),'abi_errors':abi_errors}
     target = Path(report); target.parent.mkdir(parents=True,exist_ok=True)

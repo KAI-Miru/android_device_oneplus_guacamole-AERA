@@ -4,7 +4,7 @@ import unittest
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'tools'))
 from boot_v2 import parse_boot
-from verify_image import unpack_newc, verify_native_init
+from verify_image import unpack_newc, verify_native_init, verify_arm64_runtime
 
 def sample_boot():
     image=bytearray(5*4096); image[:8]=b'ANDROID!'
@@ -55,6 +55,19 @@ class InputTests(unittest.TestCase):
             entries['system/bin/init'] = (mode, bytes(binary))
             with self.subTest(machine=machine, mode=mode), self.assertRaises(ValueError):
                 verify_native_init(entries)
+
+    def test_arm64_only_audit_preserves_gpu_firmware_and_rejects_arm32_libraries(self):
+        entries = self.native_init_archive()
+        ident = b'\x7fELF\x01\x01\x01' + bytes(9)
+        firmware = struct.pack('<16sHHIIIIIHHHHHH', ident, 2, 40, 1,
+                               0, 0, 0, 0, 52, 0, 0, 0, 0, 0)
+        entries['vendor/firmware/a640_zap.elf'] = (0o100644, firmware)
+        report = verify_arm64_runtime(entries)
+        self.assertEqual(report['primary'], 'arm64')
+        self.assertIsNone(report['secondary'])
+        entries['system/lib/libaccidental-arm32.so'] = (0o100644, firmware)
+        with self.assertRaisesRegex(ValueError, 'Non-ARM64'):
+            verify_arm64_runtime(entries)
 
     def test_boot_component_boundaries(self):
         _,p=parse_boot(sample_boot())

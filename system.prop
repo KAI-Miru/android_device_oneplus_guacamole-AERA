@@ -3,4 +3,4 @@ ro.recovery.usb.vid=2A70
 ro.recovery.usb.adb.pid=9012
 ro.hardware.egl=adreno
 ro.hardware.gralloc=msmnile
-ro.aera.gpu.required_libraries=/vendor/lib64/libllvm-qgl.so:/vendor/lib64/libllvm-qcom.so
+ro.aera.gpu.required_libraries=/system/lib64/libllvm-glnext.so

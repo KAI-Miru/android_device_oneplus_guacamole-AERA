@@ -6,4 +6,4 @@ service aera-gralloc /system/bin/aera-vendor-allocator
     seclabel u:r:recovery:s0
     interface android.hardware.graphics.allocator@3.0::IAllocator default
     interface android.hardware.graphics.allocator@4.0::IAllocator default
-    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/egl:/system/lib64
+    setenv LD_LIBRARY_PATH /system/lib64:/vendor/lib64:/vendor/lib64/egl

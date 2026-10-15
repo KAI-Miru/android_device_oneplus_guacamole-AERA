@@ -59,14 +59,15 @@ class WifiStartupTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.root = Path(self.temp.name)
-        for path in ('data/vendor/wifi', 'vendor/firmware_mnt', 'firmware/image',
+        for path in ('data/vendor/wifi', 'vendor', 'firmware/image',
                      'tmp', 'proc/self', 'sys/class/net', 'system/lib/modules/msmnile', 'system/bin', 'system/etc', 'bin',
                      'mnt/vendor/persist/rfs', 'mnt/vendor/persist/hlos_rfs', 'data/vendor/tombstones/rfs', 'data/vendor/olog'):
             (self.root / path).mkdir(parents=True, exist_ok=True)
         (self.root / 'firmware/image/modemuw.jsn').write_text('{"sr_service":[{"provider":"wlan","service":"fw"}]}')
+        (self.root / 'vendor/firmware_mnt').symlink_to(self.root / 'firmware', target_is_directory=True)
         (self.root / 'system/lib/modules/msmnile/qca_cld3_wlan.ko').write_text('module supplied by fixture')
         (self.root / 'system/etc/guacamole-wpa_supplicant.conf').write_text('ctrl_interface=DIR=/tmp/recovery/sockets GROUP=wifi\n')
-        (self.root / 'proc/mounts').write_text(f'fixture {self.root}/vendor erofs ro 0 0\nfixture {self.root}/mnt/vendor/persist ext4 ro,seclabel 0 0\n')
+        (self.root / 'proc/mounts').write_text(f'fixture {self.root}/mnt/vendor/persist ext4 ro,seclabel 0 0\n')
         (self.root / 'proc/self/mountinfo').touch()
         (self.root / 'proc/modules').touch()
         (self.root / 'properties.json').write_text('{"sys.guacamole.wlan.prepare":"preparing"}')
@@ -98,14 +99,13 @@ class WifiStartupTests(unittest.TestCase):
         path = self.root / 'events.jsonl'
         return [json.loads(line) for line in path.read_text().splitlines()] if path.exists() else []
 
-    def test_bind_precedes_mapper_and_modem_reference(self):
+    def test_ramdisk_firmware_mapper_precedes_modem_reference(self):
         self.assertEqual(self.run_script('guacamole-wlan-prepare.sh').returncode, 0)
         events = self.events()
-        bind = next(i for i, event in enumerate(events) if event[:2] == ['mount', '-o'] and event[-1].endswith('/vendor/firmware_mnt'))
+        self.assertFalse(any(event[0] == 'mount' and event[-1].endswith('/vendor/firmware_mnt') for event in events))
         starts = [event[2] for event in events if event[:2] == ['setprop', 'ctl.start']]
         self.assertEqual(starts, ['guacamole-qrtr-ns', 'guacamole-pd-mapper', 'guacamole-rmt-storage', 'guacamole-tftp-server', 'guacamole-wlan-firmware', 'guacamole-cnss-daemon'])
         mapper = events.index(['setprop', 'ctl.start', 'guacamole-pd-mapper'])
-        self.assertLess(bind, mapper)
         self.assertLess(mapper, next(i for i, event in enumerate(events) if event[0] == 'insmod'))
         self.assertEqual(json.loads((self.root / 'properties.json').read_text())['sys.guacamole.wlan.prepare'], 'ready')
 
@@ -121,19 +121,17 @@ class WifiStartupTests(unittest.TestCase):
         self.assertEqual(starts, ['guacamole-qrtr-ns', 'guacamole-pd-mapper'])
         self.assertFalse(any(event[0] == 'insmod' for event in self.events()))
 
-    def test_unmounted_vendor_cannot_hide_the_firmware_bind(self):
-        (self.root / 'proc/mounts').write_text('')
+    def test_mounted_vendor_is_not_pinned_by_a_child_firmware_bind(self):
+        (self.root / 'proc/mounts').write_text(f'fixture {self.root}/vendor erofs ro 0 0\n')
         self.assertNotEqual(self.run_script('guacamole-wlan-domains.sh').returncode, 0)
         self.assertFalse(any(event[0] == 'mount' or event[:2] == ['setprop', 'ctl.start'] for event in self.events()))
 
-    def test_ready_property_does_not_skip_a_hidden_firmware_bind(self):
+    def test_ready_property_does_not_skip_missing_firmware(self):
         (self.root / 'properties.json').write_text('{"sys.guacamole.wlan.domains":"ready"}')
-        self.assertEqual(self.run_script('guacamole-wlan-prepare.sh').returncode, 0)
-        events = self.events()
-        bind = next(i for i, event in enumerate(events) if event[0] == 'mount' and event[-1].endswith('/vendor/firmware_mnt'))
-        power = events.index(['setprop', 'ctl.start', 'guacamole-wlan-firmware'])
-        self.assertLess(bind, power)
-        self.assertTrue((self.root / 'vendor/firmware_mnt/image/modemuw.jsn').is_file())
+        (self.root / 'vendor/firmware_mnt').unlink()
+        (self.root / 'vendor/firmware_mnt').mkdir()
+        self.assertNotEqual(self.run_script('guacamole-wlan-prepare.sh').returncode, 0)
+        self.assertNotIn(['setprop', 'ctl.start', 'guacamole-wlan-firmware'], self.events())
 
     def test_failed_mapper_does_not_start_modem_or_load_module(self):
         self.env['TASK_WLAN_FAIL_SERVICE'] = 'guacamole-pd-mapper'
