@@ -1,8 +1,10 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """Compress a legacy LZMA ramdisk with a bounded 32 MiB dictionary."""
 import lzma
 import sys
 
+# Android puts its hermetic Python first in PATH; that build omits _lzma.
+# Use the Linux builder's Python, also used for the image verification tools.
 DICTIONARY_BYTES = 32 * 1024 * 1024
 
 
