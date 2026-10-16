@@ -10,7 +10,8 @@ from verify_image import verify_filesystem_format_configuration
 class FilesystemFormatImageTests(unittest.TestCase):
     def test_native_chooser_and_confirmation_are_required(self):
         markers = (b'Change filesystem', b'Format partition now',
-                   b'Type yes to enable formatting', b'/proc/filesystems')
+                   b'Type yes to enable formatting', b'/proc/filesystems',
+                   b'Unable to release userdata mapping; refusing to format.')
         binary = b'\0'.join(markers)
         self.assertFalse(verify_filesystem_format_configuration(binary)['device_format_tested'])
         for marker in markers:

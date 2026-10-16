@@ -9,6 +9,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/bin/qseecomd:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/qseecomd \
     $(LOCAL_PATH)/proprietary/system/bin/rmt_storage:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/rmt_storage \
     $(LOCAL_PATH)/proprietary/system/bin/tftp_server:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/tftp_server \
+    $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel_svc.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel_svc.so \
@@ -16,6 +17,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libSecureUILib.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libSecureUILib.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libStDrvInt.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libStDrvInt.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libadreno_utils.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libadreno_utils.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libboot_control_qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libboot_control_qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libcld80211.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libcld80211.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdiag.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdiag.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libdisplayconfig.qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libdisplayconfig.qti.so \
@@ -46,6 +48,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libqrtr.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqrtr.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqsocket.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqsocket.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqtikeymaster4.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtikeymaster4.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/librecovery_updater.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librecovery_updater.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librpmb.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librpmb.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui_svcsock.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui_svcsock.so \
@@ -80,8 +83,10 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/gralloc.msmnile.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/gralloc.msmnile.so
 
-TARGET_RECOVERY_DEVICE_MODULES += android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnl libssl libsync libutils libxml2 libz
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0 android.hardware.boot@1.1 android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnl libssl libsync libutils libxml2 libz
 RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.0.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.1.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.gatekeeper@1.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@3.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@4.0.so \

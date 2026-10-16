@@ -24,6 +24,8 @@
     ]
   },
   "platform_libraries": [
+    "android.hardware.boot@1.0.so",
+    "android.hardware.boot@1.1.so",
     "android.hardware.gatekeeper@1.0.so",
     "android.hardware.graphics.allocator@3.0.so",
     "android.hardware.graphics.allocator@4.0.so",
@@ -255,6 +257,27 @@
       ],
       "source_dump": "C15_PORT_GUAC_4G"
     },
+    "system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so": {
+      "source": "vendor/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so",
+      "source_dump": "C15_PORT_GUAC_4G",
+      "bytes": 21264,
+      "sha256": "9cb8a4156c066f7336d3e3d46cb9064f92d53f1fc961a05836c681bbe2075197",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "liblog.so",
+        "libhidlbase.so",
+        "libhardware.so",
+        "libutils.so",
+        "android.hardware.boot@1.0.so",
+        "android.hardware.boot@1.1.so",
+        "libboot_control_qti.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
+    },
     "system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so",
       "bytes": 37864,
@@ -387,6 +410,26 @@
       ],
       "source_dump": "7Pro_H40",
       "runtime": "graphics"
+    },
+    "system/lib64/libboot_control_qti.so": {
+      "source": "vendor/lib64/libboot_control_qti.so",
+      "source_dump": "C15_PORT_GUAC_4G",
+      "bytes": 117264,
+      "sha256": "c98a71f1dd782e0bb2880b257490fa88e17e3f4da5f41227dfa3373bb7466806",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "android.hardware.boot@1.1.so",
+        "librecovery_updater.so",
+        "libbase.so",
+        "libcutils.so",
+        "liblog.so",
+        "libz.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
     },
     "system/lib64/libcld80211.so": {
       "source": "vendor/lib64/libcld80211.so",
@@ -951,6 +994,24 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/lib64/librecovery_updater.so": {
+      "source": "vendor/lib64/librecovery_updater.so",
+      "source_dump": "C15_PORT_GUAC_4G",
+      "bytes": 83736,
+      "sha256": "207ce233fa50eac5e7f7e42a2f0bd80664131d98eba39c4a34551a86beddfac7",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libion.so",
+        "liblog.so",
+        "libz.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ]
     },
     "system/lib64/librpmb.so": {
       "source": "vendor/lib64/librpmb.so",

@@ -12,6 +12,19 @@ module. The tested firmware did not complete `fastboot boot`.
 Fastbootd is disabled. Its native menu, startup argument and userspace transitions
 check the build capability before changing USB or logical partitions.
 
+Boot-control 1.1 needs the stock HIDL passthrough wrapper as well as the service
+executable. The ramdisk includes `android.hardware.boot@1.0-impl-1.1-qti.so`,
+`libboot_control_qti.so` and `librecovery_updater.so` from the recorded C15 dump.
+Without that dlopened provider, slot switching and the metadata-mount checkpoint
+query can wait indefinitely for the service. These three providers passed a live
+RAM repair; the image verifier now requires them explicitly.
+
+Before formatting encrypted Data, `miru` unmounts it and synchronously removes
+the `userdata` device-mapper mapping through native libdm. A failed removal
+stops formatting before recovery clears its encryption state. It never force-
+removes or defers the mapping. Removing the leftover mapping resolved the
+observed F2FS formatter error, "In use by the system!".
+
 ## Graphics and input
 
 The ramdisk includes the platform task profiles and VINTF declarations needed

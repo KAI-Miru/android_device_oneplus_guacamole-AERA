@@ -89,6 +89,16 @@ def verify_native_service_configuration(entries):
     elf = ELFFile(io.BytesIO(entries[service][1]))
     if elf.elfclass != 64 or elf.header['e_machine'] != 'EM_AARCH64':
         raise ValueError('Native boot-control service must be ARM64')
+    # The service dlopens this provider, so DT_NEEDED closure alone cannot
+    # detect an image which starts the service but has no implementation.
+    for path in ('system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so',
+                 'system/lib64/libboot_control_qti.so',
+                 'system/lib64/librecovery_updater.so'):
+        if path not in entries or not stat.S_ISREG(entries[path][0]):
+            raise ValueError(f'Missing boot-control runtime provider: {path}')
+        provider = ELFFile(io.BytesIO(entries[path][1]))
+        if provider.elfclass != 64 or provider.header['e_machine'] != 'EM_AARCH64':
+            raise ValueError(f'Boot-control runtime provider must be ARM64: {path}')
     return [profiles, framework, manager, boot]
 
 
@@ -107,10 +117,12 @@ def verify_screen_lock_configuration(recovery):
 
 def verify_filesystem_format_configuration(recovery):
     required = (b'Change filesystem', b'Format partition now',
-                b'Type yes to enable formatting', b'/proc/filesystems')
+                b'Type yes to enable formatting', b'/proc/filesystems',
+                b'Unable to release userdata mapping; refusing to format.')
     if any(value not in recovery for value in required):
-        raise ValueError('Native filesystem selection or typed format confirmation is missing')
+        raise ValueError('Native filesystem selection, format confirmation or mapping cleanup is missing')
     return {'native_filesystem_selection_present': True,
+            'checked_userdata_mapping_cleanup_present': True,
             'device_format_tested': False}
 
 
