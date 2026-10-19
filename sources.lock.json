@@ -1,7 +1,7 @@
 {
   "manifest_url": "https://github.com/AERA-Recovery/android_manifest.git",
   "manifest_branch": "aera-16.0",
-  "manifest_commit": "250b38eed4b7bb663a945deb3c4f12e4ff2339dd",
+  "manifest_commit": "4b0611ad62c1dbb6990ab129769591d137e6ad79",
   "aosp_revision": "android-16.0.0_r1",
   "projects": [
     {
@@ -18,7 +18,7 @@
       "remote": "Miru",
       "url": "https://github.com/KAI-Miru/android_bootable_recovery.git",
       "branch": "miru",
-      "commit": "1376f7e22d308d5e15e4a3ffda5d0186f5639d7b"
+      "commit": "06aa34cccd95a376605fc55242f5c1c97f8665cf"
     },
     {
       "path": "build/make",
@@ -107,6 +107,22 @@
       "url": "https://github.com/LineageOS/android_external_libncurses.git",
       "branch": "lineage-22.2",
       "commit": "cf8d1a3f3b0ab6f9385c3361e1aada7ecc635ad6"
+    },
+    {
+      "path": "external/libsmb2",
+      "name": "android_external_libsmb2",
+      "remote": "AERA",
+      "url": "https://github.com/AERA-Recovery/android_external_libsmb2.git",
+      "branch": "aera-16.0",
+      "commit": "d2e53b65d3c19775f3651b30dd4cad582a4c6f2b"
+    },
+    {
+      "path": "external/libssh2",
+      "name": "android_external_libssh2",
+      "remote": "AERA",
+      "url": "https://github.com/AERA-Recovery/android_external_libssh2.git",
+      "branch": "aera-16.0",
+      "commit": "c9a3659ff79e540ea767357a29d7574976e9c5a9"
     },
     {
       "path": "external/libuv",

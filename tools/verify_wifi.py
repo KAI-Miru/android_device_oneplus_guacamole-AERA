@@ -8,7 +8,7 @@ from pathlib import Path
 from elftools.elf.elffile import ELFFile
 
 WLAN_EXECUTABLES = ('system/bin/wpa_supplicant', 'system/bin/wpa_cli',
-                    'system/bin/dhcptool', 'system/bin/rclone', 'system/bin/fusermount3')
+                    'system/bin/dhcptool', 'system/bin/aera-netfs', 'system/bin/fusermount3')
 WLAN_VENDOR_EXECUTABLES = ('system/bin/rmt_storage', 'system/bin/tftp_server')
 
 

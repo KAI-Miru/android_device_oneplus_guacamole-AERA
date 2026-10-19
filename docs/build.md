@@ -67,3 +67,15 @@ against its Git revision. Native platform libraries are built from pinned source
 
 A verified build is still a device-test candidate. Boot, storage unlock and
 Wi-Fi need physical testing before release.
+
+### Native NAS source update
+
+The pinned recovery now uses `aera-netfs` for SMB/SFTP. The source lock includes
+its `libsmb2` and `libssh2` projects and the manifest that declares them. Image
+verification checks the new executable and its ABI alongside the WLAN runtime.
+
+An older compiled checkpoint has a different manifest/source plan and will be
+rejected by the prepared-environment verifier. The first image build with this
+lock needs fresh preparation (`use_prepared=false`); its resulting checkpoint
+can then be reused. Recovery-only incremental updates remain supported once
+that compatible checkpoint exists.
