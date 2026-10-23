@@ -102,7 +102,9 @@ enable path.
 Stock `rmt_storage` and `tftp_server` start before the radio. The modem needs
 these backends to complete firmware startup. Remote storage serves the installed
 modem NV partitions. TFTP's writable RFS directories use RAM mirrors of the
-read-only persist files; the mirrors remain available across Wi-Fi toggles.
+persist files; the mirrors remain available across Wi-Fi toggles. Persist may
+remain read-only or be remounted writable by recovery for Qualcomm SFS when
+RPMB reports that its key is not provisioned. TFTP still writes to RAM mirrors.
 QRTR, PD mapper and the stock backends stay registered while Wi-Fi is off.
 The modem/ADSP power references and CNSS process stop with the supplicant.
 
