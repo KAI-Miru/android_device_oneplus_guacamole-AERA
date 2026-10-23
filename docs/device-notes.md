@@ -131,3 +131,13 @@ The ramdisk includes a minimal `WCNSS_qcom_cfg.ini` enabling the existing
 recovery-only deterministic MAC firmware. All other driver options keep their
 defaults. The MAC helper updates only RAM-backed configuration and firmware;
 it does not change the factory MAC or require installed vendor to stay mounted.
+
+The recovery pin includes a scoped metadata-mount checkpoint query. An
+unmarked boot slot alone must not put recovery userdata writes into rollback
+mode: recovery has no Android boot-success commit sequence. When mounted
+metadata has no pending checkpoint record, the mount keeps normal durable
+writes. Active or unverifiable Android transactions retain Vold's original
+decision. The device and installed-ROM `checkpoint=fs` entries are retained;
+the fix does not mark a slot successful, commit an OTA or edit its records.
+Source validation checks the reviewed Vold and fs_mgr identities. Host tests
+cover the policy and linkage; a rebuilt image still needs a retention test.

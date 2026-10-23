@@ -7,6 +7,30 @@ from pathlib import Path
 import subprocess
 
 
+def verify_checkpoint_source(source_root, lock, checkout):
+    metadata = Path(checkout) / 'aera_checkpoint/source.json'
+    if not metadata.is_file():
+        return None
+    origin = json.loads(metadata.read_text())
+    if origin['symbol'] != '_ZN7android4vold18cp_needsCheckpointEv':
+        raise ValueError('Unexpected recovery checkpoint query symbol')
+    reviewed = []
+    for dependency in origin['projects']:
+        project = next((p for p in lock['projects'] if p['path'] == dependency['path']), None)
+        if not project or (project['commit'], project['url']) != (dependency['commit'], dependency['url']):
+            raise ValueError('Recovery checkpoint query requires review against pinned ' + dependency['path'])
+        for name, expected in dependency['files'].items():
+            relative = Path(name)
+            if relative.is_absolute() or '..' in relative.parts:
+                raise ValueError('Unexpected recovery checkpoint source path')
+            source = Path(source_root) / dependency['path'] / relative
+            if not source.is_file() or hashlib.sha256(source.read_bytes().replace(b'\r\n', b'\n')).hexdigest() != expected:
+                raise ValueError('Recovery checkpoint upstream source identity differs: ' + name)
+        reviewed.append({'path': project['path'], 'commit': project['commit']})
+    return {'symbol': origin['symbol'], 'dependencies': reviewed,
+            'platform_sources_unchanged': True, 'pending_transactions_preserved': True}
+
+
 def verify_keystore_source(source_root, lock, checkout):
     metadata = Path(checkout) / 'aera_keystore/source.json'
     if not metadata.is_file():
@@ -39,6 +63,7 @@ def verify(source_root, artifact_root, device_root=None):
               'commit': revision, 'tracked_source_clean': True,
               'build_time_source_patches': False}
     record['keystore_source'] = verify_keystore_source(source_root, lock, checkout)
+    record['checkpoint_source'] = verify_checkpoint_source(source_root, lock, checkout)
     artifacts = Path(artifact_root)
     artifacts.mkdir(parents=True, exist_ok=True)
     (artifacts / 'recovery-source.json').write_text(json.dumps(record, indent=2) + '\n')
