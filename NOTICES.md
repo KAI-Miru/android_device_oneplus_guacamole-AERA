@@ -22,3 +22,6 @@
 
 Files with an Apache-2.0 SPDX marker use that license. Existing source,
 firmware and proprietary components retain their original licenses and terms.
+
+- AW8697 haptic firmware: the user-supplied OnePlus 7 Pro H.40 vendor dump,
+  recorded separately in `tools/haptic-source.json` and the per-file manifest.

@@ -80,3 +80,7 @@ https://github.com/TeamWin/android_device_oneplus_guacamole@abef9b8a105c9feee847
 7Pro_H40@supplied-dump/vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so:vendor/lib64/hw/android.hardware.graphics.mapper@3.0-impl-qti-display.so|b5d6c5175941a7ccea2f307ad9c850bd0c2e82f6ebea2a3d0e3804779d10b204
 7Pro_H40@supplied-dump/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so:vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so|b2fa6385d70c961c7c52e644b2bc4dbc271daaa212d7c9e601ff60677fee3c79
 7Pro_H40@supplied-dump/vendor/lib64/hw/gralloc.msmnile.so:vendor/lib64/hw/gralloc.msmnile.so|a07984b01000888bd25fc81941caebc6ef50d1f86bb2bbb4f7eebfeebf9f4a4b
+7Pro_H40@supplied-dump/vendor/firmware/40ms_RTP_170Hz.bin:vendor/firmware/40ms_RTP_170Hz.bin|f1de14505c59a0d91db1f1b2cf7e58a276f949f61946273cefb001d59f780527
+7Pro_H40@supplied-dump/vendor/firmware/80ms_RTP_170Hz.bin:vendor/firmware/80ms_RTP_170Hz.bin|98fb90d52ddf8ce2e5825d057c67be0237d78e6c6df439c2d8fbceff136ab4ff
+7Pro_H40@supplied-dump/vendor/firmware/aw8697_haptic_170.bin:vendor/firmware/aw8697_haptic_170.bin|c77f9450350bd0036674c67cea62fd12784fe00aba5bc9e01f3411782fac57db
+7Pro_H40@supplied-dump/vendor/firmware/aw8697_rtp.bin:vendor/firmware/aw8697_rtp.bin|36438cefa7206dac9ef150b613418d5912c3eb69ed4e0084798602985b43470d

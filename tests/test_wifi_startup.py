@@ -223,7 +223,8 @@ class WifiStartupTests(unittest.TestCase):
     def test_image_rejects_raced_mapper_start_and_automatic_retry(self):
         entries = {name: (0o100644, (ROOT / 'recovery/root' / name).read_bytes()) for name in
                    ('init.recovery.wifi.rc', 'system/bin/guacamole-wlan-domains.sh', 'system/bin/guacamole-wlan-prepare.sh', 'system/bin/guacamole-wpa-supplicant.sh',
-                    'system/bin/guacamole-wlan-storage.sh', 'system/etc/guacamole-wpa_supplicant.conf')}
+                    'system/bin/guacamole-wlan-storage.sh', 'system/etc/guacamole-wpa_supplicant.conf',
+                    'vendor/etc/wifi/WCNSS_qcom_cfg.ini')}
         verify_startup_configuration(entries)
         for old, new in ((b'    start guacamole-wlan-prepare', b'    start guacamole-pd-mapper\n    start guacamole-wlan-prepare'),
                          (b'    oneshot\n    seclabel', b'    seclabel')):

@@ -21,6 +21,11 @@ def verify():
         assert actual == set(manifest['files']) | {'manifest.json'}, f'Untracked binary inputs: {actual - set(manifest["files"])}'
     assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
     blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
+    from verify_haptics import verify_haptic_runtime
+    verify_haptic_runtime({name: (0o100644, (ROOT/'proprietary'/name).read_bytes())
+                           for name in blobs['files'] if blobs['files'][name].get('runtime') == 'haptics'})
+    from verify_health import verify_health_startup
+    verify_health_startup((ROOT/'recovery/root/init.recovery.qcom.rc').read_text())
     graphics = json.loads((ROOT/'tools/gpu-source.json').read_text())
     assert blobs['graphics_source'] == graphics
     for dest in set(graphics['seeds'].values()) | set(graphics['required_libraries']):
@@ -81,7 +86,8 @@ def verify():
     from verify_wifi import verify_startup_configuration
     wifi_names = ('init.recovery.wifi.rc', 'system/bin/guacamole-wlan-domains.sh',
                   'system/bin/guacamole-wlan-prepare.sh', 'system/bin/guacamole-wpa-supplicant.sh',
-                  'system/bin/guacamole-wlan-storage.sh', 'system/etc/guacamole-wpa_supplicant.conf')
+                  'system/bin/guacamole-wlan-storage.sh', 'system/etc/guacamole-wpa_supplicant.conf',
+                  'vendor/etc/wifi/WCNSS_qcom_cfg.ini')
     verify_startup_configuration({name: (0o100644, (ROOT/'recovery/root'/name).read_bytes()) for name in wifi_names})
     twrp_flags = (ROOT/'recovery/root/system/etc/twrp.flags').read_text()
     assert 'fileencryption=' not in twrp_flags, 'Display flags must not override ROM encryption settings'

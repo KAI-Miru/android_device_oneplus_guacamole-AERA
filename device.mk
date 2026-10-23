@@ -51,6 +51,7 @@ DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 
 # All copied init files are device-specific extensions to AERA's native init.
 PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/recovery/root/vendor/etc/wifi/WCNSS_qcom_cfg.ini:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/etc/wifi/WCNSS_qcom_cfg.ini \
     system/core/libprocessgroup/profiles/task_profiles.json:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/task_profiles.json \
     system/libhidl/vintfdata/manifest.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest.xml \
     system/hwservicemanager/hwservicemanager.xml:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/vintf/manifest/hwservicemanager.xml \

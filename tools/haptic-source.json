@@ -1,0 +1,22 @@
+{
+  "source_dump": "7Pro_H40",
+  "description": "OnePlus 7 Pro H.40 AW8697 170 Hz recovery haptic firmware",
+  "files": {
+    "vendor/firmware/40ms_RTP_170Hz.bin": {
+      "bytes": 985,
+      "sha256": "f1de14505c59a0d91db1f1b2cf7e58a276f949f61946273cefb001d59f780527"
+    },
+    "vendor/firmware/80ms_RTP_170Hz.bin": {
+      "bytes": 1979,
+      "sha256": "98fb90d52ddf8ce2e5825d057c67be0237d78e6c6df439c2d8fbceff136ab4ff"
+    },
+    "vendor/firmware/aw8697_haptic_170.bin": {
+      "bytes": 5852,
+      "sha256": "c77f9450350bd0036674c67cea62fd12784fe00aba5bc9e01f3411782fac57db"
+    },
+    "vendor/firmware/aw8697_rtp.bin": {
+      "bytes": 72000,
+      "sha256": "36438cefa7206dac9ef150b613418d5912c3eb69ed4e0084798602985b43470d"
+    }
+  }
+}

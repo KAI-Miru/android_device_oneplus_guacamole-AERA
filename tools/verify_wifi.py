@@ -13,6 +13,12 @@ WLAN_VENDOR_EXECUTABLES = ('system/bin/rmt_storage', 'system/bin/tftp_server')
 
 
 def verify_startup_configuration(entries):
+    name = 'vendor/etc/wifi/WCNSS_qcom_cfg.ini'
+    if name not in entries or not stat.S_ISREG(entries[name][0]):
+        raise ValueError('Recovery Qualcomm stable-MAC configuration is missing')
+    config_lines = [line.split('#', 1)[0].strip() for line in entries[name][1].decode().splitlines()]
+    if [line for line in config_lines if line] != ['read_mac_addr_from_mac_file=1', 'END']:
+        raise ValueError('Recovery Qualcomm configuration must enable only stable-MAC firmware')
     init = entries['init.recovery.wifi.rc'][1].decode()
     trigger = init.split('on property:sys.aera.wlan.up=1', 1)[1].split('\non ', 1)[0]
     if any('start ' + name in trigger for name in
@@ -112,7 +118,7 @@ def verify_runtime(entries, module_metadata):
                'system/bin/guacamole-wlan-domains.sh',
                'system/bin/guacamole-wlan-storage.sh',
                'system/bin/guacamole-wlan-prepare.sh', 'system/bin/guacamole-wpa-supplicant.sh',
-               'system/etc/guacamole-wpa_supplicant.conf',
+               'system/etc/guacamole-wpa_supplicant.conf', 'vendor/etc/wifi/WCNSS_qcom_cfg.ini',
                'system/etc/vintf/manifest/guacamole-wifi.xml')
     for name in configs:
         if name not in entries or not stat.S_ISREG(entries[name][0]):

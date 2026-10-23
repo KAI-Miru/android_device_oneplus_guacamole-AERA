@@ -116,3 +116,18 @@ Temporary-service device tests confirmed scanning and WPA2 on 2.4 GHz. WPA3
 on 5 GHz still failed with PMF and H2E enabled. The integrated image and its
 Off/On lifecycle still need device testing; configuration alone did not resolve
 the WPA3 failure.
+
+
+The bundled Health 2.1 service is explicitly imported and started on boot.
+Its executable, provider and VINTF declaration alone do not start the service.
+Image verification requires its reachable startup and ARM64 runtime inputs.
+
+AW8697 base and 170 Hz short-pulse waveforms come from the same supplied
+`7Pro_H40` reference. `tools/haptic-source.json` records their exact identities;
+imports and image checks reject missing or changed firmware. No calibration
+or persist files are included.
+
+The ramdisk includes a minimal `WCNSS_qcom_cfg.ini` enabling the existing
+recovery-only deterministic MAC firmware. All other driver options keep their
+defaults. The MAC helper updates only RAM-backed configuration and firmware;
+it does not change the factory MAC or require installed vendor to stay mounted.

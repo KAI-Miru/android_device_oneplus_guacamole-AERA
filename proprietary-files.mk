@@ -66,6 +66,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.tui_comm@1.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.tui_comm@1.0.so \
+    $(LOCAL_PATH)/proprietary/vendor/firmware/40ms_RTP_170Hz.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/40ms_RTP_170Hz.bin \
+    $(LOCAL_PATH)/proprietary/vendor/firmware/80ms_RTP_170Hz.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/80ms_RTP_170Hz.bin \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a630_gmu.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a630_gmu.bin \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a630_sqe.fw:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a630_sqe.fw \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a640_gmu.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a640_gmu.bin \
@@ -74,6 +76,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a640_zap.b02:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a640_zap.b02 \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a640_zap.elf:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a640_zap.elf \
     $(LOCAL_PATH)/proprietary/vendor/firmware/a640_zap.mdt:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/a640_zap.mdt \
+    $(LOCAL_PATH)/proprietary/vendor/firmware/aw8697_haptic_170.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/aw8697_haptic_170.bin \
+    $(LOCAL_PATH)/proprietary/vendor/firmware/aw8697_rtp.bin:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/firmware/aw8697_rtp.bin \
     $(LOCAL_PATH)/proprietary/vendor/lib64/egl/eglSubDriverAndroid.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/egl/eglSubDriverAndroid.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/egl/libEGL_adreno.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/egl/libEGL_adreno.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/egl/libGLESv1_CM_adreno.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/egl/libGLESv1_CM_adreno.so \

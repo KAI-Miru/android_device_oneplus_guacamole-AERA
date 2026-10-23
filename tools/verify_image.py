@@ -6,6 +6,9 @@ from boot_v2 import parse_boot, bootloader_layout
 from elftools.elf.elffile import ELFFile
 from verify_wifi import WLAN_EXECUTABLES, verify_runtime as verify_wifi_runtime
 from verify_usb import verify_usb_configuration
+from verify_health import verify_health_runtime
+from verify_haptics import verify_haptic_runtime
+from verify_keystore import verify_keystore_runtime
 
 def unpack_newc(data):
     entries = {}; offset = 0
@@ -309,6 +312,9 @@ def verify(image, report, kernel=None):
     if any(p in entries for p in forbidden): raise ValueError('Stock/custom recovery runtime was imported')
     native_init = verify_native_init(entries)
     native_services = verify_native_service_configuration(entries)
+    health_runtime = verify_health_runtime(entries)
+    haptic_runtime = verify_haptic_runtime(entries)
+    keystore_runtime = verify_keystore_runtime(entries)
     crypto_services = verify_crypto_service_configuration(entries)
     gpu_runtime = verify_gpu_runtime(entries)
     wifi_runtime = verify_wifi_runtime(entries, json.loads((root/'modules/manifest.json').read_text()))
@@ -332,7 +338,9 @@ def verify(image, report, kernel=None):
                 if s.entry.st_shndx != 'SHN_UNDEF': defined.add(s.name)
                 elif s.entry.st_info.bind == 'STB_GLOBAL': undefined.add(s.name)
         return deps, defined, undefined
-    audited = {n for n, record in inputs['files'].items() if 'needed' in record} | set(WLAN_EXECUTABLES)
+    audited = ({n for n, record in inputs['files'].items() if 'needed' in record} |
+               set(WLAN_EXECUTABLES) | {'system/bin/android.hardware.health@2.1-service',
+                                        'system/bin/aera_keystore2'})
     for n in sorted(audited):
         deps, defined, undefined = dynamic(entries[n][1]); seen = set(); todo = list(deps)
         while todo:
@@ -351,6 +359,8 @@ def verify(image, report, kernel=None):
               'architecture':verify_arm64_runtime(entries),'bootloader_layout':loading,
               'native_init_script':native_init,'native_init_target':'/system/bin/init',
               'native_service_configuration':native_services,
+              'health_runtime':health_runtime, 'haptic_runtime':haptic_runtime,
+              'keystore_runtime':keystore_runtime,
               'official_crypto_services':crypto_services,
               'gatekeeper_startup':verify_gatekeeper_spu_configuration(entries),
               'ui_power_handoff':{'graphics_thread_kept_alive':True,'terminal_action_retained':True,'device_reboot_tested':False},
