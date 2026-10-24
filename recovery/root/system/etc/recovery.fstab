@@ -2,12 +2,14 @@
 #
 # The supplied H.40 images are ext4, while some custom Android 12 ROMs use
 # EROFS. Keep one canonical System entry: TWRP probes the block device and
-# updates Current_File_System before mounting it. Duplicate / entries become
+# updates Current_File_System before mounting it. Use filesystem-neutral read-only
+# options here: ext4 barrier/discard options are invalid when probing finds EROFS.
+# Duplicate / entries become
 # duplicate System rows because TWRP normalizes both to /system_root.
 # The unsuffixed by-name paths are intentional: slotselect adds _a or _b.
 
 #<src>                                      <mnt_point>  <type>  <mnt_flags and options>  <fs_mgr_flags>
-/dev/block/bootdevice/by-name/system        /             ext4    ro,barrier=1,discard     wait,slotselect
+/dev/block/bootdevice/by-name/system        /             ext4    ro                       wait,slotselect
 /dev/block/bootdevice/by-name/vendor        /vendor       ext4    ro,barrier=1,discard     wait,slotselect
 /dev/block/bootdevice/by-name/vendor        /vendor       erofs   ro                       wait,slotselect
 /dev/block/bootdevice/by-name/odm           /odm          ext4    ro,barrier=1,discard     wait,slotselect

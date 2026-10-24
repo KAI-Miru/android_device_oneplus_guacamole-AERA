@@ -76,6 +76,8 @@ def verify():
     assert 'ro.recovery.usb.fastboot.pid' not in (ROOT/'system.prop').read_text()
     fstab = (ROOT/'recovery/root/system/etc/recovery.fstab').read_text()
     rows = [s.split() for s in fstab.splitlines() if s.strip() and not s.lstrip().startswith('#')]
+    from verify_mount_options import verify_system_mount_options
+    verify_system_mount_options(fstab)
     vendor_rows = [r for r in rows if r[1] == '/vendor']
     assert vendor_rows and all('ro' in r[3].split(',') for r in vendor_rows), 'Installed vendor access must remain read-only'
     data_rows = [r for r in rows if r[1] == '/data']

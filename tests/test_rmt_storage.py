@@ -141,6 +141,7 @@ class StockRemoteStorageTests(unittest.TestCase):
             with patch.object(import_vendor, 'ROOT', root), \
                  patch.object(import_vendor, 'official_crypto_root', return_value=official), \
                  patch.object(import_vendor, 'graphics_inputs', return_value={}), \
+                 patch.object(import_vendor, 'haptic_inputs', return_value={}), \
                  patch.object(import_vendor, 'elf_info', side_effect=info), \
                  patch.object(import_vendor.subprocess, 'check_output', return_value=fixture_elf):
                 import_vendor.import_vendor(port, official, gpu, stock)

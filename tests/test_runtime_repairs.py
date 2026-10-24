@@ -133,7 +133,7 @@ class RuntimeRepairTests(unittest.TestCase):
                 path = dump / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes((ROOT / 'proprietary' / name).read_bytes())
-            self.assertEqual(len(haptic_inputs(dump, source)), 4)
+            self.assertEqual(len(haptic_inputs(dump, source)), len(source['files']))
             with self.assertRaises(ValueError):
                 haptic_inputs(Path(temp) / 'wrong-model', source)
             path.write_bytes(b'changed')

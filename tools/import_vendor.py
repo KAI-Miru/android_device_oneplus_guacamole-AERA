@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 from elftools.elf.elffile import ELFFile
 from verify_rmt_storage import stock_input
+from verify_haptics import haptic_inputs
 
 ROOT = Path(__file__).resolve().parents[1]
 # Compiled from AERA/platform source, never copied from Android 15 userspace.
@@ -76,19 +77,6 @@ def graphics_inputs(dump, seeds):
             candidate = select_library(soname, search)
             relative = candidate.relative_to(dump).as_posix()
             pending.append((relative, seeds.get(relative, 'system/lib64/' + soname)))
-    return records
-
-
-def haptic_inputs(dump, source):
-    """Require exact model-matched waveforms; never fall back to port firmware."""
-    if dump.name != source['source_dump']:
-        raise ValueError('Haptic firmware must come from the recorded H.40 dump')
-    records = {}
-    for name, identity in source['files'].items():
-        data = (dump / name).read_bytes()
-        if len(data) != identity['bytes'] or hashlib.sha256(data).hexdigest() != identity['sha256']:
-            raise ValueError(f'Haptic firmware identity differs: {name}')
-        records[name] = data
     return records
 
 
@@ -184,7 +172,7 @@ def import_vendor(dump, official_checkout, gpu_dump, rmt_storage_dump):
         records[dest] = {'source': p.relative_to(dump).as_posix(), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()}
 
     haptic = json.loads((ROOT / 'tools/haptic-source.json').read_text())
-    for dest, data in haptic_inputs(gpu_dump, haptic).items():
+    for dest, data in haptic_inputs(rmt_storage_dump, haptic).items():
         target = ROOT / 'proprietary' / dest
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(data)
