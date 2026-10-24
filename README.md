@@ -13,8 +13,9 @@ tests together with the selected device tree's checks. The small launchers on
 **Guacamole native AERA recovery** accepts a device branch, tag or commit. The
 validation job resolves that ref once; build jobs use the exact device and
 runner commits it checked. Both identities are included in the diagnostics.
-Image builds also require a caller-supplied ARM64 Image URL and SHA256. The
-download is verified before compilation and kept outside the Git checkout.
+Image builds verify the original H.40 kernel, header, reference ramdisk and
+device trees bundled by the selected device revision, together with its matching
+WLAN module. There are no external kernel inputs, downloads or kernel secrets.
 
 The assembly step combines the two checkouts in a temporary directory. It
 keeps the existing build-script paths and prepared-environment fingerprint
@@ -51,16 +52,14 @@ reuse and separation of device and runner inputs. `ci/build.sh` runs the same
 device and image verification used by prepared builds. A successful build
 does not replace hardware testing.
 
-## Kernel containers and WLAN compatibility
+## Bundled boot input policy
 
-Kernel intake identifies ARM64 Image, gzip Image or boot-v2 payloads by content,
-not archive or member names. A ZIP may contain one candidate payload or one
-inner ZIP containing it. Multiple candidates, extra ZIP nesting, unsafe paths,
-symlinks and oversized inputs are rejected. The exact caller-supplied kernel
-SHA256 remains mandatory; ramdisks and device trees in containers are ignored.
+`main` owns the original H.40 boot blobs and their manifests. Cold builds,
+preparation and prepared builds all run the same bundled-input verifier before
+compilation. The original stock ramdisk is a reference blob; AERA compiles its
+native ramdisk. No external Image or retained compiled-image fallback is used.
 
-WLAN startup reads `modinfo -F vermagic` from the actual bundled module and
-compares its release with the running kernel before starting radio helpers.
-Normal `insmod` retains the kernel's vermagic and symbol-version checks; modules
-are never force-loaded. Rebuilding with a different kernel/module pair also
-requires updating the module manifest and passing the existing image/ABI audits.
+Prepared-environment fingerprints include the boot and WLAN module manifests.
+Old CI59 environments remain stored but are rejected for H.40 builds. Fresh
+builds are the default. The archive selector remains a standalone tested tool;
+it is not part of Guacamole's bundled-input build path.
