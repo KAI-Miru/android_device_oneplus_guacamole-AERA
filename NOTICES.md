@@ -25,3 +25,11 @@ firmware and proprietary components retain their original licenses and terms.
 
 - AW8697 haptic firmware: the user-supplied OnePlus 7 Pro H.40 vendor dump,
   recorded separately in `tools/haptic-source.json` and the per-file manifest.
+
+- Original OnePlus 7 Pro ColorOS 12.1 H.40 boot components: extracted from
+  source boot SHA256 `991cf738f5a6dc874c6261fa073c89182e61935a9493dc27347699c4d0a68792`.
+  Per-component identities and exact stock payload provenance are in
+  `prebuilt/manifest.json`. The reference stock ramdisk is not the AERA runtime.
+- Matching H.40 WLAN module: `7Pro_H40/vendor/lib/modules/qca_cld3_wlan.ko`,
+  with identity and kernel vermagic in `modules/manifest.json`. These original
+  firmware/kernel components retain their upstream licenses and notices.

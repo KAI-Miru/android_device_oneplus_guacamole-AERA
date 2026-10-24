@@ -5,10 +5,10 @@
 The DTB and recovery DTBO identities are in `prebuilt/manifest.json`.
 
 The boot partition is 96 MiB. The image verifier calculates the smaller runtime
-load window from the supplied Image header, the DTB reservation and guard pages.
-The firmware layout is in `config/bootloader-layout.json`. The supplied Image
-must support legacy LZMA ramdisks and match the device's DTB, firmware and WLAN
-module. The tested firmware did not complete `fastboot boot`.
+load window from the bundled original H.40 Image header, the DTB reservation and guard pages.
+The firmware layout is in `config/bootloader-layout.json`. The original kernel
+supports legacy LZMA and is bundled with the original DTB/DTBO and matching WLAN
+module. AERA generates its own ramdisk. The tested firmware did not complete `fastboot boot`.
 Fastbootd is disabled. Its native menu, startup argument and userspace transitions
 check the build capability before changing USB or logical partitions.
 

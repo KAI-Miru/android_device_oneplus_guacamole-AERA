@@ -17,8 +17,9 @@ the Android 15 ColorOS port. This is an experimental build.
 
 - ARM64-only recovery; Snapdragon 855 / Adreno 640.
 - Recovery-as-boot, physical A/B slots, boot header v2 and a 96 MiB boot partition.
-- DTB and recovery DTBO in `prebuilt/`; hashes are recorded alongside them.
-- A compatible ARM64 Image must be supplied by the builder; no kernel binary is included.
+- Original H.40 boot header, kernel, stock ramdisk, DTB and recovery DTBO are versioned in `prebuilt/`.
+- Builds use the bundled H.40 kernel and matching stock WLAN module; no kernel URL, artifact secret or user-supplied image is required.
+- The stock ramdisk is a verified reference; the final ramdisk is built natively by AERA.
 - Legacy LZMA ramdisk with a 32 MiB dictionary to fit the bootloader's load window.
 - Complete H.40 Adreno EGL/GLES runtime in the ramdisk, including its shader compiler.
 - Qualcomm crypto providers from the official TeamWin guacamole tree.

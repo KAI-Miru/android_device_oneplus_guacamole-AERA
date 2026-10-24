@@ -7,9 +7,11 @@ from import_vendor import elf_info
 ROOT = Path(__file__).resolve().parents[1]
 
 def verify():
+    from kernel_input import verify_bundled_boot
+    verify_bundled_boot(ROOT)
     prebuilt = json.loads((ROOT/'prebuilt/manifest.json').read_text())
-    assert prebuilt['source'] == 'PRO_CI59-BOOT.img'
-    assert prebuilt['source_sha256'] == '718d07ff88435d95df1c930c3ad5ff8e454b823394ffc9b05f9a4ff6ac249034'
+    assert prebuilt['source'] == 'OnePlus 7 Pro ColorOS 12.1 H.40 boot.img'
+    assert prebuilt['source_sha256'] == '991cf738f5a6dc874c6261fa073c89182e61935a9493dc27347699c4d0a68792'
     assert prebuilt['source_ramdisk_imported'] is False
     assert prebuilt['partition_bytes'] == 100663296
     for base, manifest in [(ROOT/'prebuilt', prebuilt), (ROOT/'proprietary', json.loads((ROOT/'proprietary/manifest.json').read_text()))]:
@@ -19,7 +21,7 @@ def verify():
             assert hashlib.sha256(data).hexdigest() == record['sha256'], f'Hash mismatch: {name}'
         actual = {p.relative_to(base).as_posix() for p in base.rglob('*') if p.is_file()}
         assert actual == set(manifest['files']) | {'manifest.json'}, f'Untracked binary inputs: {actual - set(manifest["files"])}'
-    assert set(prebuilt['files']) == {'dtb.img','recovery-dtbo.img'}
+    assert set(prebuilt['files']) == {'boot-header-v2.bin', 'kernel', 'ramdisk-stock.cpio.gz', 'dtb.img', 'recovery-dtbo.img'}
     blobs = json.loads((ROOT/'proprietary/manifest.json').read_text())
     from verify_haptics import verify_haptic_runtime
     verify_haptic_runtime({name: (0o100644, (ROOT/'proprietary'/name).read_bytes())

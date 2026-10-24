@@ -17,9 +17,10 @@ checks the loader window, native runtime dependencies and AVB structure.
 ## Image builds
 
 Use **Guacamole native AERA recovery** in GitHub Actions and select the device
-ref to build. Supply an HTTPS URL and SHA256 for your compatible ARM64 Image.
-With a private checkpoint, the URL can be blank to reuse a retained Image with
-the exact supplied SHA256.
+ref to build. The original H.40 boot blobs and matching WLAN module come from
+that device revision. No external kernel, download URL or kernel secret is used.
+Fresh builds are the default; old environments with different boot/module manifests
+are rejected before reuse.
 The launcher on `main` calls the runner workflow on `ci-runner`.
 Every build records the resolved device and runner commits separately.
 
@@ -31,7 +32,6 @@ git clone --branch ci-runner --single-branch \
 python3 ../guacamole-runner/ci/assemble_inputs.py \
   --device "$PWD" --runner ../guacamole-runner --output /tmp/guacamole-build-inputs
 export AERA_DEVICE_REVISION=$(git rev-parse HEAD)
-export AERA_PREBUILT_KERNEL=/absolute/path/to/your/Image
 export AERA_SOURCE_DIR=/path/to/dedicated/aera-source
 export AERA_ARTIFACT_DIR=/path/to/artifacts
 export BUILD_JOBS=4
@@ -80,16 +80,22 @@ lock needs fresh preparation (`use_prepared=false`); its resulting checkpoint
 can then be reused. Recovery-only incremental updates remain supported once
 that compatible checkpoint exists.
 
-## Kernel containers and WLAN compatibility
+## Original H.40 boot inputs
 
-Kernel intake identifies ARM64 Image, gzip Image or boot-v2 payloads by content,
-not archive or member names. A ZIP may contain one candidate payload or one
-inner ZIP containing it. Multiple candidates, extra ZIP nesting, unsafe paths,
-symlinks and oversized inputs are rejected. The exact caller-supplied kernel
-SHA256 remains mandatory; ramdisks and device trees in containers are ignored.
+`prebuilt/manifest.json` records the original 96 MiB boot-image source hash,
+all five extracted component hashes, and the exactly reconstructible stock
+boot payload hash. `tools/kernel_input.py` verifies every blob, the original
+payload, legacy LZMA support, and the matching bundled WLAN module before source
+checkout. The stock header supplies geometry/provenance; Android generates the
+new AERA boot header. The stock ramdisk is retained for reference and is never
+copied into the native AERA ramdisk.
 
-WLAN startup reads `modinfo -F vermagic` from the actual bundled module and
-compares its release with the running kernel before starting radio helpers.
-Normal `insmod` retains the kernel's vermagic and symbol-version checks; modules
-are never force-loaded. Rebuilding with a different kernel/module pair also
-requires updating the module manifest and passing the existing image/ABI audits.
+Image verification checks the exact bundled kernel, original DTB/DTBO, actual
+kernel/BSS load bounds, native runtime and all existing ABI/AVB constraints.
+Boot and module manifests are part of prepared-environment identity; an old
+CI59 compiled environment cannot silently supply a kernel or be treated as a
+compatible H.40 checkpoint. Existing caches are not deleted.
+
+WLAN startup validates the actual bundled module metadata, and normal insmod
+retains the kernel's vermagic and symbol-version checks. It never force-loads
+modules. New H.40-based builds still require physical device testing.
