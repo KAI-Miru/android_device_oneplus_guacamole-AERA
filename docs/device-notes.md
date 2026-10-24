@@ -99,7 +99,7 @@ It creates no child bind that would keep installed vendor busy. Its initial
 domain list must be populated before ICNSS's five-minute registration timeout.
 This stage leaves the modem/ADSP power references and WLAN module to the Wi-Fi
 enable path.
-Stock `rmt_storage` and `tftp_server` start before the radio. The modem needs
+Original H40 `rmt_storage` and stock `tftp_server` start before the radio. The modem needs
 these backends to complete firmware startup. Remote storage serves the installed
 modem NV partitions. TFTP's writable RFS directories use RAM mirrors of the
 persist files; the mirrors remain available across Wi-Fi toggles. Persist may
@@ -107,6 +107,13 @@ remain read-only or be remounted writable by recovery for Qualcomm SFS when
 RPMB reports that its key is not provisioned. TFTP still writes to RAM mirrors.
 QRTR, PD mapper and the stock backends stay registered while Wi-Fi is off.
 The modem/ADSP power references and CNSS process stop with the supplicant.
+
+Remote storage uses the original H40 implementation and the stock `rmtfs` UIO
+region. The C15 port binary additionally requires `oembackup`, continues after
+that missing mapping fails, and crashes in its OEM CNV worker on Guacamole.
+The pinned stock blob is checked during import, tree validation and image
+verification. Backend failure still stops WLAN; no dummy mapping or NV repair
+is used. Hardware validation of this replacement remains required.
 
 The native supplicant reads its private RAM configuration as the `wifi` user.
 The configuration enables PMF negotiation and both SAE methods, including H2E.

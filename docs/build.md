@@ -57,13 +57,19 @@ To reproduce the proprietary inputs from the supplied dumps:
 ```sh
 python3 tools/import_vendor.py /path/to/C15_PORT_GUAC_4G \
   --official-crypto-tree /path/to/pinned-TeamWin-guacamole \
-  --gpu-dump /path/to/7Pro_H40
+  --gpu-dump /path/to/7Pro_H40 \
+  --rmt-storage-dump /path/to/7Pro_H40
 ```
 
 `tools/official-crypto-source.json` pins the TeamWin revision, and
 `tools/gpu-source.json` lists the H.40 graphics entry points. The importer records
 the complete non-platform dependency set and checks every official crypto blob
 against its Git revision. Native platform libraries are built from pinned source.
+
+`tools/rmt-storage-source.json` pins the original H40 remote-storage binary.
+The importer requires that exact stock input, and tree/image verification rejects
+the C15 port's incompatible OEM CNV implementation even if the vendor manifest
+is regenerated. The build uses the bundled blob and needs no external dump.
 
 A verified build is still a device-test candidate. Boot, storage unlock and
 Wi-Fi need physical testing before release.
