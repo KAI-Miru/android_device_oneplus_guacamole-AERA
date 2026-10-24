@@ -105,3 +105,14 @@ compatible H.40 checkpoint. Existing caches are not deleted.
 WLAN startup validates the actual bundled module metadata, and normal insmod
 retains the kernel's vermagic and symbol-version checks. It never force-loads
 modules. New H.40-based builds still require physical device testing.
+
+### Stock TFTP RFS layout
+
+WLAN preparation restores the original H40/F22 `/vendor/rfs` links only after
+installed vendor has been released. Firmware links resolve to read-only stock
+firmware; writable links resolve through guarded RAM mirrors. The private RAM
+roots and newly created subsystem directories belong to TFTP's dropped-privilege
+account `2903:2903` with mode `0700`. Existing persist files are never chowned
+or modified by this preparation, and RAM state survives Wi-Fi toggles. Incorrect
+links, foreign mounts, or ownership failures stop startup before the backends
+and radio. This configuration still requires hardware Wi-Fi validation.
