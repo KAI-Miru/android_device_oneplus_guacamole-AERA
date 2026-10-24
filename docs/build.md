@@ -79,3 +79,17 @@ rejected by the prepared-environment verifier. The first image build with this
 lock needs fresh preparation (`use_prepared=false`); its resulting checkpoint
 can then be reused. Recovery-only incremental updates remain supported once
 that compatible checkpoint exists.
+
+## Kernel containers and WLAN compatibility
+
+Kernel intake identifies ARM64 Image, gzip Image or boot-v2 payloads by content,
+not archive or member names. A ZIP may contain one candidate payload or one
+inner ZIP containing it. Multiple candidates, extra ZIP nesting, unsafe paths,
+symlinks and oversized inputs are rejected. The exact caller-supplied kernel
+SHA256 remains mandatory; ramdisks and device trees in containers are ignored.
+
+WLAN startup reads `modinfo -F vermagic` from the actual bundled module and
+compares its release with the running kernel before starting radio helpers.
+Normal `insmod` retains the kernel's vermagic and symbol-version checks; modules
+are never force-loaded. Rebuilding with a different kernel/module pair also
+requires updating the module manifest and passing the existing image/ABI audits.
