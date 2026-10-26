@@ -40,9 +40,12 @@ bash /tmp/guacamole-build-inputs/ci/build.sh
 
 Install the Android Linux build prerequisites and Google's `repo` tool first.
 The runner branch documents the prepared environment and runner maintenance.
-`sources.lock.json` pins recovery to our AERA fork's `miru` commit and keeps
-the other source revisions fixed. Recovery source is checked for a clean Git
-state; no Python tool rewrites it during the build.
+`sources.lock.json` pins recovery and platform `system/security` to our forks'
+`miru` commits and keeps the other source revisions fixed. Keystore uses the
+standard executable with `--recovery` to omit only its Android boot-completion
+watcher; its crypto library and boot-completion/GC protection are unchanged.
+Recovery source is checked for a clean Git state; no Python tool rewrites it
+during the build.
 The Image must support legacy LZMA ramdisks and match the bundled DTB/DTBO and
 WLAN module. Its hash is recorded for each build and checked against the final
 boot image. It is not added to this repository.

@@ -13,8 +13,6 @@ from import_vendor import haptic_inputs
 from verify_health import verify_health_startup, verify_health_runtime
 from verify_haptics import verify_haptic_runtime
 from verify_wifi import verify_startup_configuration
-from verify_keystore import verify_keystore_runtime
-from verify_recovery_source import verify_keystore_source
 
 
 def elf(machine=183):
@@ -23,46 +21,6 @@ def elf(machine=183):
 
 
 class RuntimeRepairTests(unittest.TestCase):
-    def test_keystore_image_requires_the_recovery_entrypoint(self):
-        name = 'system/bin/aera_keystore2'
-        init = 'system/etc/init/keystore2.rc'
-        text = b'on late-init\n    start keystore2\nservice keystore2 /system/bin/aera_keystore2 /tmp/misc/keystore\n'
-        entries = {name: (0o100755, elf()), init: (0o100644, text)}
-        self.assertEqual(verify_keystore_runtime(entries)['android_boot_watcher'], False)
-        for old, new in ((b'/aera_keystore2 ', b'/keystore2 '),
-                         (b'/tmp/misc/keystore', b'/data/misc/keystore')):
-            changed = dict(entries)
-            changed[init] = (0o100644, text.replace(old, new))
-            with self.assertRaises(ValueError):
-                verify_keystore_runtime(changed)
-        entries[init] = (0o100644, text + b'    setprop sys.boot_completed 1\n')
-        with self.assertRaises(ValueError):
-            verify_keystore_runtime(entries)
-
-    def test_keystore_source_pin_cannot_drift_without_entrypoint_review(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp)
-            checkout = root / 'bootable/recovery'
-            (checkout / 'aera_keystore').mkdir(parents=True)
-            source = root / 'system/security/keystore2/src/keystore2_main.rs'
-            source.parent.mkdir(parents=True)
-            source.write_bytes(b'fixture upstream source\n')
-            origin = {'commit': '1' * 40, 'repository': 'https://example.invalid/security',
-                      'path': 'keystore2/src/keystore2_main.rs',
-                      'upstream_sha256': hashlib.sha256(source.read_bytes()).hexdigest()}
-            (checkout / 'aera_keystore/source.json').write_text(json.dumps(origin))
-            project = {'path': 'system/security', 'commit': origin['commit'],
-                       'url': origin['repository'] + '.git'}
-            lock = {'projects': [project]}
-            self.assertTrue(verify_keystore_source(root, lock, checkout)['platform_crypto_unchanged'])
-            project['commit'] = '2' * 40
-            with self.assertRaisesRegex(ValueError, 'requires review'):
-                verify_keystore_source(root, lock, checkout)
-            project['commit'] = origin['commit']
-            source.write_bytes(b'changed source\n')
-            with self.assertRaisesRegex(ValueError, 'identity differs'):
-                verify_keystore_source(root, lock, checkout)
-
     def health_entries(self):
         return {
             'init.recovery.qcom.rc': (0o100644, (ROOT / 'recovery/root/init.recovery.qcom.rc').read_bytes()),

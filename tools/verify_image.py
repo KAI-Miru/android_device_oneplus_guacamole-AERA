@@ -356,7 +356,7 @@ def verify(image, report, kernel=None):
         return deps, defined, undefined
     audited = ({n for n, record in inputs['files'].items() if 'needed' in record} |
                set(WLAN_EXECUTABLES) | {'system/bin/android.hardware.health@2.1-service',
-                                        'system/bin/aera_keystore2'})
+                                        'system/bin/keystore2'})
     for n in sorted(audited):
         deps, defined, undefined = dynamic(entries[n][1]); seen = set(); todo = list(deps)
         while todo:
