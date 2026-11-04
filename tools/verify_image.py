@@ -329,13 +329,14 @@ def verify(image, report, kernel=None):
     native_init = verify_native_init(entries)
     native_services = verify_native_service_configuration(entries)
     health_runtime = verify_health_runtime(entries)
-    haptic_runtime = verify_haptic_runtime(entries)
+    haptic_runtime = verify_haptic_runtime(entries, 'system/etc/firmware')
     keystore_runtime = verify_keystore_runtime(entries)
     crypto_services = verify_crypto_service_configuration(entries)
     gpu_runtime = verify_gpu_runtime(entries)
     wifi_runtime = verify_wifi_runtime(entries, json.loads((root/'modules/manifest.json').read_text()))
     inputs = json.loads((root/'proprietary/manifest.json').read_text())
     for n, record in inputs['files'].items():
+        n = 'system/etc/firmware/' + Path(n).name if record.get('runtime') == 'haptics' else n
         if n not in entries or hashlib.sha256(entries[n][1]).hexdigest() != record['sha256']:
             raise ValueError(f'Packaged vendor input differs or is absent: {n}')
     # Check the compiled provider closure, not just dependency names in the tree.
