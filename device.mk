@@ -48,6 +48,12 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator-V2-ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.graphics.allocator@2.0.so
 
+# Use the same dual LED/input vibrator HAL as the C17 port on 7 and 7 Pro.
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.vibrator-V2-ndk android.hardware.vibrator-V2-cpp
+RECOVERY_LIBRARY_SOURCE_FILES += \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.vibrator-V2-ndk.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.vibrator-V2-cpp.so
+
 PRODUCT_VENDOR_PROPERTIES += ro.hardware.egl=adreno ro.hardware.gralloc=msmnile
 DEVICE_MANIFEST_FILE := $(LOCAL_PATH)/manifest.xml
 

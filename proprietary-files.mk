@@ -9,6 +9,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/bin/qseecomd:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/qseecomd \
     $(LOCAL_PATH)/proprietary/system/bin/rmt_storage:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/rmt_storage \
     $(LOCAL_PATH)/proprietary/system/bin/tftp_server:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/tftp_server \
+    $(LOCAL_PATH)/proprietary/system/bin/vendor.qti.hardware.vibrator.service:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/vendor.qti.hardware.vibrator.service \
+    $(LOCAL_PATH)/proprietary/system/lib64/android.hardware.vibrator-V1-ndk_platform.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/android.hardware.vibrator-V1-ndk_platform.so \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libGPreqcancel.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libGPreqcancel.so \
@@ -48,10 +50,12 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/libqrtr.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqrtr.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqsocket.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqsocket.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libqtikeymaster4.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtikeymaster4.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libqtivibratoreffect.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libqtivibratoreffect.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librecovery_updater.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librecovery_updater.so \
     $(LOCAL_PATH)/proprietary/system/lib64/librpmb.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/librpmb.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libsecureui_svcsock.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsecureui_svcsock.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/libsoc_helper.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libsoc_helper.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libspcom.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libspcom.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libspl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libspl.so \
     $(LOCAL_PATH)/proprietary/system/lib64/libssd.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/libssd.so \
@@ -66,6 +70,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.display.mapperextensions@1.0.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.display.mapperextensions@1.1.so \
     $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.tui_comm@1.0.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.tui_comm@1.0.so \
+    $(LOCAL_PATH)/proprietary/system/lib64/vendor.qti.hardware.vibrator.impl.so:$(TARGET_COPY_OUT_RECOVERY)/root/system/lib64/vendor.qti.hardware.vibrator.impl.so \
     $(LOCAL_PATH)/proprietary/vendor/firmware/100ms_RTP_166Hz.bin:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/firmware/100ms_RTP_166Hz.bin \
     $(LOCAL_PATH)/proprietary/vendor/firmware/100ms_RTP_170Hz.bin:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/firmware/100ms_RTP_170Hz.bin \
     $(LOCAL_PATH)/proprietary/vendor/firmware/100ms_RTP_174Hz.bin:$(TARGET_COPY_OUT_RECOVERY)/root/system/etc/firmware/100ms_RTP_174Hz.bin \
@@ -166,7 +171,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/android.hardware.graphics.mapper@4.0-impl-qti-display.so \
     $(LOCAL_PATH)/proprietary/vendor/lib64/hw/gralloc.msmnile.so:$(TARGET_COPY_OUT_RECOVERY)/root/vendor/lib64/hw/gralloc.msmnile.so
 
-TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0 android.hardware.boot@1.1 android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnl libssl libsync libutils libxml2 libz
+TARGET_RECOVERY_DEVICE_MODULES += android.hardware.boot@1.0 android.hardware.boot@1.1 android.hardware.gatekeeper@1.0 android.hardware.graphics.allocator@3.0 android.hardware.graphics.allocator@4.0 android.hardware.graphics.common@1.0 android.hardware.graphics.common@1.1 android.hardware.graphics.common@1.2 android.hardware.graphics.mapper@2.0 android.hardware.graphics.mapper@2.1 android.hardware.graphics.mapper@3.0 android.hardware.graphics.mapper@4.0 android.hardware.keymaster@4.0 android.hardware.keymaster@4.1 libbase libbinder libbinder_ndk libc++ libcrypto libcutils libgralloctypes libhardware libhidlbase libhidltransport libion liblog libnl libssl libsync libutils libxml2 libz
 RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.0.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.1.so \
@@ -184,6 +189,7 @@ RECOVERY_LIBRARY_SOURCE_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libbase.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libbinder.so \
+    $(TARGET_OUT_SHARED_LIBRARIES)/libbinder_ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libc++.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libcrypto.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libcutils.so \

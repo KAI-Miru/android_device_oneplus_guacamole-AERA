@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest version="2.0" type="device" target-level="5">
+    <hal format="aidl">
+        <name>android.hardware.vibrator</name>
+        <version>1</version>
+        <fqname>IVibrator/default</fqname>
+    </hal>
     <hal format="hidl">
         <name>android.hardware.keymaster</name><transport>hwbinder</transport>
         <fqname>@4.0::IKeymasterDevice/default</fqname>

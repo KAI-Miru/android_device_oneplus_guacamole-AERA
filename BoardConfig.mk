@@ -97,6 +97,7 @@ AERA_MAX_BRIGHTNESS := 1023
 AERA_DEFAULT_BRIGHTNESS := 200
 AERA_INPUT_BLACKLIST := "hbtp_vm"
 AERA_NO_SCREEN_BLANK := true
+AERA_SUPPORT_INPUT_AIDL_HAPTICS := true
 AERA_EXCLUDE_DEFAULT_USB_INIT := true
 # Native AERA imports only /data and /metadata from the installed vendor fstab,
 # using the installed ROM encryption options.

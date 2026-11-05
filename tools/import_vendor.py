@@ -179,6 +179,19 @@ def import_vendor(dump, official_checkout, gpu_dump, rmt_storage_dump):
         records[dest] = {'source': dest, 'source_dump': haptic['source_dump'],
                          **haptic['files'][dest], 'runtime': 'haptics'}
 
+    # Retain the independently pinned C17 HAL when refreshing H40 firmware.
+    for dest, record in previous['files'].items():
+        if record.get('runtime') != 'haptics-hal':
+            continue
+        target = (ROOT / 'proprietary' / dest).resolve()
+        if not target.is_relative_to((ROOT / 'proprietary').resolve()):
+            raise ValueError(f'Unsafe haptic HAL path: {dest}')
+        data = target.read_bytes()
+        if len(data) != record['bytes'] or hashlib.sha256(data).hexdigest() != record['sha256']:
+            raise ValueError(f'Pinned C17 haptic HAL differs: {dest}')
+        records[dest] = record
+        built.update(name for name in record['needed'] if platform_library(name))
+
     # Remove only previously manifested binary inputs made obsolete by this
     # explicit source change. Do not delete other files or whole directories.
     output_root = (ROOT / 'proprietary').resolve()

@@ -40,6 +40,7 @@
     "android.hardware.keymaster@4.1.so",
     "libbase.so",
     "libbinder.so",
+    "libbinder_ndk.so",
     "libc++.so",
     "libc.so",
     "libcrypto.so",
@@ -256,6 +257,44 @@
         "libdl.so"
       ],
       "source_dump": "C15_PORT_GUAC_4G"
+    },
+    "system/bin/vendor.qti.hardware.vibrator.service": {
+      "source": "vendor/bin/hw/vendor.qti.hardware.vibrator.service",
+      "source_dump": "C17_PORT_GUAC_4G",
+      "bytes": 16624,
+      "sha256": "0e974bc6faa6ce8b039e55bfd9263ed6365971f8a14be60c558225fc5b3b49e9",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libbase.so",
+        "libbinder_ndk.so",
+        "android.hardware.vibrator-V1-ndk_platform.so",
+        "vendor.qti.hardware.vibrator.impl.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "runtime": "haptics-hal"
+    },
+    "system/lib64/android.hardware.vibrator-V1-ndk_platform.so": {
+      "source": "system/system_ext/apex/com.android.vndk.v30.apex!lib64/android.hardware.vibrator-V1-ndk_platform.so",
+      "source_dump": "C17_PORT_GUAC_4G",
+      "bytes": 64792,
+      "sha256": "bb622e5261d0d60f3180e58d3e02553374edd7021292253d5f1b3643172c1e6e",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libbinder_ndk.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "runtime": "haptics-hal",
+      "source_archive_sha256": "901146eafd3b383923cdbfcb9afd308f0c55631c8f404e3d207d71f8c31851a7"
     },
     "system/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so": {
       "source": "vendor/lib64/hw/android.hardware.boot@1.0-impl-1.1-qti.so",
@@ -995,6 +1034,23 @@
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
     },
+    "system/lib64/libqtivibratoreffect.so": {
+      "source": "vendor/lib64/libqtivibratoreffect.so",
+      "source_dump": "C17_PORT_GUAC_4G",
+      "bytes": 11000,
+      "sha256": "4cf59244685aac3d749fa452bc489e6c1425701ab7e6311b90d9549381e4fdb1",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "runtime": "haptics-hal"
+    },
     "system/lib64/librecovery_updater.so": {
       "source": "vendor/lib64/librecovery_updater.so",
       "source_dump": "C15_PORT_GUAC_4G",
@@ -1075,6 +1131,22 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/lib64/libsoc_helper.so": {
+      "source": "vendor/lib64/libsoc_helper.so",
+      "source_dump": "C17_PORT_GUAC_4G",
+      "bytes": 19368,
+      "sha256": "61fce89e46895095e43e25a7b208e142f2b2c1e115624f304480fe362549fd11",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "runtime": "haptics-hal"
     },
     "system/lib64/libspcom.so": {
       "source": "vendor/lib64/libspcom.so",
@@ -1365,6 +1437,28 @@
       ],
       "source_repository": "https://github.com/TeamWin/android_device_oneplus_guacamole",
       "source_commit": "abef9b8a105c9feee847a6b4ed0903bda8ffb5f9"
+    },
+    "system/lib64/vendor.qti.hardware.vibrator.impl.so": {
+      "source": "vendor/lib64/vendor.qti.hardware.vibrator.impl.so",
+      "source_dump": "C17_PORT_GUAC_4G",
+      "bytes": 25024,
+      "sha256": "8b6b70602c7bc9ab3ccdd5637226147cca16b6673dc00ea86d72b3ca3589d29f",
+      "elf_class": 64,
+      "machine": "EM_AARCH64",
+      "needed": [
+        "libcutils.so",
+        "libutils.so",
+        "liblog.so",
+        "libqtivibratoreffect.so",
+        "libsoc_helper.so",
+        "libbinder_ndk.so",
+        "android.hardware.vibrator-V1-ndk_platform.so",
+        "libc++.so",
+        "libc.so",
+        "libm.so",
+        "libdl.so"
+      ],
+      "runtime": "haptics-hal"
     },
     "vendor/firmware/100ms_RTP_166Hz.bin": {
       "source": "vendor/firmware/100ms_RTP_166Hz.bin",
